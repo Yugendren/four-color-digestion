@@ -1,0 +1,22 @@
+\newcommand{\ptext}{
+\rput[r](-0.5, 0.00){{\footnotesize $\mathit{0}$}} \rput[l](0.00, 0.00){\footnotesize{\texttt{Degree 7}}}
+\rput[r](-0.5, -0.38){{\footnotesize $\mathit{1}$}} \rput[l](0.00, -0.38){\footnotesize{\texttt{L0 C  1 -5  }}}
+\rput[r](-0.5, -0.76){{\footnotesize $\mathit{2}$}} \rput[l](0.40, -0.76){\footnotesize{\texttt{L1 C  2 -5  }}}
+\rput[r](-0.5, -1.14){{\footnotesize $\mathit{3}$}} \rput[l](0.80, -1.14){\footnotesize{\texttt{L2 C  3 -5  }}}
+\rput[r](-0.5, -1.52){{\footnotesize $\mathit{4}$}} \rput[l](1.20, -1.52){\footnotesize{\texttt{L3 C  4 -5  }}}
+\rput[r](-0.5, -1.90){{\footnotesize $\mathit{5}$}} \rput[l](1.60, -1.90){\footnotesize{\texttt{L4 R }}}
+\rput[r](-0.5, -2.28){{\footnotesize $\mathit{6}$}} \rput[l](1.20, -2.28){\footnotesize{\texttt{L3 C  7 -5  }}}
+\rput[r](-0.5, -2.66){{\footnotesize $\mathit{7}$}} \rput[l](1.60, -2.66){\footnotesize{\texttt{L4 R }}}
+\rput[r](-0.5, -3.04){{\footnotesize $\mathit{8}$}} \rput[l](1.20, -3.04){\footnotesize{\texttt{L3 C  4  7  }}}
+\rput[r](-0.5, -3.42){{\footnotesize $\mathit{9}$}} \rput[l](1.60, -3.42){\footnotesize{\texttt{L4 C  7  7  }}}
+\rput[r](-0.5, -3.80){{\footnotesize $\mathit{10}$}} \rput[l](2.00, -3.80){\footnotesize{\texttt{L5 C 12 -5  }}}
+\rput[r](-0.5, -4.18){{\footnotesize $\mathit{11}$}} \rput[l](2.40, -4.18){\footnotesize{\texttt{L6 C  5  8  }}}
+\rput[r](-0.5, -4.56){{\footnotesize $\mathit{12}$}} \rput[l](2.80, -4.56){\footnotesize{\texttt{L7 C  4  8  }}}
+\rput[r](-0.5, -4.94){{\footnotesize $\mathit{13}$}} \rput[l](3.20, -4.94){\footnotesize{\texttt{L8 H  (2,2,5) (4,4,-2) (5,5,0) (1,3,7)  (6,7,0) }}}
+\rput[r](-0.5, -5.32){{\footnotesize $\mathit{14}$}} \rput[l](2.80, -5.32){\footnotesize{\texttt{L7 C  6  6  }}}
+\rput[r](-0.5, -5.70){{\footnotesize $\mathit{15}$}} \rput[l](3.20, -5.70){\footnotesize{\texttt{L8 H  (1,1,4) (2,2,5) (5,5,0) (6,6,0) (7,7,-1) (3,4,2) }}}
+\rput[r](-0.5, -6.08){{\footnotesize $\mathit{16}$}} \rput[l](2.80, -6.08){\footnotesize{\texttt{L7 H  (1,1,4) (2,2,5) (5,5,0) (6,6,2) (7,7,-3) (3,4,2) }}}
+\rput[r](-0.5, -6.46){{\footnotesize $\mathit{17}$}} \rput[l](2.40, -6.46){\footnotesize{\texttt{L6 C  6  8  }}}
+\rput[r](-0.5, -6.84){{\footnotesize $\mathit{18}$}} \rput[l](2.80, -6.84){\footnotesize{\texttt{L7 S 4 1 6 18}}}
+\rput[r](-0.5, -7.22){{\footnotesize $\mathit{19}$}} \rput[l](2.40, -7.22){\footnotesize{\texttt{L6 C  4  8  }}}
+}

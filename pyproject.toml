@@ -1,0 +1,12 @@
+[project]
+name = "fourcolor-digestion"
+version = "0.1.0"
+description = "Machine digestion of the Four Color Theorem proof: verifier stack, data factory, invariant extraction"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.0",
+    "networkx>=3.3",
+]
+
+[tool.uv]
+package = false

@@ -1,0 +1,7 @@
+%latex abstract.tex
+%dvips -o abstract.ps abstract.dvi
+latex 4c.tex
+dvips -o 4c.ps 4c.dvi
+%ps2pdf 4c.ps
+%latex figtest.tex
+%dvips -o figtest.ps figtest.dvi

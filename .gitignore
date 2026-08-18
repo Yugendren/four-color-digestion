@@ -1,0 +1,7 @@
+data/
+.venv/
+build/
+__pycache__/
+*.pyc
+.DS_Store
+third_party/*/extracted_build/
