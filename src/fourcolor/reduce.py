@@ -144,10 +144,32 @@ def extendable_codes(cfg: Configuration,
             constraints_eq.append((rest[0], rest[1]))
         # 2+ contract edges in one triangle cannot happen for a valid contract.
 
-    # Order edges: interior first (deepest last), ring last, so ring colors
-    # get decided by propagation late. Simple static order suffices here.
-    order = [i for i in range(m) if not in_x[i]]
-    pos = {e: k for k, e in enumerate(order)}
+    # Greedy forcing order: repeatedly pick the uncolored edge sharing the
+    # most triangles with already-ordered edges, so most assignments are
+    # forced to 1-2 legal values. Dramatically shrinks the search tree
+    # versus a naive static order.
+    candidates = [i for i in range(m) if not in_x[i]]
+    tri_of_edge: dict[int, list[tuple[int, int, int]]] = {i: [] for i in candidates}
+    for t in triangles:
+        for e in t:
+            if not in_x[e]:
+                tri_of_edge[e].append(t)
+    order: list[int] = []
+    ordered: set[int] = set()
+    remaining = set(candidates)
+    while remaining:
+        best, best_score = None, (-1, -1)
+        for e in remaining:
+            score = sum(
+                sum(1 for o in t if o != e and o in ordered)
+                for t in tri_of_edge[e]
+            )
+            key = (score, len(tri_of_edge[e]))
+            if key > best_score:
+                best, best_score = e, key
+        order.append(best)
+        ordered.add(best)
+        remaining.discard(best)
 
     # Adjacency of constraints for pruning.
     neigh_diff: dict[int, list[int]] = {i: [] for i in order}
@@ -170,7 +192,10 @@ def extendable_codes(cfg: Configuration,
             found.add(canonical_code([v - 1 for v in ring]))
             return
         e = order[k]
-        for v in (0, 1, 2):
+        # Gauge fix: the first edge's color is 0 WLOG (color permutations act
+        # on tri-colorings; canonical codes are partition-invariant, so the
+        # restriction-code SET is unchanged while the search shrinks 3x).
+        for v in ((0,) if k == 0 else (0, 1, 2)):
             ok = True
             for o in neigh_diff[e]:
                 if o in color and color[o] == v:
@@ -295,6 +320,89 @@ def _matching_codes(m: SignedMatching):
 
 
 # ---------------------------------------------------------------------------
+# Vectorized fixed-point engine (numpy, chunked per ring size)
+# ---------------------------------------------------------------------------
+
+class _Engine:
+    """Flattened matching data for one ring size, reused across configs.
+
+    Blocks of parallel arrays: vals (signed Thm 3.2 values), codes (=|vals|),
+    theta (-1/0/+1 per value), seg_starts (reduceat boundaries per matching),
+    seg_lens. Chunked so ring-14 (~1.5M matchings) stays in bounded memory.
+    """
+
+    def __init__(self, r: int, block_values: int = 1 << 21):
+        import numpy as np
+
+        self.r = r
+        self.maxcode = (3 ** (r - 1) - 1) // 2
+        self.blocks = []
+        vals_buf: list[int] = []
+        theta_buf: list[int] = []
+        seg_buf: list[int] = []
+
+        def flush():
+            if not seg_buf:
+                return
+            vals = np.array(vals_buf, dtype=np.int64)
+            codes = np.abs(vals)
+            assert codes.max(initial=0) <= self.maxcode, "non-canonical code"
+            self.blocks.append({
+                "codes": codes,
+                "theta": np.array(theta_buf, dtype=np.int8),
+                "seg": np.array(seg_buf, dtype=np.int64),
+                "lens": None,
+                "real": np.ones(len(seg_buf), dtype=bool),
+            })
+            b = self.blocks[-1]
+            b["lens"] = np.diff(np.append(b["seg"], len(vals)))
+            vals_buf.clear()
+            theta_buf.clear()
+            seg_buf.clear()
+
+        for m in balanced_signed_matchings(r):
+            vals = _matching_codes(m)
+            seg_buf.append(len(vals_buf))
+            for v in vals:
+                vals_buf.append(v)
+                theta_buf.append(0 if m.a1 < r else (1 if v < 0 else -1))
+            if len(vals_buf) >= block_values:
+                flush()
+        flush()
+
+    def reset(self):
+        for b in self.blocks:
+            b["real"][:] = True
+
+    def round(self, live_arr, live0: bool):
+        """One M_{i+1}/C_{i+1} update. Returns (new_live_arr, new_live0)."""
+        import numpy as np
+
+        alive_code = live_arr.copy()
+        alive_code[0] = live0  # code 0 kills a matching iff not alive
+        planes = {t: np.zeros(self.maxcode + 1, dtype=bool) for t in (-1, 0, 1)}
+        for b in self.blocks:
+            ok_vals = alive_code[b["codes"]]
+            m_alive = np.minimum.reduceat(
+                ok_vals.astype(np.uint8), b["seg"]).astype(bool)
+            b["real"] &= m_alive
+            val_sel = np.repeat(b["real"], b["lens"])
+            for t in (-1, 0, 1):
+                sel = val_sel & (b["theta"] == t)
+                planes[t][b["codes"][sel]] = True
+        new_live = live_arr & planes[-1] & planes[0] & planes[1]
+        new_live[0] = False
+        new_live0 = live0 and bool(
+            planes[-1][0] or planes[0][0] or planes[1][0])
+        return new_live, new_live0
+
+
+@functools.lru_cache(maxsize=4)
+def _engine(r: int) -> "_Engine":
+    return _Engine(r)
+
+
+# ---------------------------------------------------------------------------
 # The consistent-set fixed point (paper §3) and reducibility verdicts
 # ---------------------------------------------------------------------------
 
@@ -309,28 +417,29 @@ class ReduceResult:
     trace: list[int]           # surviving |C_i| per round (process labels)
 
 
-def check(cfg: Configuration) -> ReduceResult:
-    r = cfg.r
-    ext = extendable_codes(cfg)
+@functools.lru_cache(maxsize=4)
+def canonical_codes(r: int) -> frozenset:
+    """All codes of canonical colorings for ring size r."""
+    out = set()
 
-    # live = set of canonical codes in C_i (start: all balanced-ternary codes
-    # of canonical colorings NOT in C(K)). Enumerate canonical colorings:
-    # digits d_1..d_r with d_r = 0 and highest nonzero digit (if any) = +1.
-    all_codes = set()
-    def gen(i, code, p, seen_nonzero_top):
-        if i == r:
-            all_codes.add(code)
-            return
-        # e_{i+1} digit; positions 0..r-1, position r-1 (e_r) must be 0.
-        if i == r - 1:
-            gen(i + 1, code, p * 3, seen_nonzero_top)
+    def gen(i, code, p):
+        if i == r - 1:            # e_r digit must be 0
+            if _is_canonical_code(code, r) and code >= 0:
+                out.add(code)
             return
         for d in (-1, 0, 1):
-            gen(i + 1, code + d * p, p * 3, seen_nonzero_top)
-    gen(0, 0, 1, False)
-    # keep only canonical (nonneg codes whose highest nonzero ternary digit
-    # is +1); generation above produced signed values, filter:
-    canonical = {c for c in all_codes if c >= 0 and _is_canonical_code(c, r)}
+            gen(i + 1, code + d * p, p * 3)
+
+    gen(0, 0, 1)
+    return frozenset(out)
+
+
+def check(cfg: Configuration) -> ReduceResult:
+    import numpy as np
+
+    r = cfg.r
+    ext = extendable_codes(cfg)
+    canonical = canonical_codes(r)
 
     # live[0] is exceptional (paper §3). reduce.c's updatelive shows the
     # exact rule: code 0 survives a round iff it received AT LEAST ONE theta
@@ -338,38 +447,25 @@ def check(cfg: Configuration) -> ReduceResult:
     # code needs marks for all three thetas. With no marks at all it dies
     # like any other code. It kills a matching iff it is extendable.
     live0 = 0 not in ext
-    live = {c for c in canonical if c not in ext}
-    live.discard(0)
+    engine = _engine(r)
+    engine.reset()
+    live_arr = np.zeros(engine.maxcode + 1, dtype=bool)
+    live_list = [c for c in canonical if c not in ext and c != 0]
+    live_arr[live_list] = True
 
-    matchings = balanced_signed_matchings(r)
-    real = [True] * len(matchings)
-    trace = [len(live) + (1 if live0 else 0)]
+    trace = [int(live_arr.sum()) + (1 if live0 else 0)]
     rounds = 0
-
     while True:
         rounds += 1
-        marks: dict[int, set[int]] = {}
-        for idx, m in enumerate(matchings):
-            if not real[idx]:
-                continue
-            vals = _matching_codes(m)
-            codes = [abs(v) for v in vals]
-            if any((not live0 if c == 0 else c not in live) for c in codes):
-                real[idx] = False
-                continue
-            for v, c in zip(vals, codes):
-                theta = 0 if m.a1 < r else (1 if v < 0 else -1)
-                marks.setdefault(c, set()).add(theta)
-        new_live = {c for c in live if marks.get(c, set()) >= {-1, 0, 1}}
-        new_live0 = live0 and bool(marks.get(0))
-        trace.append(len(new_live) + (1 if new_live0 else 0))
-        if new_live == live and new_live0 == live0:
+        new_live, new_live0 = engine.round(live_arr, live0)
+        trace.append(int(new_live.sum()) + (1 if new_live0 else 0))
+        if bool((new_live == live_arr).all()) and new_live0 == live0:
             break
-        live, live0 = new_live, new_live0
-        if not live and not live0:
+        live_arr, live0 = new_live, new_live0
+        if not live_arr.any() and not live0:
             break
 
-    consistent = set(live)
+    consistent = set(int(c) for c in np.nonzero(live_arr)[0])
     if live0:
         consistent.add(0)
     d_red = len(consistent) == 0
