@@ -29,7 +29,8 @@ class TestMatchings(unittest.TestCase):
     def test_counts_match_reduce_c_table(self):
         for r in range(2, 9):
             self.assertEqual(
-                len(balanced_signed_matchings(r)), SIMATCHNUMBER[r], f"r={r}"
+                sum(1 for _ in balanced_signed_matchings(r)),
+                SIMATCHNUMBER[r], f"r={r}"
             )
 
     def test_all_generated_codes_canonical(self):

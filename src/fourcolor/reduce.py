@@ -30,9 +30,10 @@ from dataclasses import dataclass
 from .conf_parser import Configuration
 
 # Number of balanced signed matchings per ring size, from reduce.c
-# (simatchnumber). Used as a generator self-test.
+# (simatchnumber; r=15,16 entries from Steinberger's extended version).
+# Used as a generator self-test.
 SIMATCHNUMBER = [0, 0, 1, 3, 10, 30, 95, 301, 980, 3228, 10797, 36487,
-                 124542, 428506, 1485003]
+                 124542, 428506, 1485003, 5178161, 18155816]
 
 
 # ---------------------------------------------------------------------------
@@ -228,8 +229,7 @@ class SignedMatching:
 
 
 def _noncrossing_matchings(r: int):
-    """All nonempty noncrossing matchings of chords on cyclic positions 1..r."""
-    results: list[list[tuple[int, int]]] = []
+    """Yield all nonempty noncrossing matchings of chords on positions 1..r."""
 
     def crosses(p, q, x, y):
         # chords {p,q}, {x,y} on a circle labeled 1..r cross iff exactly one
@@ -241,7 +241,7 @@ def _noncrossing_matchings(r: int):
 
     def extend(chosen: list[tuple[int, int]], used: int, start: int):
         if chosen:
-            results.append(list(chosen))
+            yield list(chosen)
         for idx in range(start, len(pairs_all)):
             b, a = pairs_all[idx]
             if used & (1 << a) or used & (1 << b):
@@ -249,32 +249,24 @@ def _noncrossing_matchings(r: int):
             if any(crosses(b, a, x, y) for (x, y) in chosen):
                 continue
             chosen.append((b, a))
-            extend(chosen, used | (1 << a) | (1 << b), idx + 1)
+            yield from extend(chosen, used | (1 << a) | (1 << b), idx + 1)
             chosen.pop()
 
-    extend([], 0, 0)
-    return results
+    yield from extend([], 0, 0)
 
 
 import functools
 
 
-@functools.lru_cache(maxsize=None)
-def _balanced_signed_matchings_cached(r: int) -> tuple:
-    return tuple(_balanced_signed_matchings_impl(r))
+def balanced_signed_matchings(r: int):
+    """Yield all balanced signed matchings with code and choice sequence
+    (Thm 3.2). A GENERATOR: at r=16 there are 18.2M matchings, which must
+    never be materialized as Python objects (the engine flattens them into
+    numpy blocks as they stream)."""
+    yield from _balanced_signed_matchings_impl(r)
 
 
-def balanced_signed_matchings(r: int) -> list[SignedMatching]:
-    """All balanced signed matchings with code and choice sequence (Thm 3.2).
-
-    Cached per ring size: the matching set is configuration-independent, and
-    precomputing the code lists once saves the dominant cost across a batch.
-    """
-    return list(_balanced_signed_matchings_cached(r))
-
-
-def _balanced_signed_matchings_impl(r: int) -> list[SignedMatching]:
-    out: list[SignedMatching] = []
+def _balanced_signed_matchings_impl(r: int):
     for matching in _noncrossing_matchings(r):
         k = len(matching)
         # signs mu_i in {-1,+1}; balanced iff r + #(mu=-1) is even.
@@ -300,8 +292,7 @@ def _balanced_signed_matchings_impl(r: int) -> list[SignedMatching]:
                     for (a, b, mu) in signed)
                 choices = [3 ** (a - 1) + mu * 3 ** (b - 1)
                            for (a, b, mu) in signed[1:]]
-            out.append(SignedMatching(signed, code, choices, a1))
-    return out
+            yield SignedMatching(signed, code, choices, a1)
 
 
 def _matching_codes(m: SignedMatching):
@@ -345,7 +336,7 @@ class _Engine:
             if not seg_buf:
                 return
             vals = np.array(vals_buf, dtype=np.int64)
-            codes = np.abs(vals)
+            codes = np.abs(vals).astype(np.int32)  # maxcode < 2^31 at r<=16
             assert codes.max(initial=0) <= self.maxcode, "non-canonical code"
             self.blocks.append({
                 "codes": codes,
@@ -360,7 +351,9 @@ class _Engine:
             theta_buf.clear()
             seg_buf.clear()
 
+        n_matchings = 0
         for m in balanced_signed_matchings(r):
+            n_matchings += 1
             vals = _matching_codes(m)
             seg_buf.append(len(vals_buf))
             for v in vals:
@@ -369,6 +362,10 @@ class _Engine:
             if len(vals_buf) >= block_values:
                 flush()
         flush()
+        if r < len(SIMATCHNUMBER):
+            assert n_matchings == SIMATCHNUMBER[r], (
+                f"r={r}: generated {n_matchings} matchings, "
+                f"expected {SIMATCHNUMBER[r]}")
 
     def reset(self):
         for b in self.blocks:
