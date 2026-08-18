@@ -394,8 +394,11 @@ class _Engine:
         return new_live, new_live0
 
 
-@functools.lru_cache(maxsize=4)
+@functools.lru_cache(maxsize=None)
 def _engine(r: int) -> "_Engine":
+    # All engines r=6..16 together are ~4GB (dominated by r=16's 578M
+    # values at int32+int8); keep them all cached — eviction would force
+    # minutes-long rebuilds when a batch interleaves ring sizes.
     return _Engine(r)
 
 

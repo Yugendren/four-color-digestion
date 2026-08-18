@@ -1,0 +1,5 @@
+engine r=15: 60s, values=126,324,641
+engine r=16: 195s, values=578,585,816
+CRASH CONFIG 783: agree=True a=139480/139480 b=0/0 D=True (168s)
+STEINBERGER SAMPLE: 40/40 agree
+exit=0
