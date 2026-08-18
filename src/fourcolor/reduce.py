@@ -231,8 +231,24 @@ def _noncrossing_matchings(r: int):
     return results
 
 
+import functools
+
+
+@functools.lru_cache(maxsize=None)
+def _balanced_signed_matchings_cached(r: int) -> tuple:
+    return tuple(_balanced_signed_matchings_impl(r))
+
+
 def balanced_signed_matchings(r: int) -> list[SignedMatching]:
-    """All balanced signed matchings with code and choice sequence (Thm 3.2)."""
+    """All balanced signed matchings with code and choice sequence (Thm 3.2).
+
+    Cached per ring size: the matching set is configuration-independent, and
+    precomputing the code lists once saves the dominant cost across a batch.
+    """
+    return list(_balanced_signed_matchings_cached(r))
+
+
+def _balanced_signed_matchings_impl(r: int) -> list[SignedMatching]:
     out: list[SignedMatching] = []
     for matching in _noncrossing_matchings(r):
         k = len(matching)
