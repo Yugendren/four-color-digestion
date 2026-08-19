@@ -1,0 +1,5 @@
+2026 near-linear-4ct proof reproduced end-to-end 2026-08-19T03:43:05Z
+combine_rules: 1832 all / 671 non_blocked
+wheels: 5439/6790/3285/626/8 (exact match to paper)
+cartwheels: 10094 survivors (d7-8), zero at d9-11
+gluing checks deg8/7triangle/deg7: all passed (Debug build, asserts live)

@@ -1,0 +1,16 @@
+{
+  "degree": 10,
+  "shard_index": 2,
+  "shard_total": 3,
+  "n_base_rules": 84,
+  "n_combined_rules_non_blocked": 671,
+  "n_confs_expanded": 19754,
+  "n_candidates_total": 325629,
+  "n_candidates_processed": 230000,
+  "n_charge_bound_survivors_so_far": 284,
+  "n_blocked_so_far": 78,
+  "n_predicted_bad_so_far": 206,
+  "n_ground_truth_bad": 626,
+  "completed": false,
+  "elapsed_seconds": 4343.80500793457
+}

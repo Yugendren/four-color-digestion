@@ -91,6 +91,25 @@ SCOPE / KNOWN LIMITATIONS
   IS reimplemented faithfully (including cut-vertex ring expansion and mirroring in
   ``.conf`` parsing), because closing the exact differential for d=10/d=11 requires it.
   See ``tools/nl4ct_differential.py`` for how it is (and is not) exercised at scale.
+
+--------------------------------------------------------------------------
+EXACT DIFFERENTIAL RESULTS (see results/nl4ct-differential/report_d*.json)
+--------------------------------------------------------------------------
+For each hub degree d, every necklace of spoke degrees in {5,...,9}^d (up to rotation)
+was enumerated, run through charge_bound + blocked_by_reducible_configuration, and the
+resulting "possible bad wheel" set was diffed against wheels/d{d}/*.cartwheel:
+
+    d= 7: 11,165 candidates -> 5,439 predicted bad == 5,439 ground truth (EXACT, 0/0)
+    d= 8: 48,915 candidates -> 6,790 predicted bad == 6,790 ground truth (EXACT, 0/0)
+    d= 9: 217,045 candidates -> 3,285 predicted bad == 3,285 ground truth (EXACT, 0/0)
+    d=10: 976,887 candidates -> see results/nl4ct-differential/report_d10.json
+    d=11: 4,438,925 candidates -> see results/nl4ct-differential/report_d11.json
+
+d=10 and d=11 are large enough (millions of candidates, each needing hundreds of
+rooted-homomorphism searches) that they are run out-of-band via sharded, resumable
+background processes (``tools/nl4ct_differential.py --shard-index/--shard-total`` +
+``--merge``) rather than inline; consult the JSON reports for the current/final status
+of those two degrees.
 """
 
 from __future__ import annotations
