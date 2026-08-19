@@ -1,0 +1,13 @@
+[d=8 shard 2/8] 500/6115 candidates, 338 charge-bound survivors, 32 blocked, elapsed 20s
+[d=8 shard 2/8] 1000/6115 candidates, 519 charge-bound survivors, 32 blocked, elapsed 34s
+[d=8 shard 2/8] 1500/6115 candidates, 597 charge-bound survivors, 33 blocked, elapsed 41s
+[d=8 shard 2/8] 2000/6115 candidates, 767 charge-bound survivors, 33 blocked, elapsed 54s
+[d=8 shard 2/8] 2500/6115 candidates, 820 charge-bound survivors, 33 blocked, elapsed 62s
+[d=8 shard 2/8] 3000/6115 candidates, 860 charge-bound survivors, 33 blocked, elapsed 68s
+[d=8 shard 2/8] 3500/6115 candidates, 872 charge-bound survivors, 33 blocked, elapsed 73s
+[d=8 shard 2/8] 4000/6115 candidates, 874 charge-bound survivors, 33 blocked, elapsed 76s
+[d=8 shard 2/8] 4500/6115 candidates, 874 charge-bound survivors, 33 blocked, elapsed 79s
+[d=8 shard 2/8] 5000/6115 candidates, 874 charge-bound survivors, 33 blocked, elapsed 82s
+[d=8 shard 2/8] 5500/6115 candidates, 877 charge-bound survivors, 33 blocked, elapsed 86s
+[d=8 shard 2/8] 6000/6115 candidates, 877 charge-bound survivors, 33 blocked, elapsed 88s
+[d=8 shard 2/8] done. completed_full_enum=True. See /Users/yugendren/experiments/four_color_digestion/results/p2-coverage/wheel_survivors_d8_shard2of8.jsonl

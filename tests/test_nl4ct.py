@@ -258,5 +258,81 @@ class TestBoundedPrefixExactDifferentialD11(unittest.TestCase):
         self.assertEqual(n_checked, self.PREFIX)
 
 
+@unittest.skipUnless(_have_data(), "third_party/computer-checks data not available")
+class TestBlockingAttribution(unittest.TestCase):
+    """P2 deliverable 4: the new attribution code path (``wheel_block_attribution`` /
+    ``contain_conf_sources``) must agree EXACTLY, on every sample checked, with the
+    pre-existing boolean ``wheel_is_blocked`` / ``blocked_by_reducible_configuration``
+    check it is built on top of. Both walk the same ``representative_degree``
+    concretizations with the same per-concretization matching predicate
+    (``_rooted_contain_conf``); attribution only additionally records WHICH source
+    ``.conf`` files matched instead of stopping at the first one.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rules = m.load_rules(RULE_DIR)
+        cls.combined = m.load_combined_rules(COMBINED_DIR, len(cls.rules))
+        cls.confs = m.load_configurations(CONF_DIR)
+        cls.confs_named = m.load_configurations_with_source(CONF_DIR)
+
+    def test_load_configurations_with_source_matches_unnamed_loader(self):
+        # Same total count and (up to the pairing) the same underlying Configuration
+        # objects as the pre-existing (unnamed) loader used by wheel_is_blocked.
+        self.assertEqual(len(self.confs_named), len(self.confs))
+        n_source_files = sum(1 for p in Path(CONF_DIR).iterdir() if p.suffix == ".conf")
+        distinct_sources = {name for name, _ in self.confs_named}
+        self.assertEqual(len(distinct_sources), n_source_files)
+
+    def test_attribution_agrees_with_boolean_check_on_d10_d11_ground_truth(self):
+        # All published (unblocked, by construction) wheels: attribution must also say
+        # "not blocked" for every one.
+        for d in (10, 11):
+            with self.subTest(degree=d):
+                for w in m.load_cartwheels(m.default_wheel_dir(d)):
+                    att = m.wheel_block_attribution(w, self.confs_named)
+                    ref = m.wheel_is_blocked(w, self.confs)
+                    self.assertEqual(att.blocked, ref)
+                    self.assertFalse(att.blocked)
+                    # is_blocked_by_subset with the FULL source set must reproduce the
+                    # same verdict as the boolean check (it's the same predicate).
+                    self.assertEqual(m.is_blocked_by_subset(att, att.all_blockers), att.blocked)
+
+    def test_attribution_agrees_with_boolean_check_on_charge_survivors_including_blocked(self):
+        # A bounded prefix of d=7's necklace enumeration, restricted to charge
+        # survivors, deliberately includes wheels that ARE blocked (unlike the d10/d11
+        # ground-truth set above, which by construction is never blocked) so this
+        # differential exercises both branches of the ``blocked`` boolean.
+        n_survivors = 0
+        n_blocked = 0
+        for i, seq in enumerate(m.enum_wheel_degree_sequences(7)):
+            if i >= 600:
+                break
+            w = m.generate_cartwheel(7, seq)
+            cb = m.charge_bound(w, self.rules, self.combined)
+            if cb < 0:
+                continue
+            n_survivors += 1
+            att = m.wheel_block_attribution(w, self.confs_named)
+            ref = m.wheel_is_blocked(w, self.confs)
+            self.assertEqual(att.blocked, ref, f"seq={seq} cb={cb}")
+            if att.blocked:
+                n_blocked += 1
+                # every concretization (always exactly 1 at wheel level) must carry a
+                # nonempty, real (existing .conf stem) blocker set.
+                self.assertEqual(att.n_concretizations, 1)
+                (blockers,) = att.per_concretization
+                self.assertGreater(len(blockers), 0)
+                for name in blockers:
+                    self.assertTrue((Path(CONF_DIR) / f"{name}.conf").exists(), name)
+                # Dropping all blockers must flip the subset-blocked verdict to False.
+                self.assertFalse(m.is_blocked_by_subset(att, frozenset()))
+                self.assertTrue(m.is_blocked_by_subset(att, blockers))
+        # Sanity: this prefix must actually exercise both outcomes, or the test isn't
+        # differentiating the True-branch from the trivial d10/d11 test above.
+        self.assertGreater(n_survivors, 0)
+        self.assertGreater(n_blocked, 0)
+
+
 if __name__ == "__main__":
     unittest.main()

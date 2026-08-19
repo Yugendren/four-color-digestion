@@ -1,0 +1,40 @@
+[p2-wheel d=7] starting with 8 shards
+[p2-wheel d=7] all 8 shards finished, merging...
+[d=7] merged 8 shards -> /Users/yugendren/experiments/four_color_digestion/results/p2-coverage/wheel_survivors_d7.jsonl
+{
+  "degree": 7,
+  "n_candidates_total": 11165,
+  "n_charge_bound_survivors": 5668,
+  "n_blocked": 229,
+  "n_shards": 8,
+  "elapsed_seconds_wall_estimate": 73.59560012817383,
+  "jsonl": "results/p2-coverage/wheel_survivors_d7.jsonl"
+}
+[p2-wheel d=7] done, marker at results/p2-coverage/DONE_wheel_d7
+[p2-wheel d=8] starting with 8 shards
+[p2-wheel d=8] all 8 shards finished, merging...
+[d=8] merged 8 shards -> /Users/yugendren/experiments/four_color_digestion/results/p2-coverage/wheel_survivors_d8.jsonl
+{
+  "degree": 8,
+  "n_candidates_total": 48915,
+  "n_charge_bound_survivors": 7082,
+  "n_blocked": 292,
+  "n_shards": 8,
+  "elapsed_seconds_wall_estimate": 89.51766514778137,
+  "jsonl": "results/p2-coverage/wheel_survivors_d8.jsonl"
+}
+[p2-wheel d=8] done, marker at results/p2-coverage/DONE_wheel_d8
+[p2-wheel d=9] starting with 8 shards
+[p2-wheel d=9] all 8 shards finished, merging...
+[d=9] merged 8 shards -> /Users/yugendren/experiments/four_color_digestion/results/p2-coverage/wheel_survivors_d9.jsonl
+{
+  "degree": 9,
+  "n_candidates_total": 217045,
+  "n_charge_bound_survivors": 3724,
+  "n_blocked": 439,
+  "n_shards": 8,
+  "elapsed_seconds_wall_estimate": 278.96442890167236,
+  "jsonl": "results/p2-coverage/wheel_survivors_d9.jsonl"
+}
+[p2-wheel d=9] done, marker at results/p2-coverage/DONE_wheel_d9
+[p2-wheel d=10] starting with 8 shards

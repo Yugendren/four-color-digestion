@@ -1,0 +1,196 @@
+{
+  "per_degree": {
+    "7": {
+      "status": "complete",
+      "n_candidates_total": 11165,
+      "n_charge_bound_survivors": 5668,
+      "n_blocked": 229,
+      "n_predicted_bad_unblocked": 5439,
+      "avg_concretizations_per_wheel": 1.0,
+      "max_concretizations_per_wheel": 1,
+      "avg_blockers_per_concretization_this_degree": 0.044989414255469304,
+      "max_blockers_per_concretization_this_degree": 3,
+      "distinct_blocker_sources_this_degree": 12
+    },
+    "8": {
+      "status": "complete",
+      "n_candidates_total": 48915,
+      "n_charge_bound_survivors": 7082,
+      "n_blocked": 292,
+      "n_predicted_bad_unblocked": 6790,
+      "avg_concretizations_per_wheel": 1.0,
+      "max_concretizations_per_wheel": 1,
+      "avg_blockers_per_concretization_this_degree": 0.04786783394521322,
+      "max_blockers_per_concretization_this_degree": 4,
+      "distinct_blocker_sources_this_degree": 23
+    },
+    "9": {
+      "status": "complete",
+      "n_candidates_total": 217045,
+      "n_charge_bound_survivors": 3724,
+      "n_blocked": 439,
+      "n_predicted_bad_unblocked": 3285,
+      "avg_concretizations_per_wheel": 1.0,
+      "max_concretizations_per_wheel": 1,
+      "avg_blockers_per_concretization_this_degree": 0.13345864661654136,
+      "max_blockers_per_concretization_this_degree": 4,
+      "distinct_blocker_sources_this_degree": 26
+    },
+    "10": {
+      "status": "not yet available"
+    },
+    "11": {
+      "status": "not yet available"
+    }
+  },
+  "total_charge_survivors": 16474,
+  "total_blocked": 960,
+  "distinct_blocker_sources_overall": 61,
+  "distinct_blocker_sources": [
+    "D0040",
+    "D0045",
+    "D0046",
+    "D0051",
+    "D0070",
+    "D0071",
+    "D0093",
+    "D0096",
+    "D0143",
+    "D0204",
+    "D0205",
+    "D1565",
+    "D1566",
+    "D1573",
+    "D1574",
+    "D1583",
+    "D1602",
+    "D1603",
+    "D1604",
+    "D1641",
+    "D1649",
+    "D1690",
+    "D2625",
+    "D2626",
+    "D2627",
+    "D2630",
+    "D2636",
+    "D2638",
+    "D2663",
+    "D2664",
+    "D2685",
+    "D3009",
+    "D5067",
+    "D5088",
+    "D5089",
+    "D5091",
+    "D5154",
+    "D5156",
+    "D5163",
+    "D5262",
+    "D5264",
+    "D5266",
+    "D5267",
+    "D5359",
+    "D7249",
+    "D7251",
+    "D7252",
+    "D7258",
+    "D7301",
+    "D7307",
+    "D7391",
+    "D7393",
+    "D7398",
+    "D7470",
+    "D7471",
+    "D7472",
+    "D7473",
+    "D7474",
+    "D7477",
+    "D7478",
+    "D7541"
+  ],
+  "blocker_frequency_top20": [
+    [
+      "D2627",
+      165
+    ],
+    [
+      "D0040",
+      101
+    ],
+    [
+      "D1565",
+      101
+    ],
+    [
+      "D2625",
+      86
+    ],
+    [
+      "D1583",
+      48
+    ],
+    [
+      "D0045",
+      47
+    ],
+    [
+      "D1573",
+      47
+    ],
+    [
+      "D2630",
+      47
+    ],
+    [
+      "D0051",
+      44
+    ],
+    [
+      "D1574",
+      44
+    ],
+    [
+      "D2636",
+      44
+    ],
+    [
+      "D2638",
+      36
+    ],
+    [
+      "D7249",
+      25
+    ],
+    [
+      "D0046",
+      24
+    ],
+    [
+      "D2626",
+      21
+    ],
+    [
+      "D1566",
+      15
+    ],
+    [
+      "D1649",
+      10
+    ],
+    [
+      "D5089",
+      10
+    ],
+    [
+      "D7301",
+      10
+    ],
+    [
+      "D2663",
+      10
+    ]
+  ],
+  "avg_blockers_per_concretization_overall": 0.06622556756100521,
+  "max_blockers_per_concretization_overall": 4
+}

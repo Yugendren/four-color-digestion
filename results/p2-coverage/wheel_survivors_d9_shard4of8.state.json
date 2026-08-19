@@ -1,0 +1,11 @@
+{
+  "degree": 9,
+  "shard_index": 4,
+  "shard_total": 8,
+  "n_candidates_total": 27131,
+  "n_candidates_processed": 27131,
+  "n_charge_bound_survivors_so_far": 359,
+  "n_blocked_so_far": 38,
+  "completed": true,
+  "elapsed_seconds": 264.4130733013153
+}

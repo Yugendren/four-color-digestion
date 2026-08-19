@@ -886,6 +886,121 @@ def wheel_is_blocked(wheel: CartWheel, confs: Sequence[Configuration]) -> bool:
 
 
 # --------------------------------------------------------------------------
+# P2: blocking ATTRIBUTION (which source .conf file(s) block a wheel/concretization)
+#
+# ``blocked_by_reducible_configuration`` (above) only returns a boolean: it stops at
+# the first matching Configuration in ``_contain_conf``, and a single physical
+# ``.conf`` file expands (via cut-vertex ring splitting x mirroring, see
+# ``parse_conf_file``) into up to ``2 * 2**|cut pairs|`` distinct :class:`Configuration`
+# objects that are otherwise indistinguishable once loaded. For set-cover purposes
+# (P3) the natural "column" is the SOURCE FILE, not the expanded instance, so this
+# section threads a source name through loading and collects the FULL set of source
+# files whose contain-check succeeds at each representative-degree concretization,
+# instead of stopping at the first hit. The boolean verdict this implies
+# (``all(len(blockers) > 0 for blockers in per_concretization)``) is REQUIRED to agree
+# with ``wheel_is_blocked`` above (both loop the exact same ``representative_degree``
+# concretizations and the exact same per-Z ``contain_conf`` matching predicate,
+# ``_rooted_contain_conf`` / ``rooted_contain_conf``, pseudo_configuration.cpp:270-282);
+# this is exercised as a differential in tests/test_nl4ct.py.
+# --------------------------------------------------------------------------
+
+
+def load_configurations_with_source(confdir: str | Path) -> list[tuple[str, Configuration]]:
+    """Like :func:`load_configurations`, but pairs every expanded/mirrored
+    :class:`Configuration` with the SOURCE ``.conf`` file stem it came from (all
+    ``2 * 2**|cut pairs|`` variants of one file share that file's stem) -- this is the
+    file-granularity identity that a set-cover "column" (candidate member of U) is
+    defined at.
+    """
+    out: list[tuple[str, Configuration]] = []
+    for p in sorted(Path(confdir).iterdir()):
+        if p.suffix == ".conf":
+            for c in parse_conf_file(p):
+                out.append((p.stem, c))
+    return out
+
+
+def contain_conf_sources(
+    g: Graph, center: int, confs_named: Sequence[tuple[str, Configuration]]
+) -> frozenset[str]:
+    """Port of ``PseudoConfiguration::contain_conf`` (pseudo_configuration.cpp:226-249)
+    generalized to return the FULL set of matching source-file names instead of a
+    single boolean. Once a given source name has matched once, further variants of
+    that same source are skipped (pure early-exit speedup; does not change the
+    resulting *set*, since we only ever record file-granularity identity)."""
+    buckets = _darts_by_degree(g)
+    found: set[str] = set()
+    for name, conf in confs_named:
+        if name in found:
+            continue
+        y = conf.g.head[conf.dart_id]
+        x = conf.g.head[conf.g.rev[conf.dart_id]]
+        d_y, d_x = conf.g.deg_lo[y], conf.g.deg_lo[x]
+        for f_star in buckets.get((d_y, d_x), ()):
+            if d_y > 8 and g.head[f_star] != center:
+                continue
+            if _rooted_contain_conf(g, f_star, conf):
+                found.add(name)
+                break
+    return frozenset(found)
+
+
+@dataclass
+class WheelBlockAttribution:
+    """Per-wheel blocking-attribution record (P2 wheel-level coverage).
+
+    ``per_concretization[i]`` is the set of source ``.conf`` file names whose
+    contain-check succeeds against the ``i``-th ``representative_degree`` concretization
+    of the wheel. ``blocked`` is True iff EVERY concretization has a nonempty set
+    (mirrors ``blocked_by_reducible_configuration``'s ``all(...)`` semantics exactly).
+    For stage-1 ("possible bad wheel") CartWheels specifically, every vertex's degree
+    is already either fully fixed or is the "9+" bucket (upper bound 9), so
+    ``representative_degree`` always yields exactly ONE concretization (see its
+    docstring) -- i.e. ``len(per_concretization) == 1`` always holds here. The
+    per-concretization structure is kept general (rather than special-cased to a
+    single set) because it is the same representation used, and actually exercised
+    with >1 concretization, at the cartwheel (refinement) level.
+    """
+
+    blocked: bool
+    per_concretization: list[frozenset[str]]
+
+    @property
+    def n_concretizations(self) -> int:
+        return len(self.per_concretization)
+
+    @property
+    def all_blockers(self) -> frozenset[str]:
+        """Union of blockers across all concretizations (the set of source files that
+        are relevant AT ALL to this wheel, whether or not they alone suffice)."""
+        out: set[str] = set()
+        for s in self.per_concretization:
+            out |= s
+        return frozenset(out)
+
+
+def wheel_block_attribution(
+    wheel: CartWheel, confs_named: Sequence[tuple[str, Configuration]]
+) -> WheelBlockAttribution:
+    """Port of ``blocked_by_reducible_configuration`` that additionally records, for
+    every ``representative_degree`` concretization, the full set of source ``.conf``
+    files that block it (rather than stopping at the first successful match and
+    returning only a boolean)."""
+    per: list[frozenset[str]] = []
+    for Z in _representative_degree(wheel.g, wheel.center):
+        per.append(contain_conf_sources(Z, wheel.center, confs_named))
+    blocked = all(len(s) > 0 for s in per)
+    return WheelBlockAttribution(blocked=blocked, per_concretization=per)
+
+
+def is_blocked_by_subset(attribution: WheelBlockAttribution, chosen: set[str] | frozenset[str]) -> bool:
+    """Would this wheel still be blocked if only ``chosen`` (a subset of source .conf
+    file names) were kept in the pool? True iff every concretization retains >= 1
+    blocker from ``chosen`` -- the exact predicate a P3 set-cover constraint encodes."""
+    return all(not s.isdisjoint(chosen) for s in attribution.per_concretization)
+
+
+# --------------------------------------------------------------------------
 # Convenience: default repo-relative paths
 # --------------------------------------------------------------------------
 

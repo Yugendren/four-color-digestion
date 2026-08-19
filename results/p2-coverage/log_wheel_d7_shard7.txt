@@ -1,0 +1,3 @@
+[d=7 shard 7/8] 500/1395 candidates, 406 charge-bound survivors, 25 blocked, elapsed 33s
+[d=7 shard 7/8] 1000/1395 candidates, 639 charge-bound survivors, 25 blocked, elapsed 61s
+[d=7 shard 7/8] done. completed_full_enum=True. See /Users/yugendren/experiments/four_color_digestion/results/p2-coverage/wheel_survivors_d7_shard7of8.jsonl
