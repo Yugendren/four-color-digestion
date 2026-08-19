@@ -14,13 +14,13 @@ The problem statement's deliverable 1 says "charge survivors ... a few hundred p
 | 7 | 11165 | 5668 | 229 | 5439 | 1.000 | 0.045 | 3 | 12 |
 | 8 | 48915 | 7082 | 292 | 6790 | 1.000 | 0.048 | 4 | 23 |
 | 9 | 217045 | 3724 | 439 | 3285 | 1.000 | 0.133 | 4 | 26 |
-| 10 | (not yet available) | | | | | | | |
-| 11 | (not yet available) | | | | | | | |
+| 10 | 976887 | 844 | 218 | 626 | 1.000 | 0.364 | 5 | 19 |
+| 11 | 4438925 | 38 | 30 | 8 | 1.000 | 1.211 | 4 | 5 |
 
-- Total charge survivors (all degrees): **16474**
-- Total blocked (all degrees): **960**
-- Distinct pool configs that EVER appear as a wheel-level blocker (union over all degrees): **61** (out of 8,200 total `.conf` files in the pool)
-- Avg / max blockers per concretization (overall, pooled across degrees): 0.066 / 4
+- Total charge survivors (all degrees): **17356**
+- Total blocked (all degrees): **1208**
+- Distinct pool configs that EVER appear as a wheel-level blocker (union over all degrees): **85** (out of 8,200 total `.conf` files in the pool)
+- Avg / max blockers per concretization (overall, pooled across degrees): 0.083 / 5
 - Concretizations per wheel: always exactly 1 at this (stage-1) level -- every vertex in a `generate_cartwheel` wheel is either degree-fixed or the "9+" bucket, so `representative_degree` never branches (see `WheelBlockAttribution` docstring in `src/fourcolor/nl4ct.py`). Multi-concretization structure only appears at the cartwheel (refinement) level, part 2 below.
 
 Top 20 most-frequently-appearing blocker sources (wheel level, by number of wheels they block, across all degrees):
@@ -31,6 +31,7 @@ Top 20 most-frequently-appearing blocker sources (wheel level, by number of whee
 | D0040 | 101 |
 | D1565 | 101 |
 | D2625 | 86 |
+| D2798 | 73 |
 | D1583 | 48 |
 | D0045 | 47 |
 | D1573 | 47 |
@@ -38,37 +39,36 @@ Top 20 most-frequently-appearing blocker sources (wheel level, by number of whee
 | D0051 | 44 |
 | D1574 | 44 |
 | D2636 | 44 |
+| D2795 | 42 |
+| D8026 | 39 |
 | D2638 | 36 |
+| D8027 | 31 |
 | D7249 | 25 |
 | D0046 | 24 |
 | D2626 | 21 |
-| D1566 | 15 |
-| D1649 | 10 |
-| D5089 | 10 |
-| D7301 | 10 |
-| D2663 | 10 |
+| D2805 | 20 |
 
 ## Part 2: cartwheel-level coverage
 
-Status: **partial**
+Status: **complete**
 
 | degree | wheel files with a blocklog | wheel files expected | fraction complete |
 |---|---|---|---|
-| d7 | 4348 | 5439 | 0.799 |
-| d8 | 5765 | 6790 | 0.849 |
-| d9 | 0 | 3285 | 0.000 |
+| d7 | 5439 | 5439 | 1.000 |
+| d8 | 6790 | 6790 | 1.000 |
+| d9 | 3285 | 3285 | 1.000 |
 | d10 | 626 | 626 | 1.000 |
 | d11 | 8 | 8 | 1.000 |
 
-- Blocking events logged so far: **1741324**
-- Distinct pool configs that ever appear as a cartwheel-level (refinement) blocker: **6416**
+- Blocking events logged so far: **2253185**
+- Distinct pool configs that ever appear as a cartwheel-level (refinement) blocker: **7422**
 - Avg / max matched configs per blocking event: 1.000 / 1
 
 ## Tractability verdict for the P3 MILP
 
-At the wheel level, the ground set is small: at most 16,148 wheel-level constraints (one per charge-survivor-and-blocked wheel across d=7..11; unblocked charge survivors impose no constraint), and the candidate-column count collapses from the full 8,200-config pool to only **61** distinct configs that are EVER used as a wheel-level blocker anywhere. Incidence is essentially a near-identity structure at this level (every wheel has exactly 1 concretization, and the vast majority have exactly 1 blocker; max observed is 4), so the wheel-level covering problem alone is a triviality for any MILP solver (HiGHS or otherwise) -- it is closer to a small set-partition than a hard set-cover.
+At the wheel level, the ground set is small: at most 16,148 wheel-level constraints (one per charge-survivor-and-blocked wheel across d=7..11; unblocked charge survivors impose no constraint), and the candidate-column count collapses from the full 8,200-config pool to only **85** distinct configs that are EVER used as a wheel-level blocker anywhere. Incidence is essentially a near-identity structure at this level (every wheel has exactly 1 concretization, and the vast majority have exactly 1 blocker; max observed is 5), so the wheel-level covering problem alone is a triviality for any MILP solver (HiGHS or otherwise) -- it is closer to a small set-partition than a hard set-cover.
 
-At the cartwheel (refinement) level -- the level that actually matters for P3, since it is refinements, not stage-1 wheels, that the real proof's `enum_cartwheels` search discards via blocking -- the picture is DIFFERENT and less favorable: **6416** distinct configs already appear as a cartwheel-level blocker across the degrees measured so far (out of 1741324 total logged blocking events), i.e. **78% of the full 8,200-config pool is already implicated** -- there is essentially NO column reduction at this level, in sharp contrast to the wheel level's ~61/8200. This makes sense structurally: refinement search visits vastly more, more-specialized states than stage-1 wheels do, and each specialized state tends to be blocked by a config specific to it. Each event in the C++ log records only the FIRST matching config (mirroring the original short-circuit boolean check, not full attribution), so 6416 is a LOWER bound on the true cartwheel-level candidate-column count -- it can only grow with a full-attribution pass or once d7/d8 (and d9, not yet run at this level -- see FINALIZE.md) finish.
+At the cartwheel (refinement) level -- the level that actually matters for P3, since it is refinements, not stage-1 wheels, that the real proof's `enum_cartwheels` search discards via blocking -- the picture is DIFFERENT and less favorable: **7422** distinct configs already appear as a cartwheel-level blocker across the degrees measured so far (out of 2253185 total logged blocking events), i.e. **91% of the full 8,200-config pool is already implicated** -- there is essentially NO column reduction at this level, in sharp contrast to the wheel level's ~85/8200. This makes sense structurally: refinement search visits vastly more, more-specialized states than stage-1 wheels do, and each specialized state tends to be blocked by a config specific to it. Each event in the C++ log records only the FIRST matching config (mirroring the original short-circuit boolean check, not full attribution), so 7422 is a LOWER bound on the true cartwheel-level candidate-column count -- it can only grow with a full-attribution pass or once d7/d8 (and d9, not yet run at this level -- see FINALIZE.md) finish.
 
-**Verdict: P3 is tractable as a MILP at the wheel level; the cartwheel level needs one more (cheap) measurement before the same claim can be made honestly.** The wheel-level covering problem alone is trivial (column count ~61/8,200, near-identity incidence, <=16,148 rows). The cartwheel-level problem -- the one that actually reflects what the current proof relies on for refinement-level blocking -- has an effective column count close to the FULL 8,200-config pool (not the dramatic reduction the wheel level showed, and not what the problem statement's resource-realities section seemed to hope measurement would show), so column-count reduction alone will NOT make the cartwheel-level P3 easy. What WOULD make it easy is row (constraint) sparsity -- avg matched-configs-per-blocking-event is reported as exactly 1.0 in the table above, but that is an ARTIFACT of the current C++ patch logging only the first matching config per event (mirroring the original short-circuit boolean check), not a measurement of true incidence sparsity -- it is NOT valid evidence either way about how sparse the cartwheel-level constraint matrix really is. Getting that number honestly requires the same full-attribution treatment already done at the wheel level (collect ALL matching source files per blocking event, not just the first), applied to the cartwheel-level blocking events -- a follow-up patch of the same shape as this one, scoped to a sample of the already-logged events (state hashes) rather than a full re-run. Until that measurement exists, the honest verdict is: wheel level is proven tractable; cartwheel level is UNKNOWN on the column-reduction axis and not yet measured on the row-sparsity axis, though the problem statement's original scale estimate (<=16,148 x 8,200, 'well within HiGHS territory if the incidence structure is sparse') puts an outer bound on difficulty regardless -- 8,200 binary columns is not large for a modern MILP solver even without sparsity, so 'intractable' is unlikely; 'needs the sparsity measurement to size the row count precisely' is the accurate statement. NOTE: this verdict is being written from PARTIAL data (see the per-degree / per-part status above, and `results/p2-coverage/FINALIZE.md` for exactly what is still outstanding). The wheel-level numbers (d7/d8/d9 complete; d10/d11 in progress) are unlikely to change qualitatively -- the >99% column reduction has held steadily across every degree measured so far. The cartwheel-level numbers (d7/d8 at ~80-85%, d9 not run, d10/d11 complete) WILL grow further as d7/d8 finish and if d9 is added; the 78% pool-fraction figure should be treated as a lower bound, re-derived by re-running `tools/p2_report.py` once every degree/part reports `complete`.
+**Verdict: P3 is tractable as a MILP at the wheel level; the cartwheel level needs one more (cheap) measurement before the same claim can be made honestly.** The wheel-level covering problem alone is trivial (column count ~61/8,200, near-identity incidence, <=16,148 rows). The cartwheel-level problem -- the one that actually reflects what the current proof relies on for refinement-level blocking -- has an effective column count close to the FULL 8,200-config pool (not the dramatic reduction the wheel level showed, and not what the problem statement's resource-realities section seemed to hope measurement would show), so column-count reduction alone will NOT make the cartwheel-level P3 easy. What WOULD make it easy is row (constraint) sparsity -- avg matched-configs-per-blocking-event is reported as exactly 1.0 in the table above, but that is an ARTIFACT of the current C++ patch logging only the first matching config per event (mirroring the original short-circuit boolean check), not a measurement of true incidence sparsity -- it is NOT valid evidence either way about how sparse the cartwheel-level constraint matrix really is. Getting that number honestly requires the same full-attribution treatment already done at the wheel level (collect ALL matching source files per blocking event, not just the first), applied to the cartwheel-level blocking events -- a follow-up patch of the same shape as this one, scoped to a sample of the already-logged events (state hashes) rather than a full re-run. Until that measurement exists, the honest verdict is: wheel level is proven tractable; cartwheel level is UNKNOWN on the column-reduction axis and not yet measured on the row-sparsity axis, though the problem statement's original scale estimate (<=16,148 x 8,200, 'well within HiGHS territory if the incidence structure is sparse') puts an outer bound on difficulty regardless -- 8,200 binary columns is not large for a modern MILP solver even without sparsity, so 'intractable' is unlikely; 'needs the sparsity measurement to size the row count precisely' is the accurate statement.
 

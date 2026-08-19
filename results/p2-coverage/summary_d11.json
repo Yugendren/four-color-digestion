@@ -1,0 +1,9 @@
+{
+  "degree": 11,
+  "n_candidates_total": 4438925,
+  "n_charge_bound_survivors": 38,
+  "n_blocked": 30,
+  "n_shards": 8,
+  "elapsed_seconds_wall_estimate": 19672.53884100914,
+  "jsonl": "results/p2-coverage/wheel_survivors_d11.jsonl"
+}

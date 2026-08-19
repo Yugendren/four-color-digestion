@@ -3,9 +3,9 @@
   "shard_index": 5,
   "shard_total": 8,
   "n_candidates_total": 122111,
-  "n_candidates_processed": 105000,
+  "n_candidates_processed": 122111,
   "n_charge_bound_survivors_so_far": 133,
   "n_blocked_so_far": 39,
-  "completed": false,
-  "elapsed_seconds": 14847.930873155594
+  "completed": true,
+  "elapsed_seconds": 18262.92060804367
 }

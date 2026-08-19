@@ -1,0 +1,10 @@
+{"degree": 11, "seq": [5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6], "charge_bound": 1, "n_concretizations": 1, "blocked": true, "blockers_per_concretization": [["D2821"]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 5, 5, 5, 5, 6, 5, 6], "charge_bound": 2, "n_concretizations": 1, "blocked": true, "blockers_per_concretization": [["D2821", "D8195", "D8197"]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 5, 5, 5, 6, 5, 5, 6], "charge_bound": 1, "n_concretizations": 1, "blocked": true, "blockers_per_concretization": [["D8193", "D8195"]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 6], "charge_bound": 1, "n_concretizations": 1, "blocked": true, "blockers_per_concretization": [["D8193", "D8194"]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 5, 5, 7, 5, 6, 5, 6], "charge_bound": 0, "n_concretizations": 1, "blocked": true, "blockers_per_concretization": [["D8197"]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 6], "charge_bound": 1, "n_concretizations": 1, "blocked": true, "blockers_per_concretization": [["D8193", "D8194"]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 5, 7, 5, 5, 6, 5, 6], "charge_bound": 0, "n_concretizations": 1, "blocked": false, "blockers_per_concretization": [[]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 6, 5, 5, 5, 6, 5, 6], "charge_bound": 0, "n_concretizations": 1, "blocked": true, "blockers_per_concretization": [["D8194"]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 6, 5, 6, 5, 5, 5, 6], "charge_bound": 0, "n_concretizations": 1, "blocked": true, "blockers_per_concretization": [["D8194"]]}
+{"degree": 11, "seq": [5, 5, 5, 5, 7, 5, 5, 5, 6, 5, 6], "charge_bound": 0, "n_concretizations": 1, "blocked": false, "blockers_per_concretization": [[]]}

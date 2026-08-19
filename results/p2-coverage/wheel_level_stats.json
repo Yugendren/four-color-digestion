@@ -37,15 +37,33 @@
       "distinct_blocker_sources_this_degree": 26
     },
     "10": {
-      "status": "not yet available"
+      "status": "complete",
+      "n_candidates_total": 976887,
+      "n_charge_bound_survivors": 844,
+      "n_blocked": 218,
+      "n_predicted_bad_unblocked": 626,
+      "avg_concretizations_per_wheel": 1.0,
+      "max_concretizations_per_wheel": 1,
+      "avg_blockers_per_concretization_this_degree": 0.3637440758293839,
+      "max_blockers_per_concretization_this_degree": 5,
+      "distinct_blocker_sources_this_degree": 19
     },
     "11": {
-      "status": "not yet available"
+      "status": "complete",
+      "n_candidates_total": 4438925,
+      "n_charge_bound_survivors": 38,
+      "n_blocked": 30,
+      "n_predicted_bad_unblocked": 8,
+      "avg_concretizations_per_wheel": 1.0,
+      "max_concretizations_per_wheel": 1,
+      "avg_blockers_per_concretization_this_degree": 1.2105263157894737,
+      "max_blockers_per_concretization_this_degree": 4,
+      "distinct_blocker_sources_this_degree": 5
     }
   },
-  "total_charge_survivors": 16474,
-  "total_blocked": 960,
-  "distinct_blocker_sources_overall": 61,
+  "total_charge_survivors": 17356,
+  "total_blocked": 1208,
+  "distinct_blocker_sources_overall": 85,
   "distinct_blocker_sources": [
     "D0040",
     "D0045",
@@ -78,6 +96,13 @@
     "D2663",
     "D2664",
     "D2685",
+    "D2795",
+    "D2796",
+    "D2798",
+    "D2803",
+    "D2805",
+    "D2809",
+    "D2821",
     "D3009",
     "D5067",
     "D5088",
@@ -107,7 +132,24 @@
     "D7474",
     "D7477",
     "D7478",
-    "D7541"
+    "D7541",
+    "D8026",
+    "D8027",
+    "D8037",
+    "D8041",
+    "D8046",
+    "D8047",
+    "D8049",
+    "D8050",
+    "D8065",
+    "D8066",
+    "D8067",
+    "D8068",
+    "D8069",
+    "D8193",
+    "D8194",
+    "D8195",
+    "D8197"
   ],
   "blocker_frequency_top20": [
     [
@@ -125,6 +167,10 @@
     [
       "D2625",
       86
+    ],
+    [
+      "D2798",
+      73
     ],
     [
       "D1583",
@@ -155,8 +201,20 @@
       44
     ],
     [
+      "D2795",
+      42
+    ],
+    [
+      "D8026",
+      39
+    ],
+    [
       "D2638",
       36
+    ],
+    [
+      "D8027",
+      31
     ],
     [
       "D7249",
@@ -171,26 +229,10 @@
       21
     ],
     [
-      "D1566",
-      15
-    ],
-    [
-      "D1649",
-      10
-    ],
-    [
-      "D5089",
-      10
-    ],
-    [
-      "D7301",
-      10
-    ],
-    [
-      "D2663",
-      10
+      "D2805",
+      20
     ]
   ],
-  "avg_blockers_per_concretization_overall": 0.06622556756100521,
-  "max_blockers_per_concretization_overall": 4
+  "avg_blockers_per_concretization_overall": 0.08319889375432127,
+  "max_blockers_per_concretization_overall": 5
 }

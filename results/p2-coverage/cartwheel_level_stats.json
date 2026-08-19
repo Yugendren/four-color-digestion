@@ -1,20 +1,20 @@
 {
-  "status": "partial",
+  "status": "complete",
   "per_degree": {
     "d7": {
-      "wheel_files_with_blocklog": 4348,
+      "wheel_files_with_blocklog": 5439,
       "wheel_files_expected": 5439,
-      "fraction_complete": 0.7994116565545137
+      "fraction_complete": 1.0
     },
     "d8": {
-      "wheel_files_with_blocklog": 5765,
+      "wheel_files_with_blocklog": 6790,
       "wheel_files_expected": 6790,
-      "fraction_complete": 0.8490427098674521
+      "fraction_complete": 1.0
     },
     "d9": {
-      "wheel_files_with_blocklog": 0,
+      "wheel_files_with_blocklog": 3285,
       "wheel_files_expected": 3285,
-      "fraction_complete": 0.0
+      "fraction_complete": 1.0
     },
     "d10": {
       "wheel_files_with_blocklog": 626,
@@ -27,8 +27,8 @@
       "fraction_complete": 1.0
     }
   },
-  "n_blocking_events_logged": 1741324,
-  "distinct_configs_as_cartwheel_blockers": 6416,
+  "n_blocking_events_logged": 2253185,
+  "distinct_configs_as_cartwheel_blockers": 7422,
   "avg_matched_configs_per_event": 1.0,
   "max_matched_configs_per_event": 1
 }
