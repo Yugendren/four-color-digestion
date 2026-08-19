@@ -1,0 +1,14 @@
+{
+  "degree": 7,
+  "n_base_rules": 84,
+  "n_combined_rules_non_blocked": 671,
+  "n_confs_expanded": 19754,
+  "n_candidates_total": 11165,
+  "n_candidates_processed": 4000,
+  "n_charge_bound_survivors_so_far": 3320,
+  "n_blocked_so_far": 229,
+  "n_predicted_bad_so_far": 3091,
+  "n_ground_truth_bad": 5439,
+  "completed": false,
+  "elapsed_seconds": 284.0185511112213
+}

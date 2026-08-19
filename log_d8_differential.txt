@@ -1,0 +1,1 @@
+[d=8] 10000/48915 candidates, 4438 charge-bound survivors, 283 blocked, 4155 predicted bad, elapsed 284s
