@@ -1,0 +1,9 @@
+{
+  "n_combos_total": 1832,
+  "n_blocked": 1161,
+  "n_non_blocked": 671,
+  "n_agree_with_ground_truth": 1832,
+  "n_distinct_blocker_sources": 83,
+  "elapsed_seconds": 44.483784914016724,
+  "jsonl": "results/p3/combo_blockers.jsonl"
+}

@@ -5,3 +5,10 @@ __pycache__/
 *.pyc
 .DS_Store
 third_party/*/extracted_build/
+# P3 pipeline re-runs (tools/p3_pipeline_run.sh): work/ and log/ hold the regenerated
+# combined_rules/wheels/cartwheels + thousands of per-wheel logs for one candidate pool
+# -- large (GB-scale) and fully reproducible from the pool manifest, so only the run's
+# top-level bookkeeping (driver.log, DONE_* markers, pool_manifest.sha256, counts.json,
+# checksums.sha256, VERDICT.txt) is tracked.
+results/p3/runs/*/work/
+results/p3/runs/*/log/

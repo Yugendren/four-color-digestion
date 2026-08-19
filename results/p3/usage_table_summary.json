@@ -1,0 +1,8 @@
+{
+  "n_pool_configs": 8200,
+  "n_zero_combo_count": 8117,
+  "n_zero_wheel_count": 8115,
+  "n_zero_cartwheel_first_count": 778,
+  "n_zero_usage_all_three_roles": 673,
+  "csv": "results/p3/usage_table.csv"
+}

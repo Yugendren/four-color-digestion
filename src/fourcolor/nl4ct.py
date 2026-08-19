@@ -979,18 +979,52 @@ class WheelBlockAttribution:
         return frozenset(out)
 
 
-def wheel_block_attribution(
-    wheel: CartWheel, confs_named: Sequence[tuple[str, Configuration]]
+def block_attribution(
+    g: Graph, center: int, confs_named: Sequence[tuple[str, Configuration]]
 ) -> WheelBlockAttribution:
     """Port of ``blocked_by_reducible_configuration`` that additionally records, for
     every ``representative_degree`` concretization, the full set of source ``.conf``
     files that block it (rather than stopping at the first successful match and
-    returning only a boolean)."""
+    returning only a boolean). ``(g, center)`` is any :class:`Graph` with a
+    designated root vertex -- a wheel's ``(wheel.g, wheel.center)`` (see
+    :func:`wheel_block_attribution`) or a combined rule's merged-patch graph rooted at
+    ``g.head[combined_rule.st_id]`` (see :func:`combo_block_attribution`), since
+    ``blocked_by_reducible_configuration`` itself is called identically on both
+    (``pseudo_configuration.cpp:274-282``, invoked from ``cartwheel.cpp``'s
+    ``CartWheel::prune`` for wheels and from ``rule.cpp``'s
+    ``CombinedRule::add_rule_to_combination`` for combined rules)."""
     per: list[frozenset[str]] = []
-    for Z in _representative_degree(wheel.g, wheel.center):
-        per.append(contain_conf_sources(Z, wheel.center, confs_named))
+    for Z in _representative_degree(g, center):
+        per.append(contain_conf_sources(Z, center, confs_named))
     blocked = all(len(s) > 0 for s in per)
     return WheelBlockAttribution(blocked=blocked, per_concretization=per)
+
+
+def wheel_block_attribution(
+    wheel: CartWheel, confs_named: Sequence[tuple[str, Configuration]]
+) -> WheelBlockAttribution:
+    """See :func:`block_attribution`; specialized to a :class:`CartWheel`."""
+    return block_attribution(wheel.g, wheel.center, confs_named)
+
+
+def combo_block_attribution(
+    combined_rule: CombinedRule, confs_named: Sequence[tuple[str, Configuration]]
+) -> WheelBlockAttribution:
+    """Blocking attribution for a *combined rule*'s merged patch (Lemma A.2 / P3 M1).
+
+    Mirrors exactly what ``rule.cpp``'s ``CombinedRule::add_rule_to_combination`` does
+    at ``R_tilde.blocked_by_reducible_configuration(R_tilde.darts[R_tilde.st_id].head,
+    confs)`` (rule.cpp:168): the root vertex passed to
+    ``blocked_by_reducible_configuration`` is ``head[st_id]`` -- the HEAD of the
+    combined rule's designated s->t dart, exactly like ``g.head[cr.st_id]`` here.
+    Validated (see ``tests/test_nl4ct.py`` and the P3 M1 report) to exactly reproduce,
+    for all 1,832 files under ``combined_rules/all``, which 1,161 are absent from
+    ``combined_rules/non_blocked`` -- i.e. applying this directly to each combo's own
+    final merged pattern (no replay of the incremental combine-rules search tree) is
+    sufficient; blocking turns out to be monotone under the rule-combination process
+    for this pool, so there is no path-dependence to worry about."""
+    center = combined_rule.g.head[combined_rule.st_id]
+    return block_attribution(combined_rule.g, center, confs_named)
 
 
 def is_blocked_by_subset(attribution: WheelBlockAttribution, chosen: set[str] | frozenset[str]) -> bool:
