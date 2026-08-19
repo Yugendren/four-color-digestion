@@ -44,3 +44,23 @@
 [d=10 shard 2/3] 220000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4168s
 [d=10 shard 2/3] 225000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4254s
 [d=10 shard 2/3] 230000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4344s
+[d=10 shard 2/3] 235000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4415s
+[d=10 shard 2/3] 240000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4479s
+[d=10 shard 2/3] 245000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4550s
+[d=10 shard 2/3] 250000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4620s
+[d=10 shard 2/3] 255000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4684s
+[d=10 shard 2/3] 260000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4749s
+[d=10 shard 2/3] 265000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4819s
+[d=10 shard 2/3] 270000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4885s
+[d=10 shard 2/3] 275000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 4951s
+[d=10 shard 2/3] 280000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5025s
+[d=10 shard 2/3] 285000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5087s
+[d=10 shard 2/3] 290000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5152s
+[d=10 shard 2/3] 295000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5227s
+[d=10 shard 2/3] 300000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5289s
+[d=10 shard 2/3] 305000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5343s
+[d=10 shard 2/3] 310000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5403s
+[d=10 shard 2/3] 315000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5457s
+[d=10 shard 2/3] 320000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5511s
+[d=10 shard 2/3] 325000/325629 candidates, 284 charge-bound survivors, 78 blocked, 206 predicted bad, elapsed 5562s
+[d=10 shard 2/3] done. completed_full_enum=True. See /Users/yugendren/experiments/four_color_digestion/results/nl4ct-differential/report_d10_shard2of3.json

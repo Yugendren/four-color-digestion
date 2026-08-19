@@ -4,11 +4,17 @@
   "n_combined_rules_non_blocked": 671,
   "n_confs_expanded": 19754,
   "n_candidates_total": 976887,
-  "n_candidates_processed": 420000,
+  "n_candidates_processed": 976887,
   "n_charge_bound_survivors_so_far": 844,
   "n_blocked_so_far": 218,
   "n_predicted_bad_so_far": 626,
   "n_ground_truth_bad": 626,
-  "completed": false,
-  "elapsed_seconds": 3532.3545310497284
+  "completed": true,
+  "elapsed_seconds": 5568.559328794479,
+  "n_shards": 3,
+  "exact_match": true,
+  "n_false_positive": 0,
+  "n_false_negative": 0,
+  "false_positive_examples": [],
+  "false_negative_examples": []
 }

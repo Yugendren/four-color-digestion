@@ -1,0 +1,23 @@
+[watch d=10] all 3 shards completed, merging...
+[d=10] merged 3 shards -> /Users/yugendren/experiments/four_color_digestion/results/nl4ct-differential/report_d10.json
+{
+  "degree": 10,
+  "n_base_rules": 84,
+  "n_combined_rules_non_blocked": 671,
+  "n_confs_expanded": 19754,
+  "n_candidates_total": 976887,
+  "n_candidates_processed": 976887,
+  "n_charge_bound_survivors_so_far": 844,
+  "n_blocked_so_far": 218,
+  "n_predicted_bad_so_far": 626,
+  "n_ground_truth_bad": 626,
+  "completed": true,
+  "elapsed_seconds": 5568.559328794479,
+  "n_shards": 3,
+  "exact_match": true,
+  "n_false_positive": 0,
+  "n_false_negative": 0,
+  "false_positive_examples": [],
+  "false_negative_examples": []
+}
+[watch d=10] done, marker written to results/nl4ct-differential/DONE_d10
