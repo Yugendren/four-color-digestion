@@ -1,2 +1,11 @@
 [d=9] 20000/217045 candidates, 2639 charge-bound survivors, 437 blocked, 2202 predicted bad, elapsed 223s
 [d=9] 40000/217045 candidates, 3262 charge-bound survivors, 437 blocked, 2825 predicted bad, elapsed 400s
+[d=9] 60000/217045 candidates, 3504 charge-bound survivors, 439 blocked, 3065 predicted bad, elapsed 547s
+[d=9] 80000/217045 candidates, 3720 charge-bound survivors, 439 blocked, 3281 predicted bad, elapsed 697s
+[d=9] 100000/217045 candidates, 3720 charge-bound survivors, 439 blocked, 3281 predicted bad, elapsed 806s
+[d=9] 120000/217045 candidates, 3724 charge-bound survivors, 439 blocked, 3285 predicted bad, elapsed 920s
+[d=9] 140000/217045 candidates, 3724 charge-bound survivors, 439 blocked, 3285 predicted bad, elapsed 1024s
+[d=9] 160000/217045 candidates, 3724 charge-bound survivors, 439 blocked, 3285 predicted bad, elapsed 1121s
+[d=9] 180000/217045 candidates, 3724 charge-bound survivors, 439 blocked, 3285 predicted bad, elapsed 1221s
+[d=9] 200000/217045 candidates, 3724 charge-bound survivors, 439 blocked, 3285 predicted bad, elapsed 1325s
+[d=9] done. completed_full_enum=True. See /Users/yugendren/experiments/four_color_digestion/results/nl4ct-differential/report_d9.json

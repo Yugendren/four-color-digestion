@@ -6,11 +6,13 @@ compare the resulting "possible bad wheel" set against the C++ ground truth unde
 
 Usage:
     tools/nl4ct_differential.py --degree 7 [--limit N] [--checkpoint-every 5000]
-                                 [--out results/nl4ct-differential/report_d7.json]
+                                 [--out results/nl4ct-differential/report_d7.json] [--resume]
 
-Designed to be run as a long-lived background process for d=10/d=11 (millions of
-candidates): progress is checkpointed to the output JSON periodically so it can be
-inspected (or the process killed and the partial result kept) without losing work.
+Designed to be run as a long-lived process for d=10/d=11 (hundreds of thousands to
+millions of candidates): progress is checkpointed periodically to both a human-readable
+report JSON and a sidecar ``*.state.json`` (which additionally carries the full
+predicted-bad list so a run can be resumed with ``--resume`` after being interrupted,
+e.g. by a host/session time limit) without losing work.
 """
 
 from __future__ import annotations
@@ -27,8 +29,13 @@ sys.path.insert(0, str(ROOT / "src"))
 from fourcolor import nl4ct as m  # noqa: E402
 
 
-def run(degree: int, limit: int | None, checkpoint_every: int, out_path: Path) -> None:
+def _state_path(out_path: Path) -> Path:
+    return out_path.with_suffix("").with_suffix(".state.json")
+
+
+def run(degree: int, limit: int | None, checkpoint_every: int, out_path: Path, resume: bool) -> None:
     t_start = time.time()
+    prior_elapsed = 0.0
     rules = m.load_rules(m.default_rule_dir())
     combined = m.load_combined_rules(m.default_combined_rule_dir(blocked=False), len(rules))
     confs = m.load_configurations(m.default_conf_dir())
@@ -43,10 +50,23 @@ def run(degree: int, limit: int | None, checkpoint_every: int, out_path: Path) -
     n_charge_survivors = 0
     n_blocked = 0
     predicted_bad: list[tuple[int, ...]] = []
-    false_positive_examples: list[dict] = []  # predicted bad, not in ground truth
-    false_negative_seen_not_bad: list[dict] = []  # in ground truth but WE didn't predict bad (should be empty if correct)
+    start_i = 0
+
+    state_path = _state_path(out_path)
+    if resume and state_path.exists():
+        state = json.loads(state_path.read_text())
+        assert state["degree"] == degree
+        assert state["n_candidates_total"] == len(seqs), "candidate enumeration changed since checkpoint"
+        start_i = state["n_candidates_processed"]
+        n_charge_survivors = state["n_charge_bound_survivors_so_far"]
+        n_blocked = state["n_blocked_so_far"]
+        predicted_bad = [tuple(s) for s in state["predicted_bad"]]
+        prior_elapsed = state.get("elapsed_seconds", 0.0)
+        print(f"[d={degree}] resuming from checkpoint at {start_i}/{total} "
+              f"(prior elapsed {prior_elapsed:.0f}s)", flush=True)
 
     def write_checkpoint(i: int, completed: bool) -> None:
+        elapsed = prior_elapsed + (time.time() - t_start)
         predicted_set = set(predicted_bad)
         false_pos = sorted(predicted_set - truth_set)
         false_neg = sorted(truth_set - predicted_set) if completed else []
@@ -62,7 +82,7 @@ def run(degree: int, limit: int | None, checkpoint_every: int, out_path: Path) -
             "n_predicted_bad_so_far": len(predicted_bad),
             "n_ground_truth_bad": len(truth_set),
             "completed": completed,
-            "elapsed_seconds": time.time() - t_start,
+            "elapsed_seconds": elapsed,
         }
         if completed:
             report["exact_match"] = (false_pos == [] and false_neg == [])
@@ -72,8 +92,12 @@ def run(degree: int, limit: int | None, checkpoint_every: int, out_path: Path) -
             report["false_negative_examples"] = [list(s) for s in false_neg[:50]]
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(report, indent=2))
+        # Sidecar resumable state (not meant to be human-facing; carries the full list).
+        state = dict(report)
+        state["predicted_bad"] = [list(s) for s in predicted_bad]
+        state_path.write_text(json.dumps(state))
 
-    for i, seq in enumerate(seqs[:total]):
+    for i, seq in enumerate(seqs[start_i:total], start=start_i):
         w = m.generate_cartwheel(degree, seq)
         cb = m.charge_bound(w, rules, combined)
         if cb >= 0:
@@ -87,7 +111,7 @@ def run(degree: int, limit: int | None, checkpoint_every: int, out_path: Path) -
             print(
                 f"[d={degree}] {i + 1}/{total} candidates, "
                 f"{n_charge_survivors} charge-bound survivors, {n_blocked} blocked, "
-                f"{len(predicted_bad)} predicted bad, elapsed {time.time() - t_start:.0f}s",
+                f"{len(predicted_bad)} predicted bad, elapsed {prior_elapsed + time.time() - t_start:.0f}s",
                 flush=True,
             )
 
@@ -102,9 +126,10 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=None, help="only process the first N candidates (for smoke testing)")
     ap.add_argument("--checkpoint-every", type=int, default=5000)
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--resume", action="store_true", help="resume from the sidecar *.state.json if present")
     args = ap.parse_args()
     out = args.out or (ROOT / "results" / "nl4ct-differential" / f"report_d{args.degree}.json")
-    run(args.degree, args.limit, args.checkpoint_every, out)
+    run(args.degree, args.limit, args.checkpoint_every, out, args.resume)
 
 
 if __name__ == "__main__":

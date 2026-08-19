@@ -1,1 +1,5 @@
 [d=8] 10000/48915 candidates, 4438 charge-bound survivors, 283 blocked, 4155 predicted bad, elapsed 284s
+[d=8] 20000/48915 candidates, 6572 charge-bound survivors, 292 blocked, 6280 predicted bad, elapsed 475s
+[d=8] 30000/48915 candidates, 7037 charge-bound survivors, 292 blocked, 6745 predicted bad, elapsed 580s
+[d=8] 40000/48915 candidates, 7066 charge-bound survivors, 292 blocked, 6774 predicted bad, elapsed 638s
+[d=8] done. completed_full_enum=True. See /Users/yugendren/experiments/four_color_digestion/results/nl4ct-differential/report_d8.json

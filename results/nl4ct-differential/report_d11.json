@@ -4,11 +4,11 @@
   "n_combined_rules_non_blocked": 671,
   "n_confs_expanded": 19754,
   "n_candidates_total": 4438925,
-  "n_candidates_processed": 40000,
+  "n_candidates_processed": 380000,
   "n_charge_bound_survivors_so_far": 38,
   "n_blocked_so_far": 30,
   "n_predicted_bad_so_far": 8,
   "n_ground_truth_bad": 8,
   "completed": false,
-  "elapsed_seconds": 372.99198818206787
+  "elapsed_seconds": 3473.4392330646515
 }

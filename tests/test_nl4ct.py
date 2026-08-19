@@ -190,10 +190,16 @@ class TestChargeBoundAgainstGroundTruth(unittest.TestCase):
         cls.confs = m.load_configurations(CONF_DIR)
 
     def test_ground_truth_wheels_have_nonnegative_charge_bound(self):
-        for d in (7, 8, 9, 10, 11):
+        # d=10/11 are small enough (626 + 8) to check exhaustively; d=7/8/9 are sampled
+        # (deterministic prefix) to keep this test fast -- the full sweep over all
+        # 16148 published wheels is exercised by tools/nl4ct_differential.py's
+        # ground-truth cross-check instead, not by this "fast" suite.
+        for d, sample in ((7, 400), (8, 400), (9, 400), (10, None), (11, None)):
             with self.subTest(degree=d):
                 wheels = m.load_cartwheels(m.default_wheel_dir(d))
                 self.assertGreater(len(wheels), 0)
+                if sample is not None:
+                    wheels = wheels[:sample]
                 for w in wheels:
                     cb = m.charge_bound(w, self.rules, self.combined)
                     self.assertGreaterEqual(
