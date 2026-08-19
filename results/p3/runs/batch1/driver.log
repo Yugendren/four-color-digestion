@@ -3,3 +3,25 @@
 [2026-08-19T17:47:11Z] [p3-pipeline batch1] stage 1: combine_rules
 [2026-08-19T17:47:13Z] [p3-pipeline batch1] combined_rules: all=1832 non_blocked=671 (full-pool reference: 1832/671; may legitimately differ)
 [2026-08-19T17:47:13Z] [p3-pipeline batch1] stage 2: enum_wheels d7..11
+tools/p3_pipeline_run.sh: line 118: declare: -A: invalid option
+declare: usage: declare [-afFirtx] [-p] [name[=value] ...]
+[2026-08-19T19:22:31Z] [p3-pipeline batch1] wheels d7: 5439 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-19T19:22:31Z] [p3-pipeline batch1] wheels d8: 6790 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-19T19:22:31Z] [p3-pipeline batch1] wheels d9: 3285 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-19T19:22:31Z] [p3-pipeline batch1] wheels d10: 626 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-19T19:22:31Z] [p3-pipeline batch1] wheels d11: 8 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-19T19:22:31Z] [p3-pipeline batch1] stage 3: enum_cartwheels
+[2026-08-19T19:22:31Z] [p3-pipeline batch1]   degree 7: 5439 wheels
+[2026-08-19T19:51:13Z] [p3-pipeline batch1]   degree 8: 6790 wheels
+[2026-08-19T20:23:41Z] [p3-pipeline batch1]   degree 9: 3285 wheels
+[2026-08-19T20:37:39Z] [p3-pipeline batch1]   degree 10: 626 wheels
+[2026-08-19T21:03:39Z] [p3-pipeline batch1]   degree 11: 8 wheels
+[2026-08-19T21:03:40Z] [p3-pipeline batch1] bad cartwheels total (all degrees, merged): 0 (full-pool reference: 10094; may legitimately differ)
+[2026-08-19T21:03:40Z] [p3-pipeline batch1] stage 4: gluing checks
+tools/p3_pipeline_run.sh: line 192: 17422 Abort trap: 6           "$BIN" --check_deg8 -W "$WORK/wheels/zero" -C "$POOL_DIR" > "$LOG/check_deg8.log" 2>&1
+tools/p3_pipeline_run.sh: line 192: 18255 Abort trap: 6           "$BIN" --check_7triangle -W "$WORK/wheels/zero" -C "$POOL_DIR" > "$LOG/check_7triangle.log" 2>&1
+tools/p3_pipeline_run.sh: line 192: 18333 Abort trap: 6           "$BIN" --check_deg7 -W "$WORK/wheels/zero" -C "$POOL_DIR" > "$LOG/check_deg7.log" 2>&1
+[2026-08-19T21:39:43Z] [p3-pipeline batch1] check_deg8 FAILED rc=134
+[2026-08-19T21:39:43Z] [p3-pipeline batch1] check_7triangle FAILED rc=134
+[2026-08-19T21:39:43Z] [p3-pipeline batch1] check_deg7 FAILED rc=134
+[2026-08-19T21:39:43Z] [p3-pipeline batch1] FAIL: one or more gluing checks failed (see /Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1/log/check_*.log); exit codes: deg8=134 7triangle=134 deg7=134

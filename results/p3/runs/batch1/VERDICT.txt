@@ -1,0 +1,1 @@
+FAIL: one or more gluing checks failed (see /Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1/log/check_*.log); exit codes: deg8=134 7triangle=134 deg7=134 (at 2026-08-19T21:39:43Z)

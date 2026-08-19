@@ -30,6 +30,21 @@ Properties: sound at every step (no reliance on incomplete attribution); monoton
 
 Cost model: one full pipeline re-run = combine (~minutes) + wheels (~1.5h wall, parallel) + cartwheels (~3-4h, parallel) + gluing (~15 min) ≈ **~5-6h per iterate** on this machine. Batching + bisection should reach a local minimum in 10-30 runs (days-scale, background). Optimization later: prune wheels/cartwheels re-runs to degrees actually affected.
 
+## AMENDMENT (2026-08-20, after batch1 FAIL): the FOURTH blocking role
+
+Batch #1 (drop 673 configs with zero usage in combo/wheel/cartwheel roles) FAILED all
+three gluing checks (`check88` assertion: a glued pair of survivors is no longer blocked).
+Diagnosis: the gluing lemmas (`check_deg8`/`check_7triangle`/`check_deg7`) ALSO consult
+the configuration pool — glued composite objects must be blocked by a config. This
+**fourth role** was unmeasured; some "zero-usage" configs are load-bearing exactly here.
+The failure run is preserved at results/p3/runs/batch1/ per evidence rules.
+
+Correction: usage accounting must cover FOUR roles — combo, wheel, cartwheel, and
+**gluing** (measured by instrumenting combine_cartwheel.cpp the same way as the
+cartwheel blocklog patch, run against the BASELINE survivors with the full pool;
+gluing is cheap ~15min so full attribution is affordable). Batch #1b = zero usage
+across all four roles.
+
 ## Immediate measurements needed BEFORE the first prune
 
 - **M1 — combo-blocking attribution** (cheap: 1,832 combos): which configs block which combined rules. Without this, role (iii) usage is unknown and even "zero-usage" deletion is unsafe. Deliverable: results/p3/combo_blockers.jsonl + usage table merge.
