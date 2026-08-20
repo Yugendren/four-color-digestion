@@ -164,7 +164,7 @@ else
     log "stage 3 already done, skipping"
 fi
 
-N_ZERO=$(ls "$WORK/wheels/zero"/*.cartwheel 2>/dev/null | wc -l | tr -d ' ')
+N_ZERO=$(find "$WORK/wheels/zero" -name '*.cartwheel' | wc -l | tr -d ' ')
 [ "$N_ZERO" -gt 0 ] || FAIL "vacuous-pass guard: zero surviving cartwheels is impossible for a pruned pool (baseline 10094); wrong binary or broken stage"
 log "bad cartwheels total (all degrees, merged): $N_ZERO (full-pool reference: 10094; may legitimately differ)"
 
