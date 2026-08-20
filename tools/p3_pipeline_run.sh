@@ -44,7 +44,7 @@ RUN_NAME="$2"
 POOL_DIR="$(cd "$POOL_DIR_ARG" && pwd)"
 
 CC="$ROOT/third_party/computer-checks"
-BIN="$CC/build/src/main"
+BIN="${P3_BIN:-$CC/build/src/main_pristine}"
 RULE_DIR="$CC/discharging-rules/R"
 EMPTY_DIR="$CC/empty"
 [ -x "$BIN" ] || { echo "binary not found/executable: $BIN" >&2; exit 1; }
@@ -165,6 +165,7 @@ else
 fi
 
 N_ZERO=$(ls "$WORK/wheels/zero"/*.cartwheel 2>/dev/null | wc -l | tr -d ' ')
+[ "$N_ZERO" -gt 0 ] || FAIL "vacuous-pass guard: zero surviving cartwheels is impossible for a pruned pool (baseline 10094); wrong binary or broken stage"
 log "bad cartwheels total (all degrees, merged): $N_ZERO (full-pool reference: 10094; may legitimately differ)"
 
 # --- Stage 4: the three gluing checks (Lemma A.4/A.5/A.6) -- MUST pass, asserts live ---

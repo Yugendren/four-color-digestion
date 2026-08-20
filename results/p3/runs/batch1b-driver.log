@@ -3,3 +3,19 @@
 [2026-08-20T02:39:56Z] [p3-pipeline batch1b] stage 1: combine_rules
 [2026-08-20T02:39:58Z] [p3-pipeline batch1b] combined_rules: all=1832 non_blocked=671 (full-pool reference: 1832/671; may legitimately differ)
 [2026-08-20T02:39:58Z] [p3-pipeline batch1b] stage 2: enum_wheels d7..11
+tools/p3_pipeline_run.sh: line 118: declare: -A: invalid option
+declare: usage: declare [-afFirtx] [-p] [name[=value] ...]
+[2026-08-20T04:29:46Z] [p3-pipeline batch1b] wheels d7: 5439 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T04:29:46Z] [p3-pipeline batch1b] wheels d8: 6790 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T04:29:46Z] [p3-pipeline batch1b] wheels d9: 3285 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T04:29:46Z] [p3-pipeline batch1b] wheels d10: 626 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T04:29:46Z] [p3-pipeline batch1b] wheels d11: 8 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T04:29:46Z] [p3-pipeline batch1b] stage 3: enum_cartwheels
+[2026-08-20T04:29:46Z] [p3-pipeline batch1b]   degree 7: 5439 wheels
+[2026-08-20T04:57:36Z] [p3-pipeline batch1b]   degree 8: 6790 wheels
+[2026-08-20T05:38:55Z] [p3-pipeline batch1b]   degree 9: 3285 wheels
+[2026-08-20T06:31:58Z] [p3-pipeline batch1b]   degree 10: 626 wheels
+[2026-08-20T06:35:54Z] [p3-pipeline batch1b]   degree 11: 8 wheels
+[2026-08-20T06:35:55Z] [p3-pipeline batch1b] bad cartwheels total (all degrees, merged): 0 (full-pool reference: 10094; may legitimately differ)
+[2026-08-20T06:35:55Z] [p3-pipeline batch1b] stage 4: gluing checks
+[2026-08-20T08:51:32Z] [p3-pipeline batch1b] PASS. Verdict: /Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1b/VERDICT.txt  Counts: /Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1b/counts.json  Checksums: /Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1b/checksums.sha256

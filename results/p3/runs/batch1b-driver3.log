@@ -1,0 +1,14 @@
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] starting. pool=/Users/yugendren/experiments/four_color_digestion/build/p3-pool-v1b/D run_dir=/Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1b binary=/Users/yugendren/experiments/four_color_digestion/third_party/computer-checks/build/src/main_pristine
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] pool size = 7770 (full pool is 8200; manifest at /Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1b/pool_manifest.sha256)
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] stage 1 already done, skipping
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] combined_rules: all=1832 non_blocked=671 (full-pool reference: 1832/671; may legitimately differ)
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] stage 2 already done, skipping
+tools/p3_pipeline_run.sh: line 118: declare: -A: invalid option
+declare: usage: declare [-afFirtx] [-p] [name[=value] ...]
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] wheels d7: 5439 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] wheels d8: 6790 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] wheels d9: 3285 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] wheels d10: 626 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] wheels d11: 8 (full-pool reference: 5439/6790/3285/626/8 resp.; may legitimately differ)
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b] stage 3: enum_cartwheels
+[2026-08-20T08:58:37Z] [p3-pipeline batch1b]   degree 7: 5439 wheels

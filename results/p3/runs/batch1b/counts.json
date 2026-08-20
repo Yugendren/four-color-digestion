@@ -1,0 +1,13 @@
+{
+  "n_pool": 7770,
+  "n_combined_all": 1832,
+  "n_combined_non_blocked": 671,
+  "n_wheels": {
+    "d7": 5439,
+    "d8": 6790,
+    "d9": 3285,
+    "d10": 626,
+    "d11": 8
+  },
+  "n_bad_cartwheels_total": 0
+}
