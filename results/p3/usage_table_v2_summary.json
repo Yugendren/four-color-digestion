@@ -1,0 +1,12 @@
+{
+ "n_pool": 8200,
+ "n_distinct_glue_blockers": 2199,
+ "n_zero_usage_all_four_roles": 430,
+ "zero4_sample": [
+  "D0016",
+  "D0023",
+  "D0641",
+  "D0739",
+  "D1367"
+ ]
+}

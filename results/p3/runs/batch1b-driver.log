@@ -1,0 +1,5 @@
+[2026-08-20T02:39:56Z] [p3-pipeline batch1b] starting. pool=/Users/yugendren/experiments/four_color_digestion/build/p3-pool-v1b/D run_dir=/Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1b binary=/Users/yugendren/experiments/four_color_digestion/third_party/computer-checks/build/src/main
+[2026-08-20T02:39:56Z] [p3-pipeline batch1b] pool size = 7770 (full pool is 8200; manifest at /Users/yugendren/experiments/four_color_digestion/results/p3/runs/batch1b/pool_manifest.sha256)
+[2026-08-20T02:39:56Z] [p3-pipeline batch1b] stage 1: combine_rules
+[2026-08-20T02:39:58Z] [p3-pipeline batch1b] combined_rules: all=1832 non_blocked=671 (full-pool reference: 1832/671; may legitimately differ)
+[2026-08-20T02:39:58Z] [p3-pipeline batch1b] stage 2: enum_wheels d7..11

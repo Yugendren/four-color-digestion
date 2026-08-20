@@ -1,0 +1,6 @@
+[2026-08-20 10:36:12.338] [info] Total 10094 cartwheels loaded.
+[2026-08-20 10:36:13.771] [info] Total 19754 configurations loaded.
+[2026-08-20 10:36:13.795] [info] After removing cartwheels with degree 8 and 9 and cartwheels containing a 7-triangle,
+[2026-08-20 10:36:13.795] [info] 298 cartwheels remain.
+[2026-08-20 10:36:13.795] [info] All cases have been posted to the thread pool.
+[2026-08-20 10:37:22.083] [info] Finished checking degree 7 vertices.
