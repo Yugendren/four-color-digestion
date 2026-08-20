@@ -1,0 +1,7 @@
+{"ident": "D0000", "r": 6, "n": 10, "n_extendable": 16, "n_consistent": 0, "d_reducible": true, "rounds": 5, "seconds": 0.14}
+{"ident": "D0001", "r": 7, "n": 11, "n_extendable": 39, "n_consistent": 0, "d_reducible": true, "rounds": 6, "seconds": 0.0}
+{"ident": "D0002", "r": 8, "n": 15, "n_extendable": 111, "n_consistent": 0, "d_reducible": true, "rounds": 7, "seconds": 0.01}
+{"ident": "D0003", "r": 8, "n": 13, "n_extendable": 100, "n_consistent": 0, "d_reducible": true, "rounds": 7, "seconds": 0.0}
+{"ident": "D0004", "r": 8, "n": 13, "n_extendable": 98, "n_consistent": 0, "d_reducible": true, "rounds": 5, "seconds": 0.0}
+{"ident": "D0007", "r": 8, "n": 14, "n_extendable": 104, "n_consistent": 0, "d_reducible": true, "rounds": 4, "seconds": 0.0}
+{"ident": "D0040", "r": 8, "n": 13, "n_extendable": 95, "n_consistent": 0, "d_reducible": true, "rounds": 6, "seconds": 0.0}

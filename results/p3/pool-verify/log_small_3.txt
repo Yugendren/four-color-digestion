@@ -1,0 +1,2 @@
+[shard 3/6 r9-10-11-12-13-14] 50/941 done, 0 anomalies
+[shard 3/6 r9-10-11-12-13-14] 100/941 done, 0 anomalies
