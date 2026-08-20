@@ -4,6 +4,7 @@ build/
 __pycache__/
 *.pyc
 .DS_Store
+checkpoints/
 third_party/*/extracted_build/
 # P3 pipeline re-runs (tools/p3_pipeline_run.sh): work/ and log/ hold the regenerated
 # combined_rules/wheels/cartwheels + thousands of per-wheel logs for one candidate pool

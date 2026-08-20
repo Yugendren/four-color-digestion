@@ -1,0 +1,285 @@
+{
+  "total_records_pre_dedup": 17258,
+  "pre_dedup_counts_by_source": {
+    "generated": 6135,
+    "rsst633": 633,
+    "steinberger2822": 2822,
+    "nl4ct_pool": 7668
+  },
+  "total_records": 14036,
+  "per_source_counts": {
+    "rsst633": 633,
+    "steinberger2822": 2614,
+    "generated": 5961,
+    "nl4ct_pool": 4828
+  },
+  "per_ring_counts": {
+    "6": 30,
+    "7": 43,
+    "8": 1162,
+    "9": 1446,
+    "10": 1746,
+    "11": 1873,
+    "12": 849,
+    "13": 2103,
+    "14": 2765,
+    "15": 1562,
+    "16": 457
+  },
+  "per_source_per_ring_counts": {
+    "rsst633": {
+      "6": 1,
+      "7": 1,
+      "8": 5,
+      "9": 8,
+      "10": 31,
+      "11": 81,
+      "12": 175,
+      "13": 194,
+      "14": 137
+    },
+    "steinberger2822": {
+      "8": 1,
+      "9": 8,
+      "10": 37,
+      "11": 142,
+      "12": 389,
+      "13": 705,
+      "14": 732,
+      "15": 439,
+      "16": 161
+    },
+    "generated": {
+      "6": 29,
+      "7": 42,
+      "8": 1156,
+      "9": 1430,
+      "10": 1677,
+      "11": 1627
+    },
+    "nl4ct_pool": {
+      "10": 1,
+      "11": 23,
+      "12": 285,
+      "13": 1204,
+      "14": 1896,
+      "15": 1123,
+      "16": 296
+    }
+  },
+  "class_balance": {
+    "d_reducible_true": 10057,
+    "d_reducible_false": 3979,
+    "fraction_d_reducible": 0.7165146765460245
+  },
+  "trace_availability": {
+    "with_trace": 9208,
+    "without_trace": 4828
+  },
+  "trace_length_distribution": {
+    "2": 15,
+    "3": 533,
+    "4": 1020,
+    "5": 913,
+    "6": 925,
+    "7": 1059,
+    "8": 1120,
+    "9": 826,
+    "10": 536,
+    "11": 529,
+    "12": 537,
+    "13": 433,
+    "14": 186,
+    "15": 89,
+    "16": 72,
+    "17": 54,
+    "18": 54,
+    "19": 59,
+    "20": 50,
+    "21": 49,
+    "22": 42,
+    "23": 26,
+    "24": 13,
+    "25": 8,
+    "26": 14,
+    "27": 14,
+    "28": 7,
+    "29": 4,
+    "30": 5,
+    "31": 2,
+    "32": 2,
+    "33": 2,
+    "34": 1,
+    "36": 1,
+    "37": 1,
+    "38": 1,
+    "39": 1,
+    "45": 1,
+    "47": 1,
+    "56": 1,
+    "86": 1,
+    "132": 1
+  },
+  "dedup": {
+    "n_collisions_total": 3222,
+    "within_source_dupes": {
+      "generated": 100
+    },
+    "cross_source_overlap_kept_from_dropped": {
+      "rsst633<-steinberger2822": 208,
+      "rsst633<-generated": 48,
+      "steinberger2822<-generated": 33,
+      "generated<-generated": 93,
+      "steinberger2822<-nl4ct_pool": 2601,
+      "rsst633<-nl4ct_pool": 238,
+      "generated<-nl4ct_pool": 1
+    },
+    "example_collisions": [
+      {
+        "canonical_key_prefix": "1:3:2,7,6|2:4:1,3,8,7|3:4:2,4,9,8|4:3:3,5,9|5:4:4,6,10,9|6:4",
+        "kept_source": "rsst633",
+        "kept_ident": "0.7322",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "1"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,8,7|2:4:1,3,9,8|3:3:2,4,9|4:4:3,5,10,9|5:3:4,6,10|6:4:",
+        "kept_source": "rsst633",
+        "kept_ident": "2.122",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "2"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,9,8|2:4:1,3,10,9|3:5:2,4,11,12,10|4:4:3,5,13,11|5:3:4,",
+        "kept_source": "rsst633",
+        "kept_ident": "3.442802",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "3"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,9,8|2:4:1,3,10,9|3:3:2,4,10|4:4:3,5,11,10|5:3:4,6,11|6",
+        "kept_source": "rsst633",
+        "kept_ident": "0.453962",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "4"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,10,9|2:4:1,3,11,10|3:3:2,4,11|4:4:3,5,12,11|5:5:4,6,13",
+        "kept_source": "rsst633",
+        "kept_ident": "3.1306802",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "6"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,10,9|2:4:1,3,11,10|3:3:2,4,11|4:4:3,5,12,11|5:3:4,6,12",
+        "kept_source": "rsst633",
+        "kept_ident": "2.7566",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "7"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,9,8|2:4:1,3,10,9|3:3:2,4,10|4:4:3,5,11,10|5:3:4,6,11|6",
+        "kept_source": "rsst633",
+        "kept_ident": "0.79077722",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "8"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,11,10|2:4:1,3,12,11|3:3:2,4,12|4:4:3,5,13,12|5:5:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "3.460806",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "11"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,11,10|2:4:1,3,12,11|3:3:2,4,12|4:4:3,5,13,12|5:5:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "3.1306806",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "12"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,10,9|2:4:1,3,11,10|3:3:2,4,11|4:4:3,5,12,11|5:3:4,6,12",
+        "kept_source": "rsst633",
+        "kept_ident": "0.79077962",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "15"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,11,10|2:4:1,3,12,11|3:3:2,4,12|4:4:3,5,13,12|5:4:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "2.22086",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "16"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,11,10|2:4:1,3,12,11|3:3:2,4,12|4:4:3,5,13,12|5:3:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "2.453966",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "17"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,12,11|2:4:1,3,13,12|3:3:2,4,13|4:4:3,5,14,13|5:3:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "3.1551602",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "18"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,11,10|2:4:1,3,12,11|3:3:2,4,12|4:4:3,5,13,12|5:3:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "2.79077962",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "24"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,12,11|2:4:1,3,13,12|3:3:2,4,13|4:4:3,5,14,13|5:4:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "2.25866",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "25"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,12,11|2:4:1,3,13,12|3:3:2,4,13|4:4:3,5,14,13|5:3:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "2.1325166",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "26"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,12,11|2:4:1,3,13,12|3:3:2,4,13|4:4:3,5,14,13|5:3:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "2.79077966",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "33"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,13,12|2:4:1,3,14,13|3:3:2,4,14|4:4:3,5,15,14|5:3:4,6,1",
+        "kept_source": "rsst633",
+        "kept_ident": "2.1551966",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "34"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,9,8|2:4:1,3,10,9|3:3:2,4,10|4:4:3,5,11,10|5:3:4,6,11|6",
+        "kept_source": "rsst633",
+        "kept_ident": "122.122",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "41"
+      },
+      {
+        "canonical_key_prefix": "1:3:2,10,9|2:4:1,3,11,10|3:4:2,4,12,11|4:3:3,5,12|5:5:4,6,13",
+        "kept_source": "rsst633",
+        "kept_ident": "122.442802",
+        "dropped_source": "steinberger2822",
+        "dropped_ident": "42"
+      }
+    ]
+  },
+  "nl4ct_pool_conversion_failures": {
+    "count": 0,
+    "examples": []
+  },
+  "canonicalization_note": "dedup key = fourcolor.canonical.canonical_key (dihedral-on-ring canonical form); see that module's docstring for exact scope and documented limitations."
+}

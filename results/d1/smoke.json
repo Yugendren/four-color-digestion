@@ -1,0 +1,109 @@
+{
+  "hyperparameters": {
+    "corpus": "/Users/yugendren/experiments/four_color_digestion/data/d1_corpus.jsonl",
+    "limit": 500,
+    "val_frac": 0.1,
+    "max_src_len": 200,
+    "max_tgt_len": 120,
+    "batch_size": 16,
+    "eval_batch_size": 32,
+    "lr": 0.0003,
+    "epochs": 6,
+    "d_model": 128,
+    "nhead": 4,
+    "dim_feedforward": 256,
+    "encoder_layers": 2,
+    "decoder_layers": 2,
+    "seed": 0,
+    "device": "auto",
+    "grad_clip": 1.0,
+    "checkpoint_out": "/Users/yugendren/experiments/four_color_digestion/checkpoints/d1_model.pt",
+    "metrics_out": "results/d1/smoke.json",
+    "tag": "smoke",
+    "time_budget_sec": 240.0
+  },
+  "device": "mps",
+  "param_count": 694445,
+  "train_size": 450,
+  "val_size": 50,
+  "load_stats": {
+    "corpus_total": 14036,
+    "no_trace_excluded": 4828,
+    "too_long_excluded": 7061,
+    "usable": 2147
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 17.820148550230883,
+      "n_batches": 29,
+      "exact_match": 0.0,
+      "verdict_accuracy": 0.0,
+      "verdict_present_rate": 0.0,
+      "n_eval": 50,
+      "epoch_time_sec": 161.2721791267395
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.4668222254720227,
+      "n_batches": 29,
+      "exact_match": 0.0,
+      "verdict_accuracy": 0.0,
+      "verdict_present_rate": 0.0,
+      "n_eval": 50,
+      "epoch_time_sec": 3.5897469520568848
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.9938178452952154,
+      "n_batches": 29,
+      "exact_match": 0.0,
+      "verdict_accuracy": 0.22,
+      "verdict_present_rate": 0.22,
+      "n_eval": 50,
+      "epoch_time_sec": 2.399829149246216
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.7614744346717308,
+      "n_batches": 29,
+      "exact_match": 0.0,
+      "verdict_accuracy": 0.68,
+      "verdict_present_rate": 1.0,
+      "n_eval": 50,
+      "epoch_time_sec": 1.3516769409179688
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.5513935335751238,
+      "n_batches": 29,
+      "exact_match": 0.0,
+      "verdict_accuracy": 0.56,
+      "verdict_present_rate": 0.62,
+      "n_eval": 50,
+      "epoch_time_sec": 5.644850015640259
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.5004246974813527,
+      "n_batches": 29,
+      "exact_match": 0.0,
+      "verdict_accuracy": 0.56,
+      "verdict_present_rate": 0.58,
+      "n_eval": 50,
+      "epoch_time_sec": 5.469171047210693
+    }
+  ],
+  "total_train_time_sec": 180.053405046463,
+  "final_eval": {
+    "epoch": 6,
+    "train_loss": 0.5004246974813527,
+    "n_batches": 29,
+    "exact_match": 0.0,
+    "verdict_accuracy": 0.56,
+    "verdict_present_rate": 0.58,
+    "n_eval": 50,
+    "epoch_time_sec": 5.469171047210693
+  },
+  "note": "smoke"
+}
