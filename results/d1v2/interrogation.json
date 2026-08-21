@@ -1,0 +1,442 @@
+{
+  "9": {
+    "ring": 9,
+    "val_size": 216,
+    "val_label_balance": {
+      "d_reducible": 164,
+      "not_reducible": 52
+    },
+    "val_boundary_size": 26,
+    "probe_split": {
+      "n_train": 173,
+      "n_test": 43,
+      "test_frac": 0.2
+    },
+    "probe_results": {
+      "shallow": {
+        "name": "shallow",
+        "d_features": 16,
+        "train_acc": 0.8901734352111816,
+        "n_test": 43,
+        "overall_acc": 0.7209302186965942,
+        "overall_ci_lo": 0.5813953280448914,
+        "overall_ci_hi": 0.8604651093482971,
+        "n_test_boundary": 7,
+        "boundary_acc": 0.5714285969734192,
+        "boundary_ci_lo": 0.2857142984867096,
+        "boundary_ci_hi": 0.8571428656578064
+      },
+      "shallow_plus_structural": {
+        "name": "shallow_plus_structural",
+        "d_features": 24,
+        "train_acc": 0.9190751314163208,
+        "n_test": 43,
+        "overall_acc": 0.8139534592628479,
+        "overall_ci_lo": 0.6976743936538696,
+        "overall_ci_hi": 0.930232584476471,
+        "n_test_boundary": 7,
+        "boundary_acc": 0.8571428656578064,
+        "boundary_ci_lo": 0.5714285969734192,
+        "boundary_ci_hi": 1.0
+      },
+      "control_encoder_summary": {
+        "name": "control_encoder_summary",
+        "d_features": 256,
+        "train_acc": 1.0,
+        "n_test": 43,
+        "overall_acc": 0.8837209343910217,
+        "overall_ci_lo": 0.7906976938247681,
+        "overall_ci_hi": 0.9767441749572754,
+        "n_test_boundary": 7,
+        "boundary_acc": 0.5714285969734192,
+        "boundary_ci_lo": 0.1428571492433548,
+        "boundary_ci_hi": 0.8571428656578064
+      },
+      "dynamics_encoder_summary": {
+        "name": "dynamics_encoder_summary",
+        "d_features": 256,
+        "train_acc": 1.0,
+        "n_test": 43,
+        "overall_acc": 0.7906976938247681,
+        "overall_ci_lo": 0.6744186282157898,
+        "overall_ci_hi": 0.9069767594337463,
+        "n_test_boundary": 7,
+        "boundary_acc": 0.2857142984867096,
+        "boundary_ci_lo": 0.0,
+        "boundary_ci_hi": 0.5714285969734192
+      },
+      "dynamics_round0_logits": {
+        "name": "dynamics_round0_logits",
+        "d_features": 3281,
+        "train_acc": 0.8034682273864746,
+        "n_test": 43,
+        "overall_acc": 0.7209302186965942,
+        "overall_ci_lo": 0.5813953280448914,
+        "overall_ci_hi": 0.8372092843055725,
+        "n_test_boundary": 7,
+        "boundary_acc": 0.1428571492433548,
+        "boundary_ci_lo": 0.0,
+        "boundary_ci_hi": 0.4285714328289032
+      },
+      "dynamics_h0": {
+        "name": "dynamics_h0",
+        "d_features": 256,
+        "train_acc": 1.0,
+        "n_test": 43,
+        "overall_acc": 0.7906976938247681,
+        "overall_ci_lo": 0.6744186282157898,
+        "overall_ci_hi": 0.9069767594337463,
+        "n_test_boundary": 7,
+        "boundary_acc": 0.2857142984867096,
+        "boundary_ci_lo": 0.0,
+        "boundary_ci_hi": 0.5714285969734192
+      },
+      "dynamics_h1": {
+        "name": "dynamics_h1",
+        "d_features": 256,
+        "train_acc": 1.0,
+        "n_test": 43,
+        "overall_acc": 0.9069767594337463,
+        "overall_ci_lo": 0.8139534592628479,
+        "overall_ci_hi": 0.9767441749572754,
+        "n_test_boundary": 7,
+        "boundary_acc": 0.7142857313156128,
+        "boundary_ci_lo": 0.4285714328289032,
+        "boundary_ci_hi": 1.0
+      },
+      "dynamics_h2": {
+        "name": "dynamics_h2",
+        "d_features": 256,
+        "train_acc": 0.9942196607589722,
+        "n_test": 43,
+        "overall_acc": 0.9069767594337463,
+        "overall_ci_lo": 0.8139534592628479,
+        "overall_ci_hi": 0.9767441749572754,
+        "n_test_boundary": 7,
+        "boundary_acc": 0.4285714328289032,
+        "boundary_ci_lo": 0.1428571492433548,
+        "boundary_ci_hi": 0.8571428656578064
+      }
+    },
+    "model_heads": {
+      "control_head": {
+        "overall": [
+          0.9490740895271301,
+          0.9166666865348816,
+          0.9768518805503845
+        ],
+        "n_val": 216,
+        "boundary": [
+          0.9615384340286255,
+          0.8846153616905212,
+          1.0
+        ],
+        "n_val_boundary": 26
+      },
+      "dynamics_free_running_head": {
+        "overall": [
+          0.7777777910232544,
+          0.7222222089767456,
+          0.8333333134651184
+        ],
+        "n_val": 216,
+        "boundary": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "n_val_boundary": 26
+      }
+    },
+    "dynamics_diagnosis": {
+      "best_epoch": 1,
+      "last_epoch": 21,
+      "n_epochs_trained": 21,
+      "best_tf_round_f1": [
+        0.954868948431014,
+        0.4759187071869205,
+        0.36645537872223993,
+        0.5413916361483301,
+        0.5859781356090572,
+        0.5355571472424027,
+        0.4501049940655528,
+        0.42559636501325254,
+        0.43163265306122445,
+        0.39285714285714285,
+        0.3543859649122807
+      ],
+      "last_tf_round_f1": [
+        0.9546401767857731,
+        0.6220791542423421,
+        0.6787511245876513,
+        0.7238551446637287,
+        0.7693145658343605,
+        0.7525593973343635,
+        0.7118333333333333,
+        0.6818568270702262,
+        0.6900504355800092,
+        0.6491603053435114,
+        0.644927536231884
+      ],
+      "best_fr_round_f1": [
+        0.954868948431014,
+        0.472371660435853,
+        0.007893576952358056,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "last_fr_round_f1": [
+        0.9546401767857731,
+        0.6083576393030241,
+        0.4920988119932114,
+        0.4022204144135523,
+        0.3497180473874005,
+        0.3769825389135792,
+        0.3758218941054331,
+        0.37920579753013384,
+        0.6155333548179182,
+        0.5805403209425147,
+        0.5181550539744848
+      ],
+      "best_verdict_acc_tf": 1.0,
+      "last_verdict_acc_tf": 1.0,
+      "best_verdict_acc_fr": 0.7777777910232544,
+      "last_verdict_acc_fr": 0.24074074625968933,
+      "best_verdict_acc_fr_boundary": 1.0,
+      "last_verdict_acc_fr_boundary": 0.0,
+      "best_n_val_boundary": 26
+    }
+  },
+  "10": {
+    "ring": 10,
+    "val_size": 262,
+    "val_label_balance": {
+      "d_reducible": 58,
+      "not_reducible": 204
+    },
+    "val_boundary_size": 55,
+    "probe_split": {
+      "n_train": 209,
+      "n_test": 53,
+      "test_frac": 0.2
+    },
+    "probe_results": {
+      "shallow": {
+        "name": "shallow",
+        "d_features": 16,
+        "train_acc": 0.7942583560943604,
+        "n_test": 53,
+        "overall_acc": 0.7547169923782349,
+        "overall_ci_lo": 0.6415094137191772,
+        "overall_ci_hi": 0.8679245114326477,
+        "n_test_boundary": 11,
+        "boundary_acc": 0.4545454680919647,
+        "boundary_ci_lo": 0.1818181872367859,
+        "boundary_ci_hi": 0.7272727489471436
+      },
+      "shallow_plus_structural": {
+        "name": "shallow_plus_structural",
+        "d_features": 24,
+        "train_acc": 0.9473684430122375,
+        "n_test": 53,
+        "overall_acc": 0.9056603908538818,
+        "overall_ci_lo": 0.8301886916160583,
+        "overall_ci_hi": 0.9811320900917053,
+        "n_test_boundary": 11,
+        "boundary_acc": 0.7272727489471436,
+        "boundary_ci_lo": 0.4545454680919647,
+        "boundary_ci_hi": 1.0
+      },
+      "control_encoder_summary": {
+        "name": "control_encoder_summary",
+        "d_features": 256,
+        "train_acc": 0.9904305934906006,
+        "n_test": 53,
+        "overall_acc": 0.9056603908538818,
+        "overall_ci_lo": 0.8113207817077637,
+        "overall_ci_hi": 0.9811320900917053,
+        "n_test_boundary": 11,
+        "boundary_acc": 0.8181818127632141,
+        "boundary_ci_lo": 0.5454545617103577,
+        "boundary_ci_hi": 1.0
+      },
+      "dynamics_encoder_summary": {
+        "name": "dynamics_encoder_summary",
+        "d_features": 256,
+        "train_acc": 0.9952152967453003,
+        "n_test": 53,
+        "overall_acc": 0.7735849022865295,
+        "overall_ci_lo": 0.6603773832321167,
+        "overall_ci_hi": 0.8867924809455872,
+        "n_test_boundary": 11,
+        "boundary_acc": 0.8181818127632141,
+        "boundary_ci_lo": 0.5454545617103577,
+        "boundary_ci_hi": 1.0
+      },
+      "dynamics_round0_logits": {
+        "name": "dynamics_round0_logits",
+        "d_features": 9842,
+        "train_acc": 1.0,
+        "n_test": 53,
+        "overall_acc": 0.7924528121948242,
+        "overall_ci_lo": 0.6792452931404114,
+        "overall_ci_hi": 0.8867924809455872,
+        "n_test_boundary": 11,
+        "boundary_acc": 0.6363636255264282,
+        "boundary_ci_lo": 0.3636363744735718,
+        "boundary_ci_hi": 0.9090909361839294
+      },
+      "dynamics_h0": {
+        "name": "dynamics_h0",
+        "d_features": 256,
+        "train_acc": 0.9856459498405457,
+        "n_test": 53,
+        "overall_acc": 0.7735849022865295,
+        "overall_ci_lo": 0.6603773832321167,
+        "overall_ci_hi": 0.8867924809455872,
+        "n_test_boundary": 11,
+        "boundary_acc": 0.7272727489471436,
+        "boundary_ci_lo": 0.4545454680919647,
+        "boundary_ci_hi": 1.0
+      },
+      "dynamics_h1": {
+        "name": "dynamics_h1",
+        "d_features": 256,
+        "train_acc": 0.9617224931716919,
+        "n_test": 53,
+        "overall_acc": 0.8867924809455872,
+        "overall_ci_lo": 0.7924528121948242,
+        "overall_ci_hi": 0.9622641801834106,
+        "n_test_boundary": 11,
+        "boundary_acc": 0.8181818127632141,
+        "boundary_ci_lo": 0.5454545617103577,
+        "boundary_ci_hi": 1.0
+      },
+      "dynamics_h2": {
+        "name": "dynamics_h2",
+        "d_features": 256,
+        "train_acc": 0.9760765433311462,
+        "n_test": 53,
+        "overall_acc": 0.9245283007621765,
+        "overall_ci_lo": 0.849056601524353,
+        "overall_ci_hi": 0.9811320900917053,
+        "n_test_boundary": 11,
+        "boundary_acc": 0.7272727489471436,
+        "boundary_ci_lo": 0.4545454680919647,
+        "boundary_ci_hi": 1.0
+      }
+    },
+    "model_heads": {
+      "control_head": {
+        "overall": [
+          0.9122137427330017,
+          0.8777671530842781,
+          0.9427480697631836
+        ],
+        "n_val": 262,
+        "boundary": [
+          0.800000011920929,
+          0.6909090876579285,
+          0.8909090757369995
+        ],
+        "n_val_boundary": 55
+      },
+      "dynamics_free_running_head": {
+        "overall": [
+          0.7786259651184082,
+          0.7251908183097839,
+          0.8320610523223877
+        ],
+        "n_val": 262,
+        "boundary": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "n_val_boundary": 55
+      }
+    },
+    "dynamics_diagnosis": {
+      "best_epoch": 2,
+      "last_epoch": 22,
+      "n_epochs_trained": 22,
+      "best_tf_round_f1": [
+        0.9731679337403342,
+        0.8144582531069492,
+        0.7418791422652304,
+        0.7011092942060371,
+        0.6755228398458997,
+        0.6551359565807326,
+        0.6027872596757191,
+        0.5570045619279275,
+        0.5564455661015709,
+        0.5530853791311067,
+        0.554178732574584,
+        0.6224709427464485,
+        0.674377072880347,
+        0.6664364044555737
+      ],
+      "last_tf_round_f1": [
+        0.9731428481403803,
+        0.8111657689027026,
+        0.8269722087028457,
+        0.8159773443198782,
+        0.8170316681899038,
+        0.82553242950249,
+        0.8188320544112568,
+        0.7910549556245354,
+        0.7684416218856864,
+        0.7542307389007176,
+        0.7391002205637973,
+        0.7752255947497949,
+        0.8097690646286758,
+        0.8091106290672452
+      ],
+      "best_fr_round_f1": [
+        0.9731679337403342,
+        0.8144582531069492,
+        0.743748170970752,
+        0.697388026943526,
+        0.644064002089516,
+        0.597377791882976,
+        0.5475561936381176,
+        0.5248487157473926,
+        0.5528168464432339,
+        0.6403432075449702,
+        0.655823690446065,
+        0.7049658354006181,
+        0.7253468596150977,
+        0.7247115240521504
+      ],
+      "last_fr_round_f1": [
+        0.9731428481403803,
+        0.8111643234000121,
+        0.7634350758195922,
+        0.7021565770549034,
+        0.6367271832897602,
+        0.5840070151584568,
+        0.5299366235390126,
+        0.513329780175555,
+        0.5476507968222667,
+        0.6461883363978722,
+        0.6675439784800573,
+        0.7329407434670593,
+        0.759177494638577,
+        0.759177494638577
+      ],
+      "best_verdict_acc_tf": 1.0,
+      "last_verdict_acc_tf": 1.0,
+      "best_verdict_acc_fr": 0.7786259651184082,
+      "last_verdict_acc_fr": 0.7786259651184082,
+      "best_verdict_acc_fr_boundary": 0.0,
+      "last_verdict_acc_fr_boundary": 0.0,
+      "best_n_val_boundary": 55
+    }
+  }
+}
