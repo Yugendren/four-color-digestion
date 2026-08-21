@@ -28,3 +28,13 @@ results/d1/interp/*.npz
 # generation completes.
 results/d1v2/*.pid
 results/d1v2/log_plantri_*.txt
+
+# Theorem-candidate adversarial stress test (tools/stress_test_theorem.py):
+# the live progress log + continuously-rewritten checkpoint + nohup wrapper
+# output are host/run-transient bookkeeping for a background run in flight,
+# same rationale as the d1v2 plantri logs above. stress_test.json/.md (the
+# tool's own final-snapshot outputs, periodically re-captured from the
+# checkpoint while a run is in progress) stay tracked.
+results/theorem/stress_test.log
+results/theorem/stress_test_checkpoint.json
+results/theorem/stress_test_nohup.out
