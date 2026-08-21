@@ -1,0 +1,708 @@
+{
+  "rings": {
+    "10": {
+      "agree": 17,
+      "bf_disagree": 0,
+      "mismatch": 0,
+      "oracle_inconclusive": 3,
+      "population_size": 94,
+      "records": [
+        {
+          "brute_force": {
+            "brute_force_agrees_with_reduce_py": true,
+            "brute_force_n_extendable": 367
+          },
+          "ident": "fr-r10-n15-4669",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 31,
+          "our_d_reducible": false,
+          "status": "ORACLE_INCONCLUSIVE_brute_force_confirms_ours"
+        },
+        {
+          "ident": "fr-r10-n14-359",
+          "n": 14,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n12-3",
+          "n": 12,
+          "n_interior": 2,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n15-3389",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n15-3383",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n15-2799",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n14-369",
+          "n": 14,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n14-333",
+          "n": 14,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "brute_force": {
+            "brute_force_agrees_with_reduce_py": true,
+            "brute_force_n_extendable": 365
+          },
+          "ident": "fr-r10-n15-4678",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 31,
+          "our_d_reducible": false,
+          "status": "ORACLE_INCONCLUSIVE_brute_force_confirms_ours"
+        },
+        {
+          "ident": "fr-r10-n15-4608",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n14-320",
+          "n": 14,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n15-4622",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n15-4267",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n13-22",
+          "n": 13,
+          "n_interior": 3,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n14-427",
+          "n": 14,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n15-3314",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n15-4580",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r10-n15-4636",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "brute_force": {
+            "brute_force_agrees_with_reduce_py": true,
+            "brute_force_n_extendable": 408
+          },
+          "ident": "fr-r10-n15-4613",
+          "n": 15,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 31,
+          "our_d_reducible": false,
+          "status": "ORACLE_INCONCLUSIVE_brute_force_confirms_ours"
+        },
+        {
+          "ident": "fr-r10-n14-425",
+          "n": 14,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        }
+      ],
+      "sampled": 20
+    },
+    "11": {
+      "agree": 19,
+      "bf_disagree": 0,
+      "mismatch": 0,
+      "oracle_inconclusive": 1,
+      "population_size": 603,
+      "records": [
+        {
+          "ident": "fr-r11-n17-94025",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-91413",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-59244",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-91547",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-82066",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n14-42",
+          "n": 14,
+          "n_interior": 3,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-58107",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-91416",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-89434",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-51126",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-59239",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-89420",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n16-7761",
+          "n": 16,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n16-7419",
+          "n": 16,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-91034",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n16-7439",
+          "n": 16,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n17-90276",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "brute_force": {
+            "brute_force_agrees_with_reduce_py": true,
+            "brute_force_n_extendable": 995
+          },
+          "ident": "fr-r11-n17-89446",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 31,
+          "our_d_reducible": false,
+          "status": "ORACLE_INCONCLUSIVE_brute_force_confirms_ours"
+        },
+        {
+          "ident": "fr-r11-n17-82016",
+          "n": 17,
+          "n_interior": 6,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r11-n16-5640",
+          "n": 16,
+          "n_interior": 5,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        }
+      ],
+      "sampled": 20
+    },
+    "8": {
+      "agree": 11,
+      "bf_disagree": 0,
+      "mismatch": 0,
+      "oracle_inconclusive": 1,
+      "population_size": 12,
+      "records": [
+        {
+          "ident": "fr-r8-n10-1",
+          "n": 10,
+          "n_interior": 2,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n10-2",
+          "n": 10,
+          "n_interior": 2,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n11-17",
+          "n": 11,
+          "n_interior": 3,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n11-21",
+          "n": 11,
+          "n_interior": 3,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n12-120",
+          "n": 12,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n12-166",
+          "n": 12,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n12-168",
+          "n": 12,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n12-169",
+          "n": 12,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n12-170",
+          "n": 12,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r8-n12-171",
+          "n": 12,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "brute_force": {
+            "brute_force_agrees_with_reduce_py": true,
+            "brute_force_n_extendable": 72
+          },
+          "ident": "fr-r8-n12-172",
+          "n": 12,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 31,
+          "our_d_reducible": false,
+          "status": "ORACLE_INCONCLUSIVE_brute_force_confirms_ours"
+        },
+        {
+          "ident": "fr-r8-n9-0",
+          "n": 9,
+          "n_interior": 1,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        }
+      ],
+      "sampled": 12
+    },
+    "9": {
+      "agree": 17,
+      "bf_disagree": 0,
+      "mismatch": 0,
+      "oracle_inconclusive": 1,
+      "population_size": 18,
+      "records": [
+        {
+          "ident": "fr-r9-n10-0",
+          "n": 10,
+          "n_interior": 1,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n11-1",
+          "n": 11,
+          "n_interior": 2,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n11-2",
+          "n": 11,
+          "n_interior": 2,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n12-20",
+          "n": 12,
+          "n_interior": 3,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n12-25",
+          "n": 12,
+          "n_interior": 3,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n12-28",
+          "n": 12,
+          "n_interior": 3,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-216",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-218",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-219",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-221",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-251",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-252",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-253",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-265",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-267",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "ident": "fr-r9-n13-268",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        },
+        {
+          "brute_force": {
+            "brute_force_agrees_with_reduce_py": true,
+            "brute_force_n_extendable": 147
+          },
+          "ident": "fr-r9-n13-269",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 31,
+          "our_d_reducible": false,
+          "status": "ORACLE_INCONCLUSIVE_brute_force_confirms_ours"
+        },
+        {
+          "ident": "fr-r9-n13-270",
+          "n": 13,
+          "n_interior": 4,
+          "oracle_d_reducible": false,
+          "oracle_returncode": 24,
+          "our_d_reducible": false,
+          "status": "AGREE"
+        }
+      ],
+      "sampled": 18
+    }
+  },
+  "sample_size": 20,
+  "seed": 42,
+  "summary": {
+    "total_agree": 64,
+    "total_brute_force_disagree": 0,
+    "total_checked": 70,
+    "total_mismatch": 0,
+    "total_oracle_inconclusive": 6,
+    "verdict": "PASS: RSST oracle agrees on every sampled config that reached a verdict; every count-discrepancy case that made the oracle abort was independently resolved in fourcolor.reduce.check's favor by the from-scratch brute-force tie-breaker"
+  }
+}

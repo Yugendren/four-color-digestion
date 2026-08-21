@@ -1,0 +1,67 @@
+{
+  "8": {
+    "file": "D0003.conf",
+    "r": 8,
+    "n": 13,
+    "interior": 5,
+    "our_d_reducible": true,
+    "n_extendable": 100,
+    "n_consistent": 0,
+    "rounds": 7,
+    "rsst_stdout_tail": "              112               144\n                   94               105\n                   60               53\n                   25               22\n                    4               0\n                    0\n\n\n                  ***  D-reducible  ***\n\n\nReducibility of 1 configurations verified\n",
+    "rsst_returncode": 0,
+    "rsst_says_d_reducible": true
+  },
+  "9": {
+    "file": "D0006.conf",
+    "r": 9,
+    "n": 14,
+    "interior": 5,
+    "our_d_reducible": true,
+    "n_extendable": 211,
+    "n_consistent": 0,
+    "rounds": 8,
+    "rsst_stdout_tail": "            455               678\n                  367               446\n                  264               244\n                  132               92\n                   38               20\n                    0\n\n\n                  ***  D-reducible  ***\n\n\nReducibility of 1 configurations verified\n",
+    "rsst_returncode": 0,
+    "rsst_says_d_reducible": true
+  },
+  "10": {
+    "file": "D0015.conf",
+    "r": 10,
+    "n": 16,
+    "interior": 6,
+    "our_d_reducible": true,
+    "n_extendable": 536,
+    "n_consistent": 0,
+    "rounds": 9,
+    "rsst_stdout_tail": "           1078               1226\n                  699               538\n                  370               208\n                  130               39\n                    5               0\n                    0\n\n\n                  ***  D-reducible  ***\n\n\nReducibility of 1 configurations verified\n",
+    "rsst_returncode": 0,
+    "rsst_says_d_reducible": true
+  },
+  "11": {
+    "file": "D0024.conf",
+    "r": 11,
+    "n": 18,
+    "interior": 7,
+    "our_d_reducible": true,
+    "n_extendable": 1363,
+    "n_consistent": 0,
+    "rounds": 9,
+    "rsst_stdout_tail": "        3148               3235\n                 2090               1505\n                 1088               586\n                  418               146\n                  122               16\n                    0\n\n\n                  ***  D-reducible  ***\n\n\nReducibility of 1 configurations verified\n",
+    "rsst_returncode": 0,
+    "rsst_says_d_reducible": true
+  },
+  "12": {
+    "file": "D0143.conf",
+    "r": 12,
+    "n": 19,
+    "interior": 7,
+    "our_d_reducible": true,
+    "n_extendable": 2863,
+    "n_consistent": 0,
+    "rounds": 17,
+    "rsst_stdout_tail": "       6773               5424\n                 4765               2956\n                 2659               1180\n                 1077               324\n                  182               16\n                    0\n\n\n                  ***  D-reducible  ***\n\n\nReducibility of 1 configurations verified\n",
+    "rsst_returncode": 0,
+    "rsst_says_d_reducible": true
+  }
+}

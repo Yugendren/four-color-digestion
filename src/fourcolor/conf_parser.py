@@ -74,6 +74,65 @@ class Configuration:
         return g
 
 
+def rotate_ring_starts(adjacency: dict[int, list[int]], r: int) -> dict[int, list[int]]:
+    """Return a copy of `adjacency` with every ring vertex 1..r's neighbor
+    list cyclically rotated to start at ring-neighbor i+1 (1 if i==r) and
+    end at ring-neighbor i-1 (r if i==1) -- the RSST labeling convention
+    (`ReadConf` condition (4); see `for_rsst_oracle`'s docstring for the
+    full rationale). A pure relabel-invariant rotation: does not change
+    the underlying rotation system, the edge set, or any vertex's degree.
+    Interior vertices (> r) are left untouched (RSST's convention only
+    constrains ring vertices' starting point)."""
+    out = {v: list(nbrs) for v, nbrs in adjacency.items()}
+    for i in range(1, r + 1):
+        nbrs = out[i]
+        expected_start = 1 if i == r else i + 1
+        start_idx = nbrs.index(expected_start)
+        out[i] = nbrs[start_idx:] + nbrs[:start_idx]
+    return out
+
+
+def for_rsst_oracle(cfg: Configuration, *, a: int | None = None,
+                     b: int | None = None) -> Configuration:
+    """Return a copy of `cfg` normalized so `build/reduce_rsst` (reduce.c's
+    ReadConf) will accept it as well-formed.
+
+    Two things `Configuration.validate()` does NOT enforce but ReadConf's
+    condition (4) does (`third_party/arxiv-1401.6481/src/anc/reduce.c`
+    lines ~988-997, also ported as the "condition (4)" check in
+    `fourcolor.mutate.is_legal_configuration`): each ring vertex i's
+    neighbor list must be written starting exactly at ring-neighbor i+1
+    (or 1 if i==r) and ending exactly at ring-neighbor i-1 (or r if i==1),
+    with every entry strictly between them being an interior vertex. Any
+    valid rotation system already has this as *some* cyclic rotation of
+    vertex i's list (rotation order is only defined up to starting point),
+    but graph builders that don't specifically track RSST's ring-labeling
+    convention (e.g. `tools/datagen.py`'s plantri relabeling, or ad hoc
+    constructions in tests) can produce a list that starts elsewhere --
+    reducibility is unaffected (our own checker and `Configuration.
+    validate()` are rotation-start-agnostic), but the C oracle's stricter
+    parser will reject it with `ReadErr(4, ...)`. This function fixes only
+    that (cyclically rotating each ring vertex's list to the required
+    start -- a no-op on the underlying rotation system), and additionally
+    fills placeholder coordinates if `cfg.coords` is empty (ReadConf
+    requires exactly n coordinate numbers to be present, and hangs/errors
+    without them -- see `serialize`'s docstring comment on 8-per-line
+    wrapping for the concrete failure mode). `a`/`b` override the header
+    fields when given (ReadConf's `printstatus` hard-checks `a` against
+    its own recomputed |C(K)| and exits nonzero on a mismatch, so callers
+    should pass `a=result.n_extendable` from `fourcolor.reduce.check`).
+    """
+    r, n = cfg.r, cfg.n
+    adjacency = rotate_ring_starts(cfg.adjacency, r)
+    coords = cfg.coords if cfg.coords else [0] * n
+    return Configuration(
+        cfg.ident, n, r,
+        cfg.a if a is None else a,
+        cfg.b if b is None else b,
+        list(cfg.contract), adjacency, coords,
+    )
+
+
 def _tokens(text: str):
     """Yield (line_number, token_list) for non-empty lines."""
     for i, line in enumerate(text.splitlines(), 1):
@@ -156,6 +215,23 @@ def serialize(configs: list[Configuration]) -> str:
         for v in range(1, c.n + 1):
             nbrs = c.adjacency[v]
             out.append(f"{v} {len(nbrs)} " + " ".join(map(str, nbrs)))
-        out.append(" ".join(map(str, c.coords)))
+        # Coordinates must be wrapped at (at most) 8 per line: reduce.c's
+        # ReadConf reads coordinates by calling fgets() once per line and
+        # sscanf()-ing AT MOST 8 numbers from each resulting string -- any
+        # numbers beyond the 8th on a single fgets'd line are silently
+        # dropped (not carried over to the next iteration), and a coords
+        # line with 0 parseable numbers makes sscanf return -1 (EOF), which
+        # ReadConf's `if (k == 0) exit(17)` check does NOT catch (only
+        # catches k==0, not k==-1) -- so a too-long or blank coords line
+        # sends `i += k` backwards and the read loop free-runs off the end
+        # of the file, hanging forever instead of erroring. Emitting >=1
+        # coords line only when c.coords is non-empty, and never more than
+        # 8 numbers per line, keeps this serializer's output readable by
+        # the real reduce.c oracle for every n (round-tripping through our
+        # own parse_conf is unaffected either way, since it just accumulates
+        # tokens across lines until n coords are seen).
+        coords = c.coords if c.coords else [0] * c.n
+        for i in range(0, len(coords), 8):
+            out.append(" ".join(map(str, coords[i:i + 8])))
         out.append("")  # blank separator line required by reduce.c's ReadConf
     return "\n".join(out) + "\n"

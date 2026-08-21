@@ -1,0 +1,87 @@
+{
+  "entries": {
+    "11": {
+      "candidate_configs": 1,
+      "d_reducible_count": 0,
+      "elapsed_s": 0.1,
+      "exceptions": [],
+      "excluded_condition6": 0,
+      "n": 11,
+      "n_interior": 1,
+      "r": 10,
+      "raw_triangulations": 1,
+      "ring_length_ok": 1,
+      "shard": "results/theorem/fr_table/configs_r10_n11.jsonl",
+      "valid_configs": 1
+    },
+    "12": {
+      "candidate_configs": 3,
+      "d_reducible_count": 0,
+      "elapsed_s": 0.0,
+      "exceptions": [],
+      "excluded_condition6": 0,
+      "n": 12,
+      "n_interior": 2,
+      "r": 10,
+      "raw_triangulations": 5,
+      "ring_length_ok": 5,
+      "shard": "results/theorem/fr_table/configs_r10_n12.jsonl",
+      "valid_configs": 3
+    },
+    "13": {
+      "candidate_configs": 15,
+      "d_reducible_count": 0,
+      "elapsed_s": 0.2,
+      "exceptions": [],
+      "excluded_condition6": 11,
+      "n": 13,
+      "n_interior": 3,
+      "r": 10,
+      "raw_triangulations": 68,
+      "ring_length_ok": 68,
+      "shard": "results/theorem/fr_table/configs_r10_n13.jsonl",
+      "valid_configs": 4
+    },
+    "14": {
+      "candidate_configs": 53,
+      "d_reducible_count": 0,
+      "elapsed_s": 1.1,
+      "exceptions": [],
+      "excluded_condition6": 33,
+      "n": 14,
+      "n_interior": 4,
+      "r": 10,
+      "raw_triangulations": 932,
+      "ring_length_ok": 932,
+      "shard": "results/theorem/fr_table/configs_r10_n14.jsonl",
+      "valid_configs": 20
+    },
+    "15": {
+      "candidate_configs": 149,
+      "d_reducible_count": 0,
+      "elapsed_s": 7.7,
+      "exceptions": [],
+      "excluded_condition6": 83,
+      "n": 15,
+      "n_interior": 5,
+      "r": 10,
+      "raw_triangulations": 12332,
+      "ring_length_ok": 12332,
+      "shard": "results/theorem/fr_table/configs_r10_n15.jsonl",
+      "valid_configs": 66
+    }
+  },
+  "f_catalog": 6,
+  "plantri_binary": "third_party/plantri/plantri55/plantri",
+  "r": 10,
+  "summary": {
+    "elapsed_s": 9.2,
+    "total_candidate_configs": 221,
+    "total_d_reducible": 0,
+    "total_exceptions": 0,
+    "total_excluded_condition6": 127,
+    "total_hard_exceptions": 0,
+    "total_valid_configs": 94,
+    "verdict": "PASS (0 D-reducible below threshold, among RSST-legal configs)"
+  }
+}

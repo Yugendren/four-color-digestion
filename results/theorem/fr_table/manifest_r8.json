@@ -1,0 +1,73 @@
+{
+  "entries": {
+    "10": {
+      "candidate_configs": 2,
+      "d_reducible_count": 0,
+      "elapsed_s": 0.0,
+      "exceptions": [],
+      "excluded_condition6": 0,
+      "n": 10,
+      "n_interior": 2,
+      "r": 8,
+      "raw_triangulations": 4,
+      "ring_length_ok": 4,
+      "shard": "results/theorem/fr_table/configs_r8_n10.jsonl",
+      "valid_configs": 2
+    },
+    "11": {
+      "candidate_configs": 5,
+      "d_reducible_count": 0,
+      "elapsed_s": 0.0,
+      "exceptions": [],
+      "excluded_condition6": 3,
+      "n": 11,
+      "n_interior": 3,
+      "r": 8,
+      "raw_triangulations": 39,
+      "ring_length_ok": 39,
+      "shard": "results/theorem/fr_table/configs_r8_n11.jsonl",
+      "valid_configs": 2
+    },
+    "12": {
+      "candidate_configs": 10,
+      "d_reducible_count": 0,
+      "elapsed_s": 0.0,
+      "exceptions": [],
+      "excluded_condition6": 3,
+      "n": 12,
+      "n_interior": 4,
+      "r": 8,
+      "raw_triangulations": 392,
+      "ring_length_ok": 392,
+      "shard": "results/theorem/fr_table/configs_r8_n12.jsonl",
+      "valid_configs": 7
+    },
+    "9": {
+      "candidate_configs": 1,
+      "d_reducible_count": 0,
+      "elapsed_s": 0.1,
+      "exceptions": [],
+      "excluded_condition6": 0,
+      "n": 9,
+      "n_interior": 1,
+      "r": 8,
+      "raw_triangulations": 1,
+      "ring_length_ok": 1,
+      "shard": "results/theorem/fr_table/configs_r8_n9.jsonl",
+      "valid_configs": 1
+    }
+  },
+  "f_catalog": 5,
+  "plantri_binary": "third_party/plantri/plantri55/plantri",
+  "r": 8,
+  "summary": {
+    "elapsed_s": 0.1,
+    "total_candidate_configs": 18,
+    "total_d_reducible": 0,
+    "total_exceptions": 0,
+    "total_excluded_condition6": 6,
+    "total_hard_exceptions": 0,
+    "total_valid_configs": 12,
+    "verdict": "PASS (0 D-reducible below threshold, among RSST-legal configs)"
+  }
+}

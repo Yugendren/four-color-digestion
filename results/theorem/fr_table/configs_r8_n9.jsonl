@@ -1,0 +1,1 @@
+{"ident": "fr-r8-n9-0", "n": 9, "r": 8, "n_interior": 1, "adjacency": {"1": [2, 9, 8], "2": [1, 3, 9], "9": [1, 2, 3, 4, 5, 6, 7, 8], "8": [1, 9, 7], "3": [2, 4, 9], "4": [9, 3, 5], "5": [9, 4, 6], "6": [9, 5, 7], "7": [9, 6, 8]}, "n_extendable": 43, "n_consistent": 231, "d_reducible": false, "rounds": 2, "trace": [1051, 231, 231], "is_legal_configuration": true}
