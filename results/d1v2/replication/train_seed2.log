@@ -1,0 +1,29 @@
+Using device: mps
+Loaded 3269 configs for ring 10 (9842 codes, max src len 241) in 3.3s
+Train: 2779  Val: 490  (boundary total 776, stratify=True)
+[control] parameters: 1,193,473
+[control]  epoch   1/150  loss=0.4556  verdict_acc=0.8490  verdict_acc_boundary=0.9052  time=5.8s  *best*
+[control]  epoch   2/150  loss=0.3304  verdict_acc=0.8633  verdict_acc_boundary=0.8362  time=5.4s  *best*
+[control]  epoch   3/150  loss=0.3060  verdict_acc=0.8531  verdict_acc_boundary=0.9224  time=5.4s
+[control]  epoch   4/150  loss=0.3321  verdict_acc=0.7816  verdict_acc_boundary=0.3448  time=5.4s
+[control]  epoch   5/150  loss=0.3230  verdict_acc=0.8388  verdict_acc_boundary=0.8879  time=5.4s
+[control]  epoch   6/150  loss=0.3029  verdict_acc=0.8408  verdict_acc_boundary=0.7155  time=5.4s
+[control]  epoch   7/150  loss=0.3169  verdict_acc=0.8388  verdict_acc_boundary=0.7845  time=5.4s
+[control]  epoch   8/150  loss=0.3235  verdict_acc=0.8408  verdict_acc_boundary=0.9828  time=5.4s
+[control]  epoch   9/150  loss=0.3118  verdict_acc=0.8449  verdict_acc_boundary=0.8103  time=5.4s
+[control]  epoch  10/150  loss=0.3315  verdict_acc=0.8265  verdict_acc_boundary=0.8534  time=5.4s
+[control]  epoch  11/150  loss=0.3373  verdict_acc=0.8388  verdict_acc_boundary=0.6897  time=5.7s
+[control]  epoch  12/150  loss=0.3024  verdict_acc=0.8612  verdict_acc_boundary=0.8103  time=6.2s
+[control]  epoch  13/150  loss=0.3213  verdict_acc=0.8388  verdict_acc_boundary=0.6207  time=5.4s
+[control]  epoch  14/150  loss=0.3398  verdict_acc=0.7694  verdict_acc_boundary=0.8534  time=5.4s
+[control]  epoch  15/150  loss=0.3496  verdict_acc=0.8224  verdict_acc_boundary=0.9397  time=5.4s
+[control]  epoch  16/150  loss=0.3655  verdict_acc=0.6306  verdict_acc_boundary=0.0345  time=5.3s
+[control]  epoch  17/150  loss=0.4228  verdict_acc=0.7816  verdict_acc_boundary=0.9828  time=5.4s
+[control]  epoch  18/150  loss=0.3872  verdict_acc=0.8000  verdict_acc_boundary=0.9914  time=5.4s
+[control]  epoch  19/150  loss=0.3727  verdict_acc=0.8122  verdict_acc_boundary=0.8966  time=5.4s
+[control]  epoch  20/150  loss=0.3754  verdict_acc=0.8143  verdict_acc_boundary=0.8534  time=5.5s
+[control]  epoch  21/150  loss=0.3439  verdict_acc=0.8184  verdict_acc_boundary=0.9310  time=5.7s
+[control]  epoch  22/150  loss=0.3563  verdict_acc=0.8020  verdict_acc_boundary=0.5345  time=6.1s
+[control] early stop at epoch 22: no improvement in verdict accuracy for 20 epochs (best=0.8633 at epoch 2)
+Wrote /Users/yugendren/experiments/four_color_digestion/results/d1v2/r10s2/control_metrics.json
+Wrote /Users/yugendren/experiments/four_color_digestion/results/d1v2/r10s2/summary.json

@@ -1,0 +1,40 @@
+Using device: mps
+Loaded 3269 configs for ring 10 (9842 codes, max src len 241) in 3.5s
+Train: 2779  Val: 490  (boundary total 776, stratify=True)
+[control] parameters: 1,193,473
+[control]  epoch   1/150  loss=0.4429  verdict_acc=0.8265  verdict_acc_boundary=0.5086  time=6.0s  *best*
+[control]  epoch   2/150  loss=0.3171  verdict_acc=0.8265  verdict_acc_boundary=0.9828  time=5.3s
+[control]  epoch   3/150  loss=0.2751  verdict_acc=0.8388  verdict_acc_boundary=0.5948  time=5.3s  *best*
+[control]  epoch   4/150  loss=0.2663  verdict_acc=0.8592  verdict_acc_boundary=0.7586  time=5.4s  *best*
+[control]  epoch   5/150  loss=0.2703  verdict_acc=0.8367  verdict_acc_boundary=0.7845  time=5.4s
+[control]  epoch   6/150  loss=0.2820  verdict_acc=0.8347  verdict_acc_boundary=0.5776  time=5.4s
+[control]  epoch   7/150  loss=0.2867  verdict_acc=0.8327  verdict_acc_boundary=0.9138  time=5.4s
+[control]  epoch   8/150  loss=0.2736  verdict_acc=0.8429  verdict_acc_boundary=0.6983  time=5.4s
+[control]  epoch   9/150  loss=0.2738  verdict_acc=0.8531  verdict_acc_boundary=0.8190  time=5.4s
+[control]  epoch  10/150  loss=0.3260  verdict_acc=0.8245  verdict_acc_boundary=0.8534  time=5.4s
+[control]  epoch  11/150  loss=0.3066  verdict_acc=0.8449  verdict_acc_boundary=0.7672  time=5.4s
+[control]  epoch  12/150  loss=0.2736  verdict_acc=0.8429  verdict_acc_boundary=0.7845  time=5.4s
+[control]  epoch  13/150  loss=0.2735  verdict_acc=0.8673  verdict_acc_boundary=0.8448  time=5.4s  *best*
+[control]  epoch  14/150  loss=0.2633  verdict_acc=0.8673  verdict_acc_boundary=0.9052  time=5.4s
+[control]  epoch  15/150  loss=0.2541  verdict_acc=0.8347  verdict_acc_boundary=0.9052  time=5.4s
+[control]  epoch  16/150  loss=0.2700  verdict_acc=0.8327  verdict_acc_boundary=0.7672  time=5.4s
+[control]  epoch  17/150  loss=0.2947  verdict_acc=0.8020  verdict_acc_boundary=0.8966  time=5.4s
+[control]  epoch  18/150  loss=0.2807  verdict_acc=0.8531  verdict_acc_boundary=0.9224  time=5.4s
+[control]  epoch  19/150  loss=0.2762  verdict_acc=0.8327  verdict_acc_boundary=0.8362  time=5.4s
+[control]  epoch  20/150  loss=0.2760  verdict_acc=0.8388  verdict_acc_boundary=0.7759  time=5.4s
+[control]  epoch  21/150  loss=0.2784  verdict_acc=0.8571  verdict_acc_boundary=0.7414  time=5.4s
+[control]  epoch  22/150  loss=0.2609  verdict_acc=0.8429  verdict_acc_boundary=0.8534  time=5.4s
+[control]  epoch  23/150  loss=0.2779  verdict_acc=0.8306  verdict_acc_boundary=0.8621  time=5.4s
+[control]  epoch  24/150  loss=0.2740  verdict_acc=0.8653  verdict_acc_boundary=0.7931  time=5.4s
+[control]  epoch  25/150  loss=0.2656  verdict_acc=0.8633  verdict_acc_boundary=0.8190  time=5.4s
+[control]  epoch  26/150  loss=0.2720  verdict_acc=0.8531  verdict_acc_boundary=0.7931  time=5.4s
+[control]  epoch  27/150  loss=0.2665  verdict_acc=0.8449  verdict_acc_boundary=0.8793  time=5.4s
+[control]  epoch  28/150  loss=0.2811  verdict_acc=0.8224  verdict_acc_boundary=0.5517  time=5.4s
+[control]  epoch  29/150  loss=0.2942  verdict_acc=0.8061  verdict_acc_boundary=0.9483  time=5.4s
+[control]  epoch  30/150  loss=0.3057  verdict_acc=0.8408  verdict_acc_boundary=0.7414  time=5.4s
+[control]  epoch  31/150  loss=0.2905  verdict_acc=0.8367  verdict_acc_boundary=0.8534  time=5.4s
+[control]  epoch  32/150  loss=0.2860  verdict_acc=0.8510  verdict_acc_boundary=0.8276  time=5.4s
+[control]  epoch  33/150  loss=0.2938  verdict_acc=0.8388  verdict_acc_boundary=0.7845  time=5.4s
+[control] early stop at epoch 33: no improvement in verdict accuracy for 20 epochs (best=0.8673 at epoch 13)
+Wrote /Users/yugendren/experiments/four_color_digestion/results/d1v2/r10s1/control_metrics.json
+Wrote /Users/yugendren/experiments/four_color_digestion/results/d1v2/r10s1/summary.json

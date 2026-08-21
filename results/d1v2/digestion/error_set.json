@@ -1,0 +1,83 @@
+{
+  "n_test_boundary": 21,
+  "control_encoder_summary_boundary_acc": 0.9047619104385376,
+  "shallow_plus_structural_boundary_acc": 0.761904776096344,
+  "groups": {
+    "encoder_right_struct_wrong": [
+      "gen-r10-n18-res125-21693",
+      "gen-r10-n18-res62-30377",
+      "gen-r10-n18-res161-25540",
+      "gen-r10-n18-res125-21698"
+    ],
+    "struct_right_encoder_wrong": [
+      "gen-r10-n17-527317"
+    ],
+    "both_right": [
+      "gen-r10-n17-515711",
+      "gen-r10-n18-res85-32784",
+      "gen-r10-n17-498034",
+      "gen-r10-n17-528912",
+      "gen-r10-n18-res141-28412",
+      "gen-r10-n17-518690",
+      "gen-r10-n18-res101-30375",
+      "71",
+      "gen-r10-n18-res128-32607",
+      "gen-r10-n18-res73-36455",
+      "gen-r10-n18-res80-35658",
+      "gen-r10-n18-res54-37561",
+      "gen-r10-n18-res79-21267",
+      "gen-r10-n17-518142",
+      "gen-r10-n18-res132-27157"
+    ],
+    "both_wrong": [
+      "gen-r10-n16-29491"
+    ]
+  },
+  "feature_means": {
+    "encoder_right_struct_wrong": {
+      "n_deg5_interior": 6.25,
+      "n_deg5_total": 8.75,
+      "max_run_deg5_ring": 1.25,
+      "max_run_const_degree_ring": 2.5,
+      "n_triangles_deg5": 4.0,
+      "n_diamonds_deg5": 2.75,
+      "n_extendable": 617.0,
+      "n_extendable_ratio": 0.03134684753340446,
+      "rounds": 6.25,
+      "monotonic_nonincreasing_frac": 1.0,
+      "first_round_drop_ratio": 0.8448899769562965,
+      "final_survivors": 0.0,
+      "n": 4
+    },
+    "rest_of_val_boundary": {
+      "n_deg5_interior": 4.821428571428571,
+      "n_deg5_total": 6.25,
+      "max_run_deg5_ring": 0.8928571428571429,
+      "max_run_const_degree_ring": 2.3392857142857144,
+      "n_triangles_deg5": 1.6607142857142858,
+      "n_diamonds_deg5": 0.875,
+      "n_extendable": 632.5625,
+      "n_extendable_ratio": 0.03213750444546055,
+      "rounds": 6.714285714285714,
+      "monotonic_nonincreasing_frac": 1.0,
+      "first_round_drop_ratio": 0.8433513850148232,
+      "final_survivors": 0.0,
+      "n": 112
+    },
+    "rest_of_full_corpus_boundary": {
+      "n_deg5_interior": 4.953367875647668,
+      "n_deg5_total": 6.393782383419689,
+      "max_run_deg5_ring": 0.9183937823834197,
+      "max_run_const_degree_ring": 2.3044041450777204,
+      "n_triangles_deg5": 1.8199481865284974,
+      "n_diamonds_deg5": 0.966321243523316,
+      "n_extendable": 630.0518134715026,
+      "n_extendable_ratio": 0.032009948355001906,
+      "rounds": 6.700777202072539,
+      "monotonic_nonincreasing_frac": 1.0,
+      "first_round_drop_ratio": 0.8437461551038269,
+      "final_survivors": 0.0,
+      "n": 772
+    }
+  }
+}
