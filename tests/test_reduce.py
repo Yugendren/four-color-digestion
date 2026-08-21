@@ -92,5 +92,51 @@ class TestReducibilityDifferential(unittest.TestCase):
             pass  # a structural failure on corrupted input is also acceptable
 
 
+class TestRecordSets(unittest.TestCase):
+    """record_sets=True must round-trip against the existing counts trace
+    and leave default (record_sets=False) behavior/output unchanged."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.configs = [c for c in parse_conf(RSST_CONF) if c.r <= 8][:10]
+
+    def test_default_call_has_no_set_trace(self):
+        res = check(self.configs[0])
+        self.assertIsNone(res.set_trace)
+        self.assertIsNone(res.final_consistent)
+
+    def test_set_sizes_match_counts_trace(self):
+        for c in self.configs:
+            res = check(c, record_sets=True)
+            self.assertIsNotNone(res.set_trace)
+            self.assertEqual(len(res.set_trace), len(res.trace))
+            for round_idx, (count, codes) in enumerate(
+                zip(res.trace, res.set_trace)
+            ):
+                self.assertEqual(
+                    len(codes), count,
+                    f"{c.ident} round {round_idx}: set size {len(codes)} "
+                    f"!= trace count {count}",
+                )
+                self.assertEqual(codes, sorted(codes), f"{c.ident}: not sorted")
+                self.assertEqual(len(codes), len(set(codes)), f"{c.ident}: dup codes")
+
+    def test_final_consistent_matches_last_round_and_n_consistent(self):
+        for c in self.configs:
+            res = check(c, record_sets=True)
+            self.assertEqual(res.final_consistent, res.set_trace[-1])
+            self.assertEqual(len(res.final_consistent), res.n_consistent)
+
+    def test_record_sets_does_not_change_counts_or_verdict(self):
+        for c in self.configs:
+            plain = check(c)
+            with_sets = check(c, record_sets=True)
+            self.assertEqual(plain.n_extendable, with_sets.n_extendable)
+            self.assertEqual(plain.n_consistent, with_sets.n_consistent)
+            self.assertEqual(plain.d_reducible, with_sets.d_reducible)
+            self.assertEqual(plain.rounds, with_sets.rounds)
+            self.assertEqual(plain.trace, with_sets.trace)
+
+
 if __name__ == "__main__":
     unittest.main()

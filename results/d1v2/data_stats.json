@@ -1,0 +1,83 @@
+{
+  "per_ring": {
+    "8": {
+      "n_total": 1162,
+      "n_reducible": 986,
+      "n_not_reducible": 176,
+      "fraction_reducible": 0.8485370051635112,
+      "n_boundary": 16,
+      "n_boundary_nonreducible_small_consistent": 1,
+      "n_boundary_reducible_slow": 15,
+      "by_source": {
+        "corpus:rsst633": 5,
+        "corpus:steinberger2822": 1,
+        "corpus:generated": 1156
+      },
+      "set_trace_round_size_mean": 271.06965065502186,
+      "set_trace_round_size_max": 1041,
+      "set_trace_round0_size_mean": 954.3330464716007,
+      "set_trace_round0_size_max": 1041,
+      "rounds_mean": 2.9414802065404473,
+      "rounds_max": 9
+    },
+    "9": {
+      "n_total": 1446,
+      "n_reducible": 991,
+      "n_not_reducible": 455,
+      "fraction_reducible": 0.6853388658367912,
+      "n_boundary": 176,
+      "n_boundary_nonreducible_small_consistent": 0,
+      "n_boundary_reducible_slow": 176,
+      "by_source": {
+        "corpus:rsst633": 8,
+        "corpus:steinberger2822": 8,
+        "corpus:generated": 1430
+      },
+      "set_trace_round_size_mean": 725.7586378944742,
+      "set_trace_round_size_max": 3175,
+      "set_trace_round0_size_mean": 3004.147302904564,
+      "set_trace_round0_size_max": 3175,
+      "rounds_mean": 4.544260027662517,
+      "rounds_max": 12
+    },
+    "10": {
+      "n_total": 1746,
+      "n_reducible": 405,
+      "n_not_reducible": 1341,
+      "fraction_reducible": 0.23195876288659795,
+      "n_boundary": 368,
+      "n_boundary_nonreducible_small_consistent": 0,
+      "n_boundary_reducible_slow": 368,
+      "by_source": {
+        "corpus:rsst633": 31,
+        "corpus:steinberger2822": 37,
+        "corpus:generated": 1677,
+        "corpus:nl4ct_pool": 1
+      },
+      "set_trace_round_size_mean": 2281.982374209099,
+      "set_trace_round_size_max": 9629,
+      "set_trace_round0_size_mean": 9321.303550973655,
+      "set_trace_round0_size_max": 9629,
+      "rounds_mean": 6.603665521191294,
+      "rounds_max": 17
+    }
+  },
+  "storage_bytes": {
+    "traces_r8.jsonl": 7233204,
+    "code_index_r8.json": 5490,
+    "traces_r9.jsonl": 34409241,
+    "code_index_r9.json": 18612,
+    "traces_r10.jsonl": 180498958,
+    "code_index_r10.json": 57979
+  },
+  "sanity_check": {
+    "n_checked": 100,
+    "n_mismatch": 0,
+    "examples": []
+  },
+  "plantri_status": {
+    "8": null,
+    "9": null,
+    "10": null
+  }
+}

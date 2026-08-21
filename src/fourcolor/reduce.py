@@ -415,6 +415,15 @@ class ReduceResult:
     c_reducible: bool | None   # None if no contract given/needed
     rounds: int
     trace: list[int]           # surviving |C_i| per round (process labels)
+    set_trace: list[list[int]] | None = None
+    # Per-round SET of surviving canonical codes (sorted ascending int lists),
+    # one entry per round 0..rounds (same length/indexing as `trace`; each
+    # entry's length equals the corresponding `trace` entry). Only populated
+    # when check() is called with record_sets=True -- None otherwise, so
+    # default behavior/performance is unchanged. set_trace[-1] IS the final
+    # consistent set C'(K) (also exposed separately as `final_consistent`
+    # for convenience).
+    final_consistent: list[int] | None = None
 
 
 @functools.lru_cache(maxsize=4)
@@ -434,7 +443,18 @@ def canonical_codes(r: int) -> frozenset:
     return frozenset(out)
 
 
-def check(cfg: Configuration) -> ReduceResult:
+def _live_set_sorted(live_arr, live0: bool) -> list[int]:
+    """Sorted list of surviving canonical codes for one round's state."""
+    import numpy as np
+
+    codes = [int(c) for c in np.nonzero(live_arr)[0]]
+    if live0:
+        codes.append(0)
+        codes.sort()
+    return codes
+
+
+def check(cfg: Configuration, record_sets: bool = False) -> ReduceResult:
     import numpy as np
 
     r = cfg.r
@@ -454,11 +474,16 @@ def check(cfg: Configuration) -> ReduceResult:
     live_arr[live_list] = True
 
     trace = [int(live_arr.sum()) + (1 if live0 else 0)]
+    set_trace: list[list[int]] | None = None
+    if record_sets:
+        set_trace = [_live_set_sorted(live_arr, live0)]
     rounds = 0
     while True:
         rounds += 1
         new_live, new_live0 = engine.round(live_arr, live0)
         trace.append(int(new_live.sum()) + (1 if new_live0 else 0))
+        if record_sets:
+            set_trace.append(_live_set_sorted(new_live, new_live0))
         if bool((new_live == live_arr).all()) and new_live0 == live0:
             break
         live_arr, live0 = new_live, new_live0
@@ -474,8 +499,9 @@ def check(cfg: Configuration) -> ReduceResult:
         mod_ext = extendable_codes(cfg, contract=cfg.contract)
         c_red = consistent.isdisjoint(mod_ext)
 
+    final_consistent = sorted(consistent) if record_sets else None
     return ReduceResult(cfg.ident, len(ext), len(consistent), d_red, c_red,
-                        rounds, trace)
+                        rounds, trace, set_trace, final_consistent)
 
 
 def _is_canonical_code(code: int, r: int) -> bool:

@@ -20,3 +20,11 @@ results/p3/runs/*/log/
 # p3 work/log exclusion above. report.md and the JSON summaries (small,
 # and what the write-up actually cites) stay tracked.
 results/d1/interp/*.npz
+
+# D1-v2 datagen (tools/d1v2_datagen.py plantri): PID files from detached
+# background generation jobs are host/run-transient bookkeeping, not
+# results. The live progress logs (log_plantri_r{r}_n18.txt) are kept
+# untracked while a job is in flight; commit a final snapshot once
+# generation completes.
+results/d1v2/*.pid
+results/d1v2/log_plantri_*.txt
