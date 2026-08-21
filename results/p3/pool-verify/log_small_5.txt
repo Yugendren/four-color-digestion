@@ -1,2 +1,19 @@
 [shard 5/6 r9-10-11-12-13-14] 50/941 done, 0 anomalies
 [shard 5/6 r9-10-11-12-13-14] 100/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 150/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 200/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 250/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 300/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 350/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 400/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 450/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 500/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 550/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 600/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 650/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 700/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 750/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 800/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 850/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] 900/941 done, 0 anomalies
+[shard 5/6 r9-10-11-12-13-14] COMPLETE: 941 configs, 0 anomalies

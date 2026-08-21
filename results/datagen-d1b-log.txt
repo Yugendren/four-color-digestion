@@ -1,0 +1,5 @@
+r=8 n=16..17: 38367421 disk triangulations, 997 valid configurations, 864 D-reducible (86.7%) in 1097s -> /Users/yugendren/experiments/four_color_digestion/data/configs_r8_n16-17.jsonl
+r=9 n=16..17: 9372959 disk triangulations, 1233 valid configurations, 938 D-reducible (76.1%) in 571s -> /Users/yugendren/experiments/four_color_digestion/data/configs_r9_n16-17.jsonl
+r=10 n=12..17: 1880470 disk triangulations, 1724 valid configurations, 383 D-reducible (22.2%) in 509s -> /Users/yugendren/experiments/four_color_digestion/data/configs_r10_n12-17.jsonl
+r=11 n=13..17: 293554 disk triangulations, 1630 valid configurations, 0 D-reducible (0.0%) in 377s -> /Users/yugendren/experiments/four_color_digestion/data/configs_r11_n13-17.jsonl
+exit=0

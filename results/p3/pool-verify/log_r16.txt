@@ -1,0 +1,10 @@
+[shard 0/1 r16] 50/483 done, 0 anomalies
+[shard 0/1 r16] 100/483 done, 0 anomalies
+[shard 0/1 r16] 150/483 done, 0 anomalies
+[shard 0/1 r16] 200/483 done, 0 anomalies
+[shard 0/1 r16] 250/483 done, 0 anomalies
+[shard 0/1 r16] 300/483 done, 0 anomalies
+[shard 0/1 r16] 350/483 done, 0 anomalies
+[shard 0/1 r16] 400/483 done, 0 anomalies
+[shard 0/1 r16] 450/483 done, 0 anomalies
+[shard 0/1 r16] COMPLETE: 483 configs, 0 anomalies
