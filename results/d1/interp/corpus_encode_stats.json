@@ -1,0 +1,6 @@
+{
+  "corpus_total": 14036,
+  "excluded_over_model_max_len": 7015,
+  "encodable": 7021,
+  "model_max_len": 259
+}
