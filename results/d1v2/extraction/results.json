@@ -1,0 +1,234 @@
+[
+ {
+  "seed": 0,
+  "probe_results": {
+   "shallow": {
+    "name": "shallow",
+    "d_features": 16,
+    "train_acc": 0.7627550959587097,
+    "n_test": 98,
+    "overall_acc": 0.7551020383834839,
+    "overall_ci_lo": 0.6632652878761292,
+    "overall_ci_hi": 0.8469387888908386,
+    "n_test_boundary": 21,
+    "boundary_acc": 0.523809552192688,
+    "boundary_ci_lo": 0.33214286714792257,
+    "boundary_ci_hi": 0.7142857313156128
+   },
+   "shallow_plus_structural": {
+    "name": "shallow_plus_structural",
+    "d_features": 24,
+    "train_acc": 0.8928571343421936,
+    "n_test": 98,
+    "overall_acc": 0.8571428656578064,
+    "overall_ci_lo": 0.7857142686843872,
+    "overall_ci_hi": 0.918367326259613,
+    "n_test_boundary": 21,
+    "boundary_acc": 0.761904776096344,
+    "boundary_ci_lo": 0.5714285969734192,
+    "boundary_ci_hi": 0.9047619104385376
+   },
+   "struct_plus_arrangement": {
+    "name": "struct_plus_arrangement",
+    "d_features": 38,
+    "train_acc": 0.9158163070678711,
+    "n_test": 98,
+    "overall_acc": 0.918367326259613,
+    "overall_ci_lo": 0.8673469424247742,
+    "overall_ci_hi": 0.9693877696990967,
+    "n_test_boundary": 21,
+    "boundary_acc": 0.9523809552192688,
+    "boundary_ci_lo": 0.8571428656578064,
+    "boundary_ci_hi": 1.0
+   },
+   "control_encoder_summary": {
+    "name": "control_encoder_summary",
+    "d_features": 256,
+    "train_acc": 0.9413265585899353,
+    "n_test": 98,
+    "overall_acc": 0.9081632494926453,
+    "overall_ci_lo": 0.8367347121238708,
+    "overall_ci_hi": 0.9591836929321289,
+    "n_test_boundary": 21,
+    "boundary_acc": 0.9047619104385376,
+    "boundary_ci_lo": 0.761904776096344,
+    "boundary_ci_hi": 1.0
+   }
+  },
+  "error_set_check": {}
+ },
+ {
+  "seed": 1,
+  "probe_results": {
+   "shallow": {
+    "name": "shallow",
+    "d_features": 16,
+    "train_acc": 0.7831632494926453,
+    "n_test": 98,
+    "overall_acc": 0.7755101919174194,
+    "overall_ci_lo": 0.6836734414100647,
+    "overall_ci_hi": 0.8571428656578064,
+    "n_test_boundary": 23,
+    "boundary_acc": 0.43478259444236755,
+    "boundary_ci_lo": 0.21739129722118378,
+    "boundary_ci_hi": 0.6521739363670349
+   },
+   "shallow_plus_structural": {
+    "name": "shallow_plus_structural",
+    "d_features": 24,
+    "train_acc": 0.8852040767669678,
+    "n_test": 98,
+    "overall_acc": 0.8571428656578064,
+    "overall_ci_lo": 0.7857142686843872,
+    "overall_ci_hi": 0.918367326259613,
+    "n_test_boundary": 23,
+    "boundary_acc": 0.782608687877655,
+    "boundary_ci_lo": 0.6086956262588501,
+    "boundary_ci_hi": 0.95652174949646
+   },
+   "struct_plus_arrangement": {
+    "name": "struct_plus_arrangement",
+    "d_features": 38,
+    "train_acc": 0.918367326259613,
+    "n_test": 98,
+    "overall_acc": 0.9081632494926453,
+    "overall_ci_lo": 0.8469387888908386,
+    "overall_ci_hi": 0.9591836929321289,
+    "n_test_boundary": 23,
+    "boundary_acc": 0.9130434989929199,
+    "boundary_ci_lo": 0.782608687877655,
+    "boundary_ci_hi": 1.0
+   },
+   "control_encoder_summary": {
+    "name": "control_encoder_summary",
+    "d_features": 256,
+    "train_acc": 0.8826530575752258,
+    "n_test": 98,
+    "overall_acc": 0.8571428656578064,
+    "overall_ci_lo": 0.7857142686843872,
+    "overall_ci_hi": 0.918367326259613,
+    "n_test_boundary": 23,
+    "boundary_acc": 0.782608687877655,
+    "boundary_ci_lo": 0.6086956262588501,
+    "boundary_ci_hi": 0.9130434989929199
+   }
+  },
+  "error_set_check": {}
+ },
+ {
+  "seed": 2,
+  "probe_results": {
+   "shallow": {
+    "name": "shallow",
+    "d_features": 16,
+    "train_acc": 0.795918345451355,
+    "n_test": 98,
+    "overall_acc": 0.7142857313156128,
+    "overall_ci_lo": 0.6224489808082581,
+    "overall_ci_hi": 0.795918345451355,
+    "n_test_boundary": 24,
+    "boundary_acc": 0.5416666865348816,
+    "boundary_ci_lo": 0.3333333432674408,
+    "boundary_ci_hi": 0.75
+   },
+   "shallow_plus_structural": {
+    "name": "shallow_plus_structural",
+    "d_features": 24,
+    "train_acc": 0.8979591727256775,
+    "n_test": 98,
+    "overall_acc": 0.8571428656578064,
+    "overall_ci_lo": 0.7857142686843872,
+    "overall_ci_hi": 0.9285714030265808,
+    "n_test_boundary": 24,
+    "boundary_acc": 0.7083333134651184,
+    "boundary_ci_lo": 0.5,
+    "boundary_ci_hi": 0.875
+   },
+   "struct_plus_arrangement": {
+    "name": "struct_plus_arrangement",
+    "d_features": 38,
+    "train_acc": 0.9158163070678711,
+    "n_test": 98,
+    "overall_acc": 0.8571428656578064,
+    "overall_ci_lo": 0.7857142686843872,
+    "overall_ci_hi": 0.918367326259613,
+    "n_test_boundary": 24,
+    "boundary_acc": 0.875,
+    "boundary_ci_lo": 0.7083333134651184,
+    "boundary_ci_hi": 1.0
+   },
+   "control_encoder_summary": {
+    "name": "control_encoder_summary",
+    "d_features": 256,
+    "train_acc": 0.9005101919174194,
+    "n_test": 98,
+    "overall_acc": 0.8265306353569031,
+    "overall_ci_lo": 0.7448979616165161,
+    "overall_ci_hi": 0.8979591727256775,
+    "n_test_boundary": 24,
+    "boundary_acc": 0.75,
+    "boundary_ci_lo": 0.5833333134651184,
+    "boundary_ci_hi": 0.9166666865348816
+   }
+  },
+  "error_set_check": {}
+ },
+ {
+  "seed": 3,
+  "probe_results": {
+   "shallow": {
+    "name": "shallow",
+    "d_features": 16,
+    "train_acc": 0.7857142686843872,
+    "n_test": 98,
+    "overall_acc": 0.7142857313156128,
+    "overall_ci_lo": 0.6224489808082581,
+    "overall_ci_hi": 0.7961734473705278,
+    "n_test_boundary": 25,
+    "boundary_acc": 0.5199999809265137,
+    "boundary_ci_lo": 0.3199999928474426,
+    "boundary_ci_hi": 0.7200000286102295
+   },
+   "shallow_plus_structural": {
+    "name": "shallow_plus_structural",
+    "d_features": 24,
+    "train_acc": 0.8954081535339355,
+    "n_test": 98,
+    "overall_acc": 0.8775510191917419,
+    "overall_ci_lo": 0.8061224222183228,
+    "overall_ci_hi": 0.9387755393981934,
+    "n_test_boundary": 25,
+    "boundary_acc": 0.7599999904632568,
+    "boundary_ci_lo": 0.6000000238418579,
+    "boundary_ci_hi": 0.9200000166893005
+   },
+   "struct_plus_arrangement": {
+    "name": "struct_plus_arrangement",
+    "d_features": 38,
+    "train_acc": 0.9132652878761292,
+    "n_test": 98,
+    "overall_acc": 0.8673469424247742,
+    "overall_ci_lo": 0.795918345451355,
+    "overall_ci_hi": 0.9285714030265808,
+    "n_test_boundary": 25,
+    "boundary_acc": 0.7599999904632568,
+    "boundary_ci_lo": 0.5990000233054161,
+    "boundary_ci_hi": 0.9200000166893005
+   },
+   "control_encoder_summary": {
+    "name": "control_encoder_summary",
+    "d_features": 256,
+    "train_acc": 0.9132652878761292,
+    "n_test": 98,
+    "overall_acc": 0.918367326259613,
+    "overall_ci_lo": 0.8571428656578064,
+    "overall_ci_hi": 0.9693877696990967,
+    "n_test_boundary": 25,
+    "boundary_acc": 0.9200000166893005,
+    "boundary_ci_lo": 0.800000011920929,
+    "boundary_ci_hi": 1.0
+   }
+  },
+  "error_set_check": {}
+ }
+]
