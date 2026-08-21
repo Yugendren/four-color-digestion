@@ -1,0 +1,14 @@
+Using device: mps
+
+=== Ring 10 ===
+  shallow                      overall=0.7551  boundary=0.523809552192688
+  shallow_plus_structural      overall=0.8571  boundary=0.761904776096344
+  control_encoder_summary      overall=0.9082  boundary=0.9047619104385376
+  dynamics_encoder_summary     overall=0.8571  boundary=0.9047619104385376
+  dynamics_round0_logits       overall=0.7449  boundary=0.6190476417541504
+  dynamics_h0                  overall=0.8469  boundary=0.9047619104385376
+  dynamics_h1                  overall=0.8776  boundary=0.8571428656578064
+  dynamics_h2                  overall=0.9082  boundary=0.9047619104385376
+
+Wrote results/d1v2/v2run/interrogation.json
+Wrote results/d1v2/v2run/interrogation.md

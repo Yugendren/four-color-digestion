@@ -1,0 +1,58 @@
+Using device: mps
+Loaded 3269 configs for ring 10 (9842 codes, max src len 241) in 3.4s
+Train: 2779  Val: 490  (boundary total 776, stratify=True)
+[dynamics] parameters: 6,637,427
+[dynamics] epoch   1/150  loss=0.2662 (state=0.2213 verdict=0.0450)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.5592  verdict_acc_fr_boundary=0.0172  time=19.1s  *best*
+[dynamics] epoch   2/150  loss=0.1326 (state=0.1311 verdict=0.0015)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.4s  *best*
+[dynamics] epoch   3/150  loss=0.1233 (state=0.1226 verdict=0.0007)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.0s
+[dynamics] epoch   4/150  loss=0.1183 (state=0.1178 verdict=0.0004)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.0s
+[dynamics] epoch   5/150  loss=0.1153 (state=0.1149 verdict=0.0003)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.2s
+[dynamics] epoch   6/150  loss=0.1127 (state=0.1125 verdict=0.0002)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.0s
+[dynamics] epoch   7/150  loss=0.1099 (state=0.1097 verdict=0.0002)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.2s
+[dynamics] epoch   8/150  loss=0.1073 (state=0.1071 verdict=0.0002)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.0s
+[dynamics] epoch   9/150  loss=0.1047 (state=0.1045 verdict=0.0002)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.2s
+[dynamics] epoch  10/150  loss=0.1021 (state=0.1019 verdict=0.0002)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=20.1s
+[dynamics] epoch  11/150  loss=0.0999 (state=0.0997 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.6s
+[dynamics] epoch  12/150  loss=0.0976 (state=0.0974 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=17.7s
+[dynamics] epoch  13/150  loss=0.0955 (state=0.0954 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.1s
+[dynamics] epoch  14/150  loss=0.0938 (state=0.0936 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=19.8s
+[dynamics] epoch  15/150  loss=0.0921 (state=0.0920 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.0s
+[dynamics] epoch  16/150  loss=0.0908 (state=0.0907 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=17.9s
+[dynamics] epoch  17/150  loss=0.0893 (state=0.0892 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=17.8s
+[dynamics] epoch  18/150  loss=0.0881 (state=0.0880 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=17.8s
+[dynamics] epoch  19/150  loss=0.0869 (state=0.0868 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.0s
+[dynamics] epoch  20/150  loss=0.0859 (state=0.0858 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=17.9s
+[dynamics] epoch  21/150  loss=0.0850 (state=0.0849 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=17.9s
+[dynamics] epoch  22/150  loss=0.0840 (state=0.0839 verdict=0.0001)  round0_f1=0.9698  verdict_acc_tf=1.0000  verdict_acc_fr=0.6245  verdict_acc_fr_boundary=0.0000  time=18.0s
+[dynamics] early stop at epoch 22: no improvement in free-running verdict accuracy for 20 epochs (best=0.6245 at epoch 2)
+Wrote results/d1v2/r10v2/dynamics_metrics.json
+[control] parameters: 1,193,473
+[control]  epoch   1/150  loss=0.4702  verdict_acc=0.8714  verdict_acc_boundary=0.7241  time=5.4s  *best*
+[control]  epoch   2/150  loss=0.3260  verdict_acc=0.8735  verdict_acc_boundary=0.8190  time=5.4s  *best*
+[control]  epoch   3/150  loss=0.2821  verdict_acc=0.8755  verdict_acc_boundary=0.8879  time=5.4s  *best*
+[control]  epoch   4/150  loss=0.2748  verdict_acc=0.8694  verdict_acc_boundary=0.9138  time=5.5s
+[control]  epoch   5/150  loss=0.2814  verdict_acc=0.8531  verdict_acc_boundary=0.9483  time=5.5s
+[control]  epoch   6/150  loss=0.2718  verdict_acc=0.8939  verdict_acc_boundary=0.8103  time=5.4s  *best*
+[control]  epoch   7/150  loss=0.2532  verdict_acc=0.8857  verdict_acc_boundary=0.8103  time=5.4s
+[control]  epoch   8/150  loss=0.2761  verdict_acc=0.8857  verdict_acc_boundary=0.8103  time=5.4s
+[control]  epoch   9/150  loss=0.2738  verdict_acc=0.8878  verdict_acc_boundary=0.6897  time=5.6s
+[control]  epoch  10/150  loss=0.2653  verdict_acc=0.8816  verdict_acc_boundary=0.8707  time=5.5s
+[control]  epoch  11/150  loss=0.2586  verdict_acc=0.8714  verdict_acc_boundary=0.9655  time=5.5s
+[control]  epoch  12/150  loss=0.2527  verdict_acc=0.8612  verdict_acc_boundary=0.9397  time=5.5s
+[control]  epoch  13/150  loss=0.2603  verdict_acc=0.8673  verdict_acc_boundary=0.7586  time=5.5s
+[control]  epoch  14/150  loss=0.2834  verdict_acc=0.8837  verdict_acc_boundary=0.9397  time=5.5s
+[control]  epoch  15/150  loss=0.2746  verdict_acc=0.8592  verdict_acc_boundary=0.7759  time=5.4s
+[control]  epoch  16/150  loss=0.2970  verdict_acc=0.8510  verdict_acc_boundary=0.6724  time=5.4s
+[control]  epoch  17/150  loss=0.2751  verdict_acc=0.8857  verdict_acc_boundary=0.8448  time=5.4s
+[control]  epoch  18/150  loss=0.2943  verdict_acc=0.8102  verdict_acc_boundary=0.5776  time=5.5s
+[control]  epoch  19/150  loss=0.2824  verdict_acc=0.8531  verdict_acc_boundary=0.8017  time=5.4s
+[control]  epoch  20/150  loss=0.2861  verdict_acc=0.8653  verdict_acc_boundary=0.9052  time=5.4s
+[control]  epoch  21/150  loss=0.2786  verdict_acc=0.8796  verdict_acc_boundary=0.8966  time=5.4s
+[control]  epoch  22/150  loss=0.2778  verdict_acc=0.8776  verdict_acc_boundary=0.9052  time=5.4s
+[control]  epoch  23/150  loss=0.2640  verdict_acc=0.8939  verdict_acc_boundary=0.8621  time=5.4s
+[control]  epoch  24/150  loss=0.2651  verdict_acc=0.8714  verdict_acc_boundary=0.8448  time=5.4s
+[control]  epoch  25/150  loss=0.2716  verdict_acc=0.8571  verdict_acc_boundary=0.8707  time=5.4s
+[control]  epoch  26/150  loss=0.2937  verdict_acc=0.8571  verdict_acc_boundary=0.6983  time=5.4s
+[control] early stop at epoch 26: no improvement in verdict accuracy for 20 epochs (best=0.8939 at epoch 6)
+Wrote results/d1v2/r10v2/control_metrics.json
+Wrote results/d1v2/r10v2/summary.json

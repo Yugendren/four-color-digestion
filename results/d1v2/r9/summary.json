@@ -1,0 +1,16 @@
+{
+  "ring": 9,
+  "n_configs": 1446,
+  "n_codes": 3281,
+  "n_boundary_total": 176,
+  "train_size": 1230,
+  "val_size": 216,
+  "dynamics": {
+    "best_epoch": 1,
+    "best_verdict_accuracy_free_running": 0.7777777910232544
+  },
+  "control": {
+    "best_epoch": 5,
+    "best_verdict_accuracy": 0.9490740895271301
+  }
+}
