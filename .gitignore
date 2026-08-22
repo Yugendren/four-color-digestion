@@ -6,6 +6,11 @@ __pycache__/
 .DS_Store
 checkpoints/
 third_party/*/extracted_build/
+# Lemma-harness source index (src/fourcolor/lemma_corpus.py): per-source-file
+# line offsets + canonical-form hashes, keyed by (size, mtime) and rebuilt
+# automatically when a source changes. Pure derived data, ~5MB, ~30s to
+# regenerate from scratch.
+.cache/
 # P3 pipeline re-runs (tools/p3_pipeline_run.sh): work/ and log/ hold the regenerated
 # combined_rules/wheels/cartwheels + thousands of per-wheel logs for one candidate pool
 # -- large (GB-scale) and fully reproducible from the pool manifest, so only the run's
