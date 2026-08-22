@@ -3,3 +3,4 @@ r=13 n=14 (interior=1): 1 raw -> 1 ring-ok -> 1 candidate configs (0 excluded, c
 r=13 n=15 (interior=2): 6 raw -> 6 ring-ok -> 4 candidate configs (0 excluded, cond-6) -> 4 valid configs, 0 D-reducible, 1.0s
 r=13 n=16 (interior=3): 132 raw -> 132 ring-ok -> 44 candidate configs (36 excluded, cond-6) -> 8 valid configs, 0 D-reducible, 17.8s
 r=13 n=17 (interior=4): 2727 raw -> 2727 ring-ok -> 320 candidate configs (264 excluded, cond-6) -> 56 valid configs, 0 D-reducible, 138.1s
+r=13 n=18 (interior=5): 50195 raw -> 50195 ring-ok -> 1734 candidate configs (1454 excluded, cond-6) -> 280 valid configs, 0 D-reducible, 1183.1s

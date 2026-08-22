@@ -55,6 +55,20 @@
       "ring_length_ok": 2727,
       "shard": "results/theorem/fr_table/configs_r13_n17.jsonl",
       "valid_configs": 56
+    },
+    "18": {
+      "candidate_configs": 1734,
+      "d_reducible_count": 0,
+      "elapsed_s": 1183.1,
+      "exceptions": [],
+      "excluded_condition6": 1454,
+      "n": 18,
+      "n_interior": 5,
+      "r": 13,
+      "raw_triangulations": 50195,
+      "ring_length_ok": 50195,
+      "shard": "results/theorem/fr_table/configs_r13_n18.jsonl",
+      "valid_configs": 280
     }
   },
   "f_catalog": null,
