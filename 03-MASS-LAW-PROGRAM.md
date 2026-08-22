@@ -77,3 +77,11 @@ supply the mass.* This is the "chapter title" for the 50-year-old case-bash.
 - Enumeration completeness = plantri 5.5 (pinned third_party/plantri) + RSST-legality filter
   `fourcolor.mutate.is_legal_configuration` (includes condition 6 — datagen.py's old filter lacked it).
 - Long jobs: nohup+disown, checkpointed; waiters get reaped — re-arm freely, all idempotent.
+- **Lemma-testing harness (the third checker): test any candidate statement BEFORE proving it.**
+  `.venv/bin/python tools/test_lemma.py --check "rec.d_reducible implies rec.a >= 94*2.4**(rec.r-8)"`
+  (also `--implies P Q`, `--bound "rec.a <= 2**(rec.r+rec.k-3)"`, `--filter EXPR`, `--summary`,
+  `--gap-table`). Runs over all 59,142 canonically-deduped labeled configs (rings 6–16; d1_corpus
+  + v2 traces + fr_table + generated), ~0.2s for scalar statements, and appends a timestamp-free
+  receipt to `results/mass-law/lemma_log.jsonl`. Corpus loader `src/fourcolor/lemma_corpus.py`,
+  checker `src/fourcolor/lemma_harness.py`, syntax + verdict semantics in `results/mass-law/README.md`.
+  HOLDS means "survived the corpus", not proven — see the stress-test lesson in item 3 above.
