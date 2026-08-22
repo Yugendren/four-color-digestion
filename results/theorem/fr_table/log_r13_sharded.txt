@@ -1,0 +1,9 @@
+all 8 shards of r=13 n=19 complete
+=== r=13 DONE: 238 valid configs (954 excluded, cond-6) across n=19..19, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s0of8.json ===
+=== r=13 DONE: 162 valid configs (643 excluded, cond-6) across n=19..19, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s1of8.json ===
+=== r=13 DONE: 188 valid configs (744 excluded, cond-6) across n=19..19, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s2of8.json ===
+=== r=13 DONE: 161 valid configs (672 excluded, cond-6) across n=19..19, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s3of8.json ===
+=== r=13 DONE: 122 valid configs (567 excluded, cond-6) across n=19..19, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s4of8.json ===
+=== r=13 DONE: 176 valid configs (679 excluded, cond-6) across n=19..19, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s5of8.json ===
+=== r=13 DONE: 196 valid configs (833 excluded, cond-6) across n=19..19, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s6of8.json ===
+=== r=13 DONE: 202 valid configs (783 excluded, cond-6) across n=19..19, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s7of8.json ===
