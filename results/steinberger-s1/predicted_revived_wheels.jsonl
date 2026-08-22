@@ -1,0 +1,9 @@
+{"degree": 9, "seq": [5, 6, 5, 6, 6, 5, 6, 6, 6], "charge_bound": 7, "sole_blockers_above_ring": ["D7541"]}
+{"degree": 9, "seq": [5, 5, 6, 5, 6, 6, 6, 6, 6], "charge_bound": 4, "sole_blockers_above_ring": ["D2685"]}
+{"degree": 9, "seq": [5, 6, 5, 6, 6, 6, 5, 6, 6], "charge_bound": 7, "sole_blockers_above_ring": ["D7541"]}
+{"degree": 9, "seq": [5, 5, 6, 6, 6, 6, 6, 5, 6], "charge_bound": 4, "sole_blockers_above_ring": ["D2685"]}
+{"degree": 10, "seq": [5, 5, 5, 5, 6, 5, 6, 6, 6, 6], "charge_bound": 1, "sole_blockers_above_ring": ["D2809"]}
+{"degree": 10, "seq": [5, 5, 5, 5, 6, 6, 6, 6, 5, 6], "charge_bound": 1, "sole_blockers_above_ring": ["D2809"]}
+{"degree": 10, "seq": [5, 5, 5, 5, 6, 6, 6, 6, 5, 7], "charge_bound": 0, "sole_blockers_above_ring": ["D2809"]}
+{"degree": 10, "seq": [5, 5, 5, 5, 7, 5, 6, 6, 6, 6], "charge_bound": 0, "sole_blockers_above_ring": ["D2809"]}
+{"degree": 10, "seq": [5, 5, 5, 5, 5, 5, 6, 6, 6, 6], "charge_bound": 2, "sole_blockers_above_ring": ["D2809"]}

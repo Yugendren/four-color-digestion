@@ -1,0 +1,5 @@
+[2026-08-22T21:48:37Z] [p3-pipeline steinberger-s1] starting. pool=/Users/yugendren/experiments/four_color_digestion/build/steinberger-pool-r14/D run_dir=/Users/yugendren/experiments/four_color_digestion/results/p3/runs/steinberger-s1 binary=/Users/yugendren/experiments/four_color_digestion/third_party/computer-checks/build/src/main_pristine
+[2026-08-22T21:48:37Z] [p3-pipeline steinberger-s1] pool size = 5895 (full pool is 8200; manifest at /Users/yugendren/experiments/four_color_digestion/results/p3/runs/steinberger-s1/pool_manifest.sha256)
+[2026-08-22T21:48:37Z] [p3-pipeline steinberger-s1] stage 1: combine_rules
+[2026-08-22T21:48:39Z] [p3-pipeline steinberger-s1] combined_rules: all=1832 non_blocked=681 (full-pool reference: 1832/671; may legitimately differ)
+[2026-08-22T21:48:39Z] [p3-pipeline steinberger-s1] stage 2: enum_wheels d7..11

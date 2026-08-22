@@ -1,0 +1,460 @@
+{
+  "run_dir": "/Users/yugendren/experiments/four_color_digestion/results/p3/runs/steinberger-s1",
+  "max_ring": 14,
+  "verdict": "(no verdict yet)",
+  "n_pool_expected": 5895,
+  "n_source_configs": 8200,
+  "combined_rules": {
+    "stage_reached": true,
+    "baseline_n_all": 1832,
+    "baseline_n_non_blocked": 671,
+    "n_predicted_revived": 10,
+    "predicted_n_non_blocked": 681,
+    "n_all": 1832,
+    "n_non_blocked": 681,
+    "delta_non_blocked": 10,
+    "revived": [
+      {
+        "combo_id": "combined_rule_493",
+        "rule_flag": "000000001001100000000000000000000000000000000000000000000000000000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_489",
+        "rule_flag": "000000010001100000000000000000000000000000000000000000000000000000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_1708",
+        "rule_flag": "000000000000000000000000000000000000000000000000000000010000100000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_1702",
+        "rule_flag": "000000000000000000000000000000000000000000000000000000001001000000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_1709",
+        "rule_flag": "000000000000010000000000000000000000000000000000000000010000100000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_1703",
+        "rule_flag": "000000000000001000000000000000000000000000000000000000001001000000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_1700",
+        "rule_flag": "000000000000000000000000000000000000000010000000000000000001000000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_1706",
+        "rule_flag": "000000000000000000000000000000000000000100000000000000000000100000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_1701",
+        "rule_flag": "000000000000001000000000000000000000000010000000000000000001000000000000000000000000",
+        "predicted": true
+      },
+      {
+        "combo_id": "combined_rule_1707",
+        "rule_flag": "000000000000010000000000000000000000000100000000000000000000100000000000000000000000",
+        "predicted": true
+      }
+    ],
+    "n_revived": 10,
+    "n_unexpectedly_reblocked": 0,
+    "prediction_matches_observed": true,
+    "predicted_not_observed": [],
+    "observed_not_predicted": []
+  },
+  "wheels": {
+    "baseline": {
+      "7": 5439,
+      "8": 6790,
+      "9": 3285,
+      "10": 626,
+      "11": 8
+    },
+    "stage_complete": false,
+    "cartwheel_stage_complete": false,
+    "per_degree": {
+      "d7": {
+        "baseline": 5439,
+        "observed": 5439,
+        "delta": 0,
+        "predicted_revived": 0,
+        "predicted_total": 5439,
+        "matches_prediction": null
+      },
+      "d8": {
+        "baseline": 6790,
+        "observed": 6790,
+        "delta": 0,
+        "predicted_revived": 0,
+        "predicted_total": 6790,
+        "matches_prediction": null
+      },
+      "d9": {
+        "baseline": 3285,
+        "observed": 3289,
+        "delta": 4,
+        "predicted_revived": 4,
+        "predicted_total": 3289,
+        "matches_prediction": null
+      },
+      "d10": {
+        "baseline": 626,
+        "observed": 631,
+        "delta": 5,
+        "predicted_revived": 5,
+        "predicted_total": 631,
+        "matches_prediction": null
+      },
+      "d11": {
+        "baseline": 8,
+        "observed": 0,
+        "delta": -8,
+        "predicted_revived": 0,
+        "predicted_total": 8,
+        "matches_prediction": null
+      }
+    },
+    "n_predicted_revived_total": 9,
+    "n_observed_total": 16149,
+    "baseline_total": 16148,
+    "bad_cartwheels": {
+      "baseline": 10094,
+      "observed": null
+    }
+  },
+  "gluing": {
+    "checks": {
+      "check_deg8": {
+        "check": "check_deg8",
+        "log": "/Users/yugendren/experiments/four_color_digestion/results/p3/runs/steinberger-s1/log/check_deg8.log",
+        "present": false,
+        "finished": false,
+        "assertion": null,
+        "assert_function": null,
+        "assert_file": null,
+        "assert_line": null,
+        "n_cartwheels_loaded": null,
+        "n_configurations_loaded": null,
+        "n_cartwheels_remaining": null
+      },
+      "check_7triangle": {
+        "check": "check_7triangle",
+        "log": "/Users/yugendren/experiments/four_color_digestion/results/p3/runs/steinberger-s1/log/check_7triangle.log",
+        "present": false,
+        "finished": false,
+        "assertion": null,
+        "assert_function": null,
+        "assert_file": null,
+        "assert_line": null,
+        "n_cartwheels_loaded": null,
+        "n_configurations_loaded": null,
+        "n_cartwheels_remaining": null
+      },
+      "check_deg7": {
+        "check": "check_deg7",
+        "log": "/Users/yugendren/experiments/four_color_digestion/results/p3/runs/steinberger-s1/log/check_deg7.log",
+        "present": false,
+        "finished": false,
+        "assertion": null,
+        "assert_function": null,
+        "assert_file": null,
+        "assert_line": null,
+        "n_cartwheels_loaded": null,
+        "n_configurations_loaded": null,
+        "n_cartwheels_remaining": null
+      }
+    },
+    "stage_reached": false,
+    "any_failure": false,
+    "failed_checks": [],
+    "baseline_gluelog": {
+      "check_deg8": {
+        "gluelog": "/Users/yugendren/experiments/four_color_digestion/third_party/computer-checks/wheels/glue_blocklog/check_deg8.gluelog.tsv",
+        "present": true,
+        "n_composites_logged": 10447659,
+        "n_at_risk": 50718,
+        "frac_at_risk": 0.00485448462665177
+      },
+      "check_7triangle": {
+        "gluelog": "/Users/yugendren/experiments/four_color_digestion/third_party/computer-checks/wheels/glue_blocklog/check_7triangle.gluelog.tsv",
+        "present": true,
+        "n_composites_logged": 384639,
+        "n_at_risk": 28259,
+        "frac_at_risk": 0.07346888901021477
+      },
+      "check_deg7": {
+        "gluelog": "/Users/yugendren/experiments/four_color_digestion/third_party/computer-checks/wheels/glue_blocklog/check_deg7.gluelog.tsv",
+        "present": true,
+        "n_composites_logged": 200520,
+        "n_at_risk": 4554,
+        "frac_at_risk": 0.022710951526032315
+      }
+    },
+    "n_at_risk_composites": 83531,
+    "top_culprit_configs": [
+      {
+        "config": "D6596",
+        "ring": 15,
+        "n_at_risk_composites": 6111
+      },
+      {
+        "config": "D6514",
+        "ring": 15,
+        "n_at_risk_composites": 5822
+      },
+      {
+        "config": "D1117",
+        "ring": 15,
+        "n_at_risk_composites": 3991
+      },
+      {
+        "config": "D2424",
+        "ring": 15,
+        "n_at_risk_composites": 3899
+      },
+      {
+        "config": "D6611",
+        "ring": 15,
+        "n_at_risk_composites": 3523
+      },
+      {
+        "config": "D5953",
+        "ring": 15,
+        "n_at_risk_composites": 2437
+      },
+      {
+        "config": "D4397",
+        "ring": 15,
+        "n_at_risk_composites": 2262
+      },
+      {
+        "config": "D1438",
+        "ring": 15,
+        "n_at_risk_composites": 2041
+      },
+      {
+        "config": "D1253",
+        "ring": 15,
+        "n_at_risk_composites": 1986
+      },
+      {
+        "config": "D6693",
+        "ring": 15,
+        "n_at_risk_composites": 1936
+      },
+      {
+        "config": "D4817",
+        "ring": 15,
+        "n_at_risk_composites": 1635
+      },
+      {
+        "config": "D4456",
+        "ring": 15,
+        "n_at_risk_composites": 1571
+      },
+      {
+        "config": "D4378",
+        "ring": 15,
+        "n_at_risk_composites": 1368
+      },
+      {
+        "config": "D2490",
+        "ring": 15,
+        "n_at_risk_composites": 1337
+      },
+      {
+        "config": "D1496",
+        "ring": 16,
+        "n_at_risk_composites": 1321
+      },
+      {
+        "config": "D7172",
+        "ring": 15,
+        "n_at_risk_composites": 1216
+      },
+      {
+        "config": "D3813",
+        "ring": 15,
+        "n_at_risk_composites": 1186
+      },
+      {
+        "config": "D2486",
+        "ring": 15,
+        "n_at_risk_composites": 1127
+      },
+      {
+        "config": "D0696",
+        "ring": 15,
+        "n_at_risk_composites": 1098
+      },
+      {
+        "config": "D1245",
+        "ring": 15,
+        "n_at_risk_composites": 1084
+      },
+      {
+        "config": "D4315",
+        "ring": 15,
+        "n_at_risk_composites": 988
+      },
+      {
+        "config": "D7201",
+        "ring": 15,
+        "n_at_risk_composites": 933
+      },
+      {
+        "config": "D1506",
+        "ring": 16,
+        "n_at_risk_composites": 929
+      },
+      {
+        "config": "D6168",
+        "ring": 15,
+        "n_at_risk_composites": 878
+      },
+      {
+        "config": "D4840",
+        "ring": 15,
+        "n_at_risk_composites": 823
+      },
+      {
+        "config": "D1193",
+        "ring": 15,
+        "n_at_risk_composites": 823
+      },
+      {
+        "config": "D6607",
+        "ring": 15,
+        "n_at_risk_composites": 771
+      },
+      {
+        "config": "D7221",
+        "ring": 15,
+        "n_at_risk_composites": 728
+      },
+      {
+        "config": "D4231",
+        "ring": 15,
+        "n_at_risk_composites": 726
+      },
+      {
+        "config": "D1439",
+        "ring": 15,
+        "n_at_risk_composites": 720
+      },
+      {
+        "config": "D4948",
+        "ring": 16,
+        "n_at_risk_composites": 689
+      },
+      {
+        "config": "D1434",
+        "ring": 15,
+        "n_at_risk_composites": 641
+      },
+      {
+        "config": "D4968",
+        "ring": 15,
+        "n_at_risk_composites": 632
+      },
+      {
+        "config": "D1189",
+        "ring": 15,
+        "n_at_risk_composites": 582
+      },
+      {
+        "config": "D4374",
+        "ring": 15,
+        "n_at_risk_composites": 552
+      },
+      {
+        "config": "D4773",
+        "ring": 15,
+        "n_at_risk_composites": 540
+      },
+      {
+        "config": "D2624",
+        "ring": 15,
+        "n_at_risk_composites": 536
+      },
+      {
+        "config": "D3794",
+        "ring": 15,
+        "n_at_risk_composites": 501
+      },
+      {
+        "config": "D1459",
+        "ring": 15,
+        "n_at_risk_composites": 469
+      },
+      {
+        "config": "D5046",
+        "ring": 17,
+        "n_at_risk_composites": 466
+      },
+      {
+        "config": "D2577",
+        "ring": 15,
+        "n_at_risk_composites": 425
+      },
+      {
+        "config": "D1469",
+        "ring": 15,
+        "n_at_risk_composites": 411
+      },
+      {
+        "config": "D1316",
+        "ring": 16,
+        "n_at_risk_composites": 406
+      },
+      {
+        "config": "D4765",
+        "ring": 15,
+        "n_at_risk_composites": 391
+      },
+      {
+        "config": "D6610",
+        "ring": 15,
+        "n_at_risk_composites": 374
+      },
+      {
+        "config": "D7021",
+        "ring": 18,
+        "n_at_risk_composites": 347
+      },
+      {
+        "config": "D4769",
+        "ring": 15,
+        "n_at_risk_composites": 333
+      },
+      {
+        "config": "D4883",
+        "ring": 16,
+        "n_at_risk_composites": 329
+      },
+      {
+        "config": "D1510",
+        "ring": 16,
+        "n_at_risk_composites": 318
+      },
+      {
+        "config": "D1463",
+        "ring": 15,
+        "n_at_risk_composites": 316
+      }
+    ],
+    "n_distinct_culprit_configs": 541,
+    "static_mode_caveat": "gluelog attribution is FIRST-MATCH per representative, so 'at risk' is an UPPER bound on composites that truly lost every blocker; use --s1-gluelog-dir for the exact set",
+    "exact": null,
+    "exact_mode_command": "third_party/computer-checks/build/src/main_gluelog --check_deg8 -W /Users/yugendren/experiments/four_color_digestion/results/p3/runs/steinberger-s1/work/wheels/zero -C build/steinberger-pool-r14/D -o results/steinberger-s1/gluelog   (repeat with --check_7triangle / --check_deg7; writes only into -o, leaving the run dir untouched)"
+  }
+}

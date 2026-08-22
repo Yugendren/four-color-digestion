@@ -14,6 +14,13 @@ third_party/*/extracted_build/
 results/p3/runs/*/work/
 results/p3/runs/*/log/
 
+# Steinberger S1 gap analysis (tools/s1_gap_analysis.py): the at-risk glued-composite
+# list is derived from the 14.6M-event full-pool gluing blocklog and is ~13MB, fully
+# regenerated in ~15s from tracked inputs -- same rationale as the p3 work/log
+# exclusion above. gap_analysis.json and the two small JSONL lists stay tracked.
+results/steinberger-s1/at_risk_composites.jsonl
+results/steinberger-s1/gluelog/
+
 # D1 interrogation (tools/d1_interrogate.py): the full-corpus pooled-
 # encoder-state artifact is a ~16MB binary blob, fully reproducible from
 # the checkpoint + corpus in well under a minute -- same rationale as the
