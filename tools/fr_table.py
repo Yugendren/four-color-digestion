@@ -86,14 +86,16 @@ PLANTRI = datagen.PLANTRI
 F_CATALOG = {8: 5, 9: 5, 10: 6, 11: 7, 12: 7}
 
 
-def sweep_one(r: int, n: int, outdir: Path, log) -> dict:
+def sweep_one(r: int, n: int, outdir: Path, log, res=None, mod=None) -> dict:
     """Run plantri + filter + check for one (r, n); write the JSONL shard;
     return the manifest entry dict (does not write the manifest itself)."""
     t0 = time.time()
-    shard = outdir / f"configs_r{r}_n{n}.jsonl"
-    proc = subprocess.run(
-        [str(PLANTRI), f"-P{r}", "-c3", "-a", str(n)],
-        capture_output=True, text=True)
+    tag = f"_s{res}of{mod}" if mod else ""
+    shard = outdir / f"configs_r{r}_n{n}{tag}.jsonl"
+    argv = [str(PLANTRI), f"-P{r}", "-c3", "-a", str(n)]
+    if mod:
+        argv.append(f"{res}/{mod}")
+    proc = subprocess.run(argv, capture_output=True, text=True)
     lines = [l for l in proc.stdout.splitlines() if l and l[0].isdigit()]
     raw = len(lines)
     ring_ok = 0
@@ -212,11 +214,16 @@ def main() -> int:
     ap.add_argument("n_max", type=int)
     ap.add_argument("--outdir", default=str(ROOT / "results" / "theorem" / "fr_table"))
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--res", type=int, default=None,
+                    help="plantri res/mod shard index (0..mod-1)")
+    ap.add_argument("--mod", type=int, default=None,
+                    help="plantri res/mod shard count; splits the enumeration")
     args = ap.parse_args()
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
-    manifest_path = outdir / f"manifest_r{args.r}.json"
+    mtag = f"_s{args.res}of{args.mod}" if args.mod else ""
+    manifest_path = outdir / f"manifest_r{args.r}{mtag}.json"
     manifest = load_manifest(manifest_path)
     entries = manifest.setdefault("entries", {})
     manifest["r"] = args.r
@@ -236,7 +243,7 @@ def main() -> int:
         if args.resume and key in entries:
             log(f"r={args.r} n={n}: already in manifest, skipping (--resume)")
             continue
-        entry = sweep_one(args.r, n, outdir, log)
+        entry = sweep_one(args.r, n, outdir, log, res=args.res, mod=args.mod)
         entries[key] = entry
         save_manifest(manifest_path, manifest)
 

@@ -1,0 +1,31 @@
+{
+  "entries": {
+    "9": {
+      "candidate_configs": 0,
+      "d_reducible_count": 0,
+      "elapsed_s": 0.0,
+      "exceptions": [],
+      "excluded_condition6": 0,
+      "n": 9,
+      "n_interior": 1,
+      "r": 8,
+      "raw_triangulations": 0,
+      "ring_length_ok": 0,
+      "shard": "results/theorem/fr_table/configs_r8_n9_s0of2.jsonl",
+      "valid_configs": 0
+    }
+  },
+  "f_catalog": 5,
+  "plantri_binary": "third_party/plantri/plantri55/plantri",
+  "r": 8,
+  "summary": {
+    "elapsed_s": 0.0,
+    "total_candidate_configs": 0,
+    "total_d_reducible": 0,
+    "total_exceptions": 0,
+    "total_excluded_condition6": 0,
+    "total_hard_exceptions": 0,
+    "total_valid_configs": 0,
+    "verdict": "PASS (0 D-reducible below threshold, among RSST-legal configs)"
+  }
+}
