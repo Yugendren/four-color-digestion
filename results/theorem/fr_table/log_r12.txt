@@ -4,3 +4,5 @@ r=12 n=14 (interior=2): 6 raw -> 6 ring-ok -> 4 candidate configs (0 excluded, c
 r=12 n=15 (interior=3): 109 raw -> 109 ring-ok -> 33 candidate configs (26 excluded, cond-6) -> 7 valid configs, 0 D-reducible, 3.0s
 r=12 n=16 (interior=4): 1961 raw -> 1961 ring-ok -> 191 candidate configs (149 excluded, cond-6) -> 42 valid configs, 0 D-reducible, 27.8s
 r=12 n=17 (interior=5): 32402 raw -> 32402 ring-ok -> 836 candidate configs (650 excluded, cond-6) -> 186 valid configs, 0 D-reducible, 247.1s
+r=12 n=18 (interior=6): 474809 raw -> 474809 ring-ok -> 3027 candidate configs (2179 excluded, cond-6) -> 848 valid configs, 0 D-reducible, 2303.3s
+=== r=12 DONE: 1088 valid configs (3004 excluded, cond-6) across n=13..18, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r12.json ===
