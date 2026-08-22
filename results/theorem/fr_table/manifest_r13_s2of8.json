@@ -13,19 +13,33 @@
       "ring_length_ok": 105384,
       "shard": "results/theorem/fr_table/configs_r13_n19_s2of8.jsonl",
       "valid_configs": 188
+    },
+    "20": {
+      "candidate_configs": 3001,
+      "d_reducible_count": 0,
+      "elapsed_s": 13207.7,
+      "exceptions": [],
+      "excluded_condition6": 2110,
+      "n": 20,
+      "n_interior": 7,
+      "r": 13,
+      "raw_triangulations": 1459972,
+      "ring_length_ok": 1459972,
+      "shard": "results/theorem/fr_table/configs_r13_n20_s2of8.jsonl",
+      "valid_configs": 891
     }
   },
   "f_catalog": null,
   "plantri_binary": "third_party/plantri/plantri55/plantri",
   "r": 13,
   "summary": {
-    "elapsed_s": 2255.6,
-    "total_candidate_configs": 932,
+    "elapsed_s": 13207.7,
+    "total_candidate_configs": 3933,
     "total_d_reducible": 0,
     "total_exceptions": 0,
-    "total_excluded_condition6": 744,
+    "total_excluded_condition6": 2854,
     "total_hard_exceptions": 0,
-    "total_valid_configs": 188,
+    "total_valid_configs": 1079,
     "verdict": "PASS (0 D-reducible below threshold, among RSST-legal configs)"
   }
 }

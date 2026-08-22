@@ -1,1 +1,3 @@
 === f(r) sweep: r=13, n=20..20 (interior 7..7), f_catalog(r)=None ===
+r=13 n=20 (interior=7): 1379226 raw -> 1379226 ring-ok -> 3429 candidate configs (2624 excluded, cond-6) -> 805 valid configs, 0 D-reducible, 13302.1s
+=== r=13 DONE: 1001 valid configs (3457 excluded, cond-6) across n=20..20, 0 D-reducible (expect 0), 0 hard exceptions -> /Users/yugendren/experiments/four_color_digestion/results/theorem/fr_table/manifest_r13_s6of8.json ===

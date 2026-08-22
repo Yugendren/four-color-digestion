@@ -45,7 +45,12 @@ supply the mass.* This is the "chapter title" for the 50-year-old case-bash.
 
 ## Milestones
 
-- **M1 (compute, launched 2026-08-22): extend the table + test the law out-of-sample.**
+- **M1: COMPLETE (2026-08-23).** f(13) = 8 established: interior <=6 (n<=19: 1,445 valid at
+  interior 6 alone) and interior 7 (n=20: 6,710 valid) fully exhausted 8-way-sharded, ZERO
+  D-reducible; tightness from catalogs (min interior 8 at r=13). Table now rings 8-13:
+  f = 5,5,6,7,7,8. **Mass-law gap CONFIRMED OUT-OF-SAMPLE at r=13**: max a among the newly
+  enumerated below-threshold negatives = 6,003 < 6,954 = min a among catalog D-reducibles
+  (margin 951). Original M1 text follows for provenance:
   r=13 exhaustion `tools/fr_table.py 13 14 19` (interior ≤6 → proves f(13) ≥ 7; the interior-7/n=20
   cell is a separate later run — plantri n=20 is ~day-scale). Produces below-threshold negatives at
   r=13 → tests the gap prediction (law predicts threshold ≈ 6954·(range) vs sub-threshold max).
