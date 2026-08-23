@@ -54,7 +54,29 @@ supply the mass.* This is the "chapter title" for the 50-year-old case-bash.
   r=13 exhaustion `tools/fr_table.py 13 14 19` (interior ≤6 → proves f(13) ≥ 7; the interior-7/n=20
   cell is a separate later run — plantri n=20 is ~day-scale). Produces below-threshold negatives at
   r=13 → tests the gap prediction (law predicts threshold ≈ 6954·(range) vs sub-threshold max).
-- **M2 (math): prove the Cap (C).** Route: a ≤ #tri-colorings of free completion up to color
+- **M2 (math): PARTIAL (2026-08-23). See `results/mass-law/PROOF-SHARP-CAP.md`.**
+  Attempted the sharp cap `a ≤ ((2^r+2)/6)(4/3)^(k-1)`. **Not proven; the obstruction is
+  now precisely localized and it is the Bridge Lemma itself.** What IS proven:
+  (i) *base case exact* — `k=1` gives `a = (2^r + 2(-1)^r)/6 = P(W_r,4)/24`, with the full
+  equality-case argument (fibres of the restriction map are singletons except at the 3
+  monochromatic rims when r is even, whose stabilizer exactly compensates); adversarially
+  re-verified four ways including the compiled 1995 RSST C oracle, r=5..12.
+  (ii) *star-first cap* — `a ≤ min over interior h of (2^deg h + 2(-1)^deg h)·2^(n-deg h-1)/6
+  ≤ 11·2^(r+k-7)`, i.e. the weak cap's constant improved by 11/16 and now EXACTLY TIGHT at
+  every wheel. Implies `f(r) ≥ ⌈0.26303r − 0.1367⌉` (was −0.6768): **+1 interior vertex at
+  6 of 10 rings, slope unchanged.** γ = 3/2 proven at k = 2 only.
+  (iii) **THE OBSTRUCTION (rigorous, 10 vertices):** for `gen-r8-n10-2` (r=8,k=2),
+  `P(S,4)/24 = 61 > 57.33 = W(8)·4/3 > 55 = a`. So no proof factoring through `a ≤ P(S,4)/24`
+  can reach γ = 4/3 — the floor for that route is `61/43 = 1.4186` (implied f-slope ≤ 0.52).
+  The P-form of the sharp cap is KILLED on 1,960/59,142 corpus configs and by 4 orders of
+  magnitude on triangular-lattice disks. Reaching 4/3 requires bounding `|Φ|` directly
+  (ring-trace transfer matrix, not tri-colourings).
+  (iv) **The sharp cap itself got STRONGER:** `a` computed exactly on adversarial
+  triangular-lattice disks up to (r,k) = (18,15) — cap holds every time with the margin
+  *improving* (0.92→0.35) and γ_a *decreasing* (1.278→1.2365). New tools:
+  `src/fourcolor/count4.py` (exact P(G,4)), `tools/p4_measure.py`, `tools/star_order_check.py`,
+  `tools/arc_profile.py`, `tools/lattice_disk_entropy.py`, `tools/lattice_disk_phi.py`.
+  Original M2 text follows for provenance: Route: a ≤ #tri-colorings of free completion up to color
   symmetry; tri-colorings of planar (near-)triangulations ↔ proper 4-colorings (Tait); bound
   P(G,4)-style counts in terms of k for near-triangulations with interior degrees ≥5. Literature
   needed: Birkhoff–Lewis, chromatic polynomial bounds for triangulations, Tutte's work. A clean
