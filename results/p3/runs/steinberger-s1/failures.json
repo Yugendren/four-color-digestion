@@ -1,0 +1,4167 @@
+[
+ {
+  "degree": 9,
+  "wheel": "391",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "1091",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "3272",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "1125",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "3213",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2116",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2923",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "1035",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "3254",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "1652",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "811",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2889",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2690",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2368",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "1644",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2124",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "319",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "997",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "985",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "3274",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2431",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "389",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "807",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2574",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2126",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "3223",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "1171",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2123",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "1028",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "451",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2119",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2932",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2115",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "623",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "3162",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2463",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "390",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "249",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "245",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "302",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2922",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "3267",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "1702",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2392",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2125",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "510",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "375",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2056",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "251",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2127",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 9,
+  "wheel": "2324",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 7,
+  "wheel": "5176",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3691",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "920",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3426",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3791",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3526",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "748",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1020",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3369",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3438",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "756",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3996",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5164",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2652",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1876",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3988",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2586",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3557",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3206",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "744",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2824",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2282",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "904",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2664",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3402",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1079",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4349",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1581",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3561",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2607",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3341",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2676",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "916",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1493",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4238",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "908",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2668",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1659",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2615",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4392",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "500",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5343",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3713",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4709",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3918",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2516",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3914",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3384",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5185",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2300",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3637",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5267",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4001",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3922",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3941",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3754",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2263",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2685",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4013",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2689",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1340",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5316",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4596",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4721",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2797",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3908",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3703",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3916",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5402",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1278",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3398",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1425",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2569",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5322",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3867",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3394",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2191",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3711",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2577",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "502",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5241",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3639",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3739",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5369",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3644",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4111",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3932",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3727",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2210",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3756",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2687",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4631",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4003",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3920",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4947",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5218",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "853",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3455",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5166",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1710",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3998",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "941",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "841",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "922",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3693",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3375",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3424",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3524",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5174",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3986",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2588",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1077",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5021",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4247",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4193",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3412",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2674",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "914",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3243",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4359",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5288",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "918",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4579",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2605",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4181",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2280",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "906",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2666",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3351",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4635",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2218",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3498",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3859",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3924",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2206",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4943",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3640",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4932",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5210",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3928",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4068",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1258",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4644",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5273",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4015",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3936",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3723",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2214",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3863",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3390",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2510",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4979",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2573",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "506",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5234",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3619",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3707",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3912",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4386",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2601",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5137",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4232",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2284",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "902",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2662",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3355",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3224",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5392",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5125",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5292",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5025",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3359",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3408",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2670",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3416",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "910",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2296",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "845",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2658",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "938",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2758",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3789",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "838",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4998",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3697",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "926",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3420",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3371",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "742",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2729",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "849",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2654",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "934",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2941",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3990",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5162",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3238",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1112",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3345",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2672",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2123",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "912",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2294",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4195",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1489",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5127",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5290",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2611",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2979",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1000",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3357",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2660",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2875",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4402",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2603",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2298",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3349",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1036",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3992",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2656",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3453",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3699",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1860",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2951",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "924",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3695",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3373",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4691",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "752",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5011",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1576",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3949",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2998",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2316",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3496",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3721",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2547",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4592",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5212",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4725",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3742",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2208",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2528",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2204",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3926",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3945",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2536",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2681",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3938",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3910",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5255",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5404",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3705",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3380",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3137",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5236",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "508",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "504",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2571",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3717",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3709",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4388",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3840",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4632",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "999",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2301",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4944",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4000",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3923",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4948",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2688",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5209",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2213",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3931",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2517",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3864",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3919",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1277",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2509",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3907",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4393",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "501",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3712",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5233",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4679",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1557",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3868",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3915",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3700",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4356",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2606",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3198",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5299",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4248",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "905",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2665",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2283",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1078",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1178",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5022",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3194",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2614",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1174",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "909",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2669",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3411",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3340",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2677",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2937",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1770",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1021",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3985",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3790",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3376",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2730",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4360",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2825",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3989",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2599",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5165",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3997",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2653",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "933",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5289",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4192",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3242",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2293",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2675",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3342",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "915",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4246",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1627",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1107",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4237",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "907",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2667",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2281",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2604",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3562",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1019",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "919",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1875",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1031",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1286",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3366",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5167",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3995",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "747",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4362",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2827",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1603",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3792",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "923",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3692",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3374",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3425",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3987",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5175",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5116",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1879",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "940",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1611",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2948",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3999",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "728",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1320",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3933",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4110",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3726",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3626",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4595",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4722",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3950",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3638",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2798",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5264",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4002",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3921",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2203",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2686",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3842",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3942",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2993",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4970",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3702",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5403",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3917",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3909",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1316",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3710",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4862",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4801",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3696",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3370",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2759",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "839",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2659",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "939",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "844",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3442",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3362",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2655",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5163",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3991",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1035",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1282",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1607",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2823",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "643",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4184",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4233",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "903",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2663",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3354",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5128",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2600",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4401",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2297",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2671",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3346",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "911",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1111",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3358",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1623",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4188",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5293",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5024",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1789",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3138",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4974",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3706",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5407",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4387",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3913",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "468",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1785",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5235",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3925",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2207",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1181",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1336",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3499",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1579",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3946",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2997",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4014",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3937",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3722",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4069",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1324",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3929",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4933",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3641",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4726",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5211",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4700",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5405",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3911",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3704",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3708",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1880",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3608",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1373",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2513",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3393",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "337",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3860",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "566",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "505",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2570",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2209",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2309",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2692",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3643",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2217",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3720",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3620",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3497",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5270",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4016",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3935",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1477",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1577",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3839",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3939",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4636",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2305",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4004",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3927",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2278",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3452",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "741",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5161",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3993",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2657",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3360",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2757",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "837",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1037",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2933",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5173",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "825",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3523",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3423",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3372",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1861",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1496",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5291",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5126",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3190",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2610",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3515",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2295",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3344",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2673",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3339",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1113",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "5149",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1162",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "3348",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2299",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4403",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4352",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2602",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "901",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2661",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2761",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "2874",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "4231",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 7,
+  "wheel": "1001",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4559",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "849",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2725",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "113",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6387",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "484",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "826",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "845",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5162",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4555",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1618",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6053",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2814",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3228",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3193",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1110",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1983",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2241",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3676",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2199",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3719",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5565",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2253",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4064",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3824",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3731",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2988",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4832",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2984",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "310",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "328",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3280",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2097",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6376",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4818",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2512",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5882",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4117",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1090",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "689",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1248",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4166",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "263",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5586",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "847",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3261",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5959",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6285",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6385",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5598",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "486",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "111",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3273",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5928",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2727",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1620",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "768",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2711",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5863",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3191",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5812",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3257",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4561",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3418",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6004",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2816",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6182",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4125",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1307",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6531",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "98",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2255",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1264",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3253",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2812",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6000",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3241",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4569",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1671",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "115",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5932",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "851",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2723",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1289",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6675",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5119",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "843",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1968",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "79",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "748",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5965",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3320",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3197",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1626",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3189",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "670",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2778",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4081",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2137",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3528",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3279",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "841",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3216",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "109",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3208",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6045",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1966",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3644",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4723",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2980",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3107",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5996",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3031",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3808",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2249",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6362",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2234",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2245",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2238",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3061",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3730",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5993",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2782",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2268",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4933",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5540",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5476",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "244",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2240",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1982",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3254",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3405",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5972",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3180",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2815",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1160",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2968",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1586",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "860",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5803",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3258",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "112",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2724",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4558",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2728",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2179",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3262",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4554",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1619",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "100",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1048",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "485",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5944",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "827",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5939",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3190",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6646",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1742",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6009",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4094",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4252",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5970",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5913",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3256",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4560",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2634",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "825",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1029",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "487",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5061",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3260",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "846",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3540",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2726",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "173",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4790",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1617",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "829",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "110",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3272",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2987",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4831",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2692",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4179",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "329",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2233",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5225",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "192",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3268",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "114",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4540",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "850",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3276",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2730",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5942",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3264",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "842",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5809",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2813",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1625",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5610",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1984",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3120",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4124",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2358",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4779",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4128",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2254",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3663",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "99",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3051",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2237",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6334",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3923",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "205",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4720",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "274",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3108",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2235",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1524",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2239",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3177",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4837",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2794",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3734",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2798",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6336",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1351",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "840",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3680",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3274",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5931",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3887",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "1967",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3209",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2948",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6390",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3317",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4092",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3342",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5864",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3196",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3096",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "5020",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2136",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "6003",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "4478",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "3184",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 8,
+  "wheel": "2811",
+  "kind": "C_positive"
+ },
+ {
+  "degree": 10,
+  "wheel": "531",
+  "kind": "degree_range"
+ },
+ {
+  "degree": 10,
+  "wheel": "350",
+  "kind": "degree_range"
+ }
+]
