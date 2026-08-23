@@ -1,0 +1,353 @@
+\section{Machine learning: what was tried, and what it gave}
+\label{sec:ml}
+
+This section is an accounting, not an advertisement. None of the theorems in
+this paper were discovered by a neural model. They came from exhaustive
+enumeration, LP duality, and machine-checked mining over finite catalogs, as
+described in the preceding sections. We nonetheless ran a substantial
+interpretability programme alongside that work, on the hypothesis that a
+small model trained to predict D-reducibility might expose a human-statable
+sufficient condition that the enumeration was not organized to find. We
+report what that programme gave: one modest positive result, one
+methodological finding about the fragility of ``mechanism'' as a concept,
+and several negative results we think are worth recording so that others do
+not have to rediscover them. We write in the register of a referee report
+on our own work.
+
+\subsection{Design and motivation}
+
+The programme deliberately transplanted the template of
+Huang, Jackson, and Lee's mechanistic-interpretability study of the zeta
+map \cite{huang2025zeta}: train a small transformer on a well-defined
+mathematical computation, probe its internal representations, and try to
+extract a human-readable mechanism. That template sits inside the broader
+agenda of using machine learning to guide mathematical intuition
+\cite{davies2021}. The target computation here was D-reducibility itself:
+given a configuration, predict the Kempe-closure trace produced by the
+D-reduction search and the final verdict (reducible or not). The rationale
+was simple. If a small model can predict reducibility reliably, whatever
+internal feature it relies on is a candidate for a sufficient condition a
+human could then state and verify independently -- the same logic that
+motivated the zeta-map study's search for a legible mechanism.
+
+We built two model generations.
+
+\textbf{D1.} An encoder-decoder transformer ($d_{\mathrm{model}}=192$,
+4 heads, feed-forward width 384, 2 encoder layers, 2 decoder layers,
+dropout 0, 1{,}543{,}725 parameters), trained seq2seq from a canonical
+token sequence encoding a configuration to a target sequence of
+closure-trace count buckets followed by a verdict token. Training ran 120
+epochs at learning rate $10^{-3}$, batch size 64, seed 0, for 10{,}392~s on
+an Apple MPS device. The corpus, \art{data/d1\_corpus.jsonl}, held
+14{,}036 deduplicated records spanning ring sizes 6--16 (633 from RSST,
+2{,}614 from Steinberger, 5{,}961 generated, 4{,}828 drawn from the 2026
+pool); after excluding records with degenerate traces or out-of-range
+length, 6{,}559 remained, split 5{,}904 train / 655 validation. Artifacts:
+\art{checkpoints/d1\_full\_v1.pt},
+\art{results/d1/train\_metrics\_full\_v1.json},
+\art{results/d1/corpus\_stats.json}.
+
+\textbf{D1-v2.} A second generation of per-ring specialists at
+$r = 8, 9, 10$, sharing a 2-layer encoder ($d_{\mathrm{model}}=256$, 4
+heads, feed-forward width 512, masked-mean-pool summary) with two
+alternative heads. A ``dynamics'' head iterates a weight-tied
+\texttt{GRUCell} over the per-ring survivor-set bitmap with per-round
+supervision (3.26M parameters at $r=9$, 6.64M at $r=10$); a
+``verdict-only'' \textsc{control} head reads the verdict directly off the
+encoder summary with no recurrence (1.19M parameters), and exists
+specifically to test whether the dynamics head's recurrent machinery
+contributes anything the summary vector does not already contain. Data
+lived in \art{data/v2/traces\_r8.jsonl}, \art{data/v2/traces\_r9.jsonl},
+and \art{data/v2/traces\_r10.jsonl}, carrying full per-round survivor sets;
+the corpora held 1{,}162 / 1{,}446 / 1{,}746 configurations at $r=8,9,10$, with
+ring-colouring code-index sizes 1{,}094 / 3{,}281 / 9{,}842 respectively. Artifacts: \art{results/d1v2/r9/},
+\art{results/d1v2/r10/}, \art{results/d1v2/r10v2/}.
+
+\subsection{Results}
+
+D1 reaches verdict accuracy 0.9298 on its 655-example validation split,
+against a majority-class baseline of 0.5603 -- a real signal, well above
+chance. Full-sequence exact match (verdict token plus the entire
+closure-trace bucket sequence) is a much weaker 0.2397: the model gets the
+answer right far more often than it gets the reasoning trace right.
+
+We then asked what the encoder actually represents, using a probe ladder
+recorded in \art{results/d1/interp/report.md} (ridge logistic probes on
+standardized inputs, probe-test $n=131$, 95\% bootstrap confidence
+intervals with \texttt{n\_boot}$=2000$). A 16-feature hand-coded shallow
+baseline -- counts and simple graph statistics of the configuration, no
+learned representation involved -- already reaches 0.8779
+$[0.8168, 0.9313]$. The best pure-encoder representation is
+\texttt{encoder\_layer0\_mean}, the \emph{pre-attention} embedding bag, at
+0.9008 $[0.8473, 0.9466]$: a delta of $+0.0229$ over the shallow baseline,
+but with overlapping confidence intervals, so not a distinguishable
+improvement. The post-attention layers are worse, not better: layers 1 and
+2 both give 0.8855, despite fitting the training set considerably better
+than layer 0 (train accuracy 0.9599 and 0.9866 respectively, against 0.8817
+for the pre-attention bag). Attention is improving the model's memorization
+of the training distribution without improving the generalizing signal a
+downstream probe can extract. Augmenting the shallow features with
+hand-derived structural candidates reaches 0.9237
+$[0.8779, 0.9695]$ -- that is, hand features beat the encoder's best
+representation outright. We state this plainly as the honest summary of
+D1: the transformer's internal representation of reducibility is, on this
+evidence, no better than what a referee could write down with a pencil,
+and in places worse.
+
+A second question was whether the decoder accumulates verdict evidence as
+it emits the closure trace, the way one might hope a legible mechanism
+would. We probed decoder hidden states at each greedy decoding step
+$t = 0, \dots, 39$. Verdict-probe accuracy is 0.8473 at $t=0$, before a
+single trace token has been produced, and the curve stays essentially flat
+thereafter: the mean over $t=0$--$2$ is 0.8702, the mean over $t=35$--$39$
+is 0.8656, and every later confidence interval overlaps the one at $t=0$.
+The closure-trace tokens ride along with a verdict decision already
+implicit at the start; they do not build toward one.
+
+\subsection{The boundary result}
+\label{sec:ml-boundary}
+
+The results above concern accuracy on the full validation distribution,
+which is dominated by easy cases. We pre-registered a harder ``boundary''
+stratum, flagged by \texttt{tools/d1v2\_datagen.py::boundary\_flag}, to test
+whether any representation carries information beyond the shallow features
+specifically on the cases an easy classifier would get wrong: a
+configuration is boundary if it is non-reducible with
+$0 < n_{\mathrm{consistent}} \le 50$, or reducible with rounds $\ge 6$. We
+pre-registered the decision rule before looking at boundary results: a
+representation beats the shallow baseline only if its boundary 95\%
+bootstrap confidence interval does not overlap the shallow baseline's and
+lies strictly above it.
+
+The first pass, at rings 9 and 10 on the smaller corpus, was a clean null:
+0 of the 7 non-baseline representations at $r=9$ and 0 of 7 at $r=10$ cleared the
+rule, and
+the boundary strata in the probe-test splits were tiny (7 and 11 examples
+respectively) -- underpowered by construction.
+
+The second pass used an enlarged ring-10 corpus (3{,}269 configurations;
+probe-test $n=98$, of which 21 are boundary) and gave a real result.
+Table~\ref{tab:boundary} summarizes it.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lcc}
+\toprule
+Representation & Overall accuracy & Boundary accuracy [95\% CI] \\
+\midrule
+shallow & 0.7551 & 0.5238 $[0.3321, 0.7143]$ \\
+shallow\_plus\_structural & 0.8571 & 0.7619 $[0.5714, 0.9048]$ \\
+control\_encoder\_summary & 0.9082 & 0.9048 $[0.7619, 1.0000]$ \\
+dynamics\_encoder\_summary & -- & 0.9048 \\
+dynamics\_h0 & -- & 0.9048 \\
+dynamics\_h2 & -- & 0.9048 \\
+\bottomrule
+\end{tabular}
+\caption{Ring-10 boundary probe results, second pass ($n=98$ overall,
+21 boundary). \texttt{control\_encoder\_summary} and three dynamics-model
+representations clear the pre-registered rule against the shallow
+baseline.}
+\label{tab:boundary}
+\end{table}
+
+\texttt{control\_encoder\_summary} -- the 256-dimensional encoder summary
+feeding the verdict-only control head, with no recurrent dynamics involved
+at all -- clears the pre-registered rule against the plain shallow
+baseline, as do three dynamics-model representations. This is the one
+genuinely positive result in the programme: some encoder representation
+carries boundary-relevant information the 16 hand-picked shallow features
+do not.
+
+We caveat it on three counts. First, $n=21$ boundary examples is a small
+stratum; the confidence intervals in Table~\ref{tab:boundary} are wide.
+Second, against the also-hand-engineered \texttt{shallow\_plus\_structural}
+baseline the comparison is never confidence-interval-decisive at any seed
+we tried (0.9048 versus 0.7619, intervals overlap); the result holds
+against the naive 16-feature baseline, not against a reasonably strengthened
+one. Third, we note for the record that the source report's own concluding
+prose (\art{results/d1v2/v2run/interrogation.md}) contradicts its table: it
+recycles wording from the earlier null run at rings 9 and 10. We report the
+table, not the prose.
+
+\subsection{Extraction: hand features recover most, but not all, of the advantage}
+\label{sec:ml-extraction}
+
+Given that some encoder representation beats the shallow baseline on
+boundary cases, we tried to extract what it was finding, in the spirit of
+turning a learned feature into a stated one. We hand-coded 14 arrangement
+features of $H_5$, the subgraph induced on interior vertices of degree
+exactly 5 (\art{src/fourcolor/d1\_features.py}): number of connected
+components, largest component size, number of isolated vertices, edge
+count, density, maximum degree, existence of a length-3 path, number of
+vertices adjacent to the ring, minimum and mean component-to-ring
+distance, minimum and mean inter-component distance, the count of
+degree-5 vertices with at least 3 degree-5 neighbours, and the existence
+of a diamond in $H_5$.
+Appending these 14 to the 24-dimensional \texttt{shallow\_plus\_structural} vector
+(16 shallow features plus 8 structural ones) gives a 38-dimensional
+\texttt{shallow\_plus\_arrangement} vector. Table~\ref{tab:extraction}
+reports boundary accuracy across four seeds, drawn from
+\art{results/d1v2/extraction/report.md}.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+Seed & $n_{\mathrm{boundary}}$ & shallow & +structural & +arrangement [95\% CI] & control\_encoder \\
+\midrule
+0 & 21 & 0.5238 & 0.7619 & 0.9524 $[0.8571, 1.0000]$ & 0.9048 \\
+1 & 23 & 0.4348 & 0.7826 & 0.9130 $[0.7826, 1.0000]$ & 0.7826 \\
+2 & 24 & 0.5417 & 0.7083 & 0.8750 $[0.7083, 1.0000]$ & 0.7500 \\
+3 & 25 & 0.5200 & 0.7600 & 0.7600 $[0.5990, 0.9200]$ & 0.9200 \\
+\bottomrule
+\end{tabular}
+\caption{Boundary accuracy of the hand-coded arrangement-feature extraction
+against the plain shallow baseline, the structural baseline, and the
+encoder control, across four seeds.}
+\label{tab:extraction}
+\end{table}
+
+The extraction succeeds on three of four folds: at seeds 0, 1, and 2 the
+arrangement features push boundary accuracy well above
+\texttt{shallow\_plus\_structural}, and in all three above the encoder control as
+well (0.9524 vs 0.9048, 0.9130 vs 0.7826, 0.8750 vs 0.7500). It fails on seed 3: the arrangement features add
+exactly nothing over the structural baseline there, an identical point
+estimate of 0.7600 to 0.7600, while the encoder control reaches 0.9200. We
+do not know why seed 3 is different; we simply report that it is.
+
+The boundary result of Table~\ref{tab:boundary} itself replicates across
+these same four seeds in direction but not always in confidence-interval
+strength: the control encoder beats the plain shallow baseline by $+0.38$,
+$+0.35$, $+0.21$, and $+0.40$ at seeds 0--3 respectively, so the sign is
+consistent 4 of 4. But the confidence-interval-decisive version of the
+comparison -- the pre-registered rule -- holds only at seeds 0 and 3, i.e.\
+2 of 4. The headline boundary result reported in
+of \S\ref{sec:ml-boundary} was therefore somewhat fortunate in its seed choice;
+a differently seeded first pass could plausibly have reported an
+inconclusive result instead. Artifacts:
+\art{results/d1v2/extraction/report.md},
+\art{results/d1v2/replication/report.md}.
+
+We also performed a small error-set digestion at seed 0
+(\art{results/d1v2/digestion/cases.md}). Of the 21 boundary probe-test
+examples, the encoder control is right and the structural baseline is
+wrong on 4; the reverse holds on 1; both are right on 15; both are wrong
+on 1. All 4 configurations where the encoder wins have $n=18$, are
+D-reducible, and have closure round counts $6, 6, 7, 6$. Their mean count
+of degree-5 diamonds is 2.75, against 0.88 for the rest of the validation
+boundary set and 0.97 corpus-wide -- roughly a factor of three -- with
+every other feature we measured flat across the two groups. We decline to
+run a significance test at $n=4$; the sample is too small to support one
+honestly.
+
+We flag one honest gap here. The automated per-configuration check that
+the arrangement features specifically fix these four cases did not
+actually run: \art{tools/d1v2\_extraction\_test.py} guards its
+\texttt{error\_set\_check} behind
+\texttt{hasattr(interro, "probe\_predictions")}, which is \texttt{False}
+for the interrogation object actually produced, so the check is silently
+skipped and \texttt{error\_set\_check} is empty at every seed. The causal
+link we would like to draw -- diamond count explains the four flipped
+cases -- is therefore suggestive, resting on the aggregate statistic above,
+and not established at the level of individual predictions.
+
+\subsection{Mechanism is training-contingent: a replication finding}
+
+This subsection reports a companion experiment run in a separate
+repository, \texttt{/Users/yugendren/experiments/zeta\_map\_interp}, not in
+the codebase for this paper. Its subject is the published zeta-map result
+we took as our template, \cite{huang2025zeta}, and the question is whether
+its reported mechanism replicates under a faithful reimplementation.
+
+We reimplemented the published architecture (1 encoder layer, 1 decoder
+layer, 1 attention head, $d_{\mathrm{model}}=128$, feed-forward width 256,
+post-norm, learned positional embeddings, weight-tied output projection):
+337{,}029 parameters against the paper's reported 339{,}716. Training
+reached the same headline accuracy the paper reports: 0.9950 greedy
+exact-match on a held-out instances of size $n=13$. We then reran each of the
+paper's three reported mechanistic findings against our own checkpoint.
+
+\begin{itemize}
+\item \emph{Causal ablation.} The paper reports that ablating
+cross-attention to up-steps costs about 1.5\% exact-match accuracy, read
+as evidence of a selective mechanism attending preferentially to up-steps.
+We measure a baseline of 0.996 exact match falling to 0.0000 when
+ablating attention to up-steps, and to 0.0005 when ablating attention to
+the complementary down-steps. Both ablations are catastrophic and
+symmetric: cross-attention is load-bearing wholesale in our model, with no
+selectivity toward either step type.
+
+\item \emph{Attention statistics.} Mean cross-attention mass on up-steps
+is 0.5344 against a uniform baseline of 0.5; the attention argmax lands on
+an up-step for 0.5739 of queries; only 0.0682 of queries have their argmax
+at the path's own maximum level; the mean level of the argmax-attended
+position is 2.369, against 2.471 averaged over all source positions. These
+are essentially uniform statistics -- we find no evidence of attention
+selecting the path's highest level.
+
+\item \emph{Linear probes.} The paper reports approximately 84\% probe
+accuracy for recovering path levels from encoder hidden states. We measure
+0.9478 (14 classes, majority baseline 0.2439) for level, and 1.0000 for
+step type (2 classes, baseline 0.5). This one direction replicates, and in
+fact strengthens.
+
+\item \emph{Length generalization.} The paper evaluates lengths
+$n = 11$--$16$. Our model scores exactly 0.0000 exact match at
+$n = 11, 12, 14, 15, 16$, with per-token character accuracy 0.5872 at
+$n=12$ against roughly 0.5 chance. We tried four positional-placement
+variants at evaluation time (left-aligned to length 24, left-aligned
+padded to length 26, right-aligned, centered); all four give 0.0000 exact
+match, which rules out a pure positional-embedding-range explanation for
+the failure.
+\end{itemize}
+
+We draw the conclusion carefully, and without asserting that the original
+authors made an error: same architecture, same task, the same held-out
+accuracy we would need to call the reimplementation faithful, and yet a
+materially different internal mechanism by every measure we could apply.
+Whatever mechanism a small transformer settles on for a mathematical
+computation appears to be, at least in part, a property of the particular
+training run rather than a property of the task it was trained on. For an
+interpretability-driven discovery programme this is the central
+methodological risk: an extracted ``mechanism'' may describe a training
+run rather than a fact about the mathematics. This is exactly the failure
+mode we then observed inside our own setting, at seed 3 of
+\S\ref{sec:ml-extraction}.
+
+\subsection{Assessment}
+
+None of the four contributions of this paper came from the neural models.
+The one thing the machine-learning line delivered that fed forward into
+the rest of the paper was the degree-5 arrangement feature family of
+\S\ref{sec:ml-extraction}, which sharpened our attention on $H_5$ and became
+one input, among others, to the rule-mining process that produced the
+candidate rules discussed in Section~\ref{sec:negative} -- of which the
+surviving rule, in its exhaustively verified form, became
+Theorem~\ref{thm:fr}. We describe that as an indirect, heuristic
+contribution and make no stronger claim than that.
+
+We also record two structural failures of the programme, so that the
+positive results above are read in proportion. First, the dynamics
+model -- the entire interpretability design bet, and the closest analogue
+to the zeta-map paper's step-by-step mechanism -- attains teacher-forced
+verdict accuracy 1.0000, but collapses under free-running rollout to
+0.7778 at $r=9$, 0.7786 at $r=10$, and 0.6245 at $r=10$ in the second
+($r10v2$) configuration, with free-running boundary accuracy exactly
+0.0000 at $r=10$ and $r10v2$: unrolled without teacher forcing, the model
+converges to the trivial fixed point of predicting that nothing is ever
+eliminated. Second, the D1 checkpoint's learned positional embeddings
+extend only to length 259, which admits 7{,}021 of the 14{,}036
+configurations in the corpus; ring sizes above roughly 13 were structurally
+out of the model's reach, independent of anything about the underlying
+mathematics.
+
+Finally, we caught and quarantined one tautological feature during this
+work. The quantity $n_{\mathrm{consistent}}$ correlates with the verdict
+label at Spearman $-0.850$ and appears to ``close 167\% of the gap'' to
+perfect boundary accuracy -- because, on inspection, it is the label in
+disguise: $n_{\mathrm{consistent}} \le 50$ is one of the two disjuncts
+defining boundary non-reducibility in the first place. It is excluded from
+consideration via \texttt{TAUTOLOGICAL\_CANDIDATES} in
+\art{tools/d1\_interrogate.py}, and we mention it here only as a caution to anyone repeating this
+kind of search: a feature that predicts the label unusually well is worth
+checking for circularity before it is reported as a discovery.

@@ -53,3 +53,11 @@ results/d1v2/log_plantri_*.txt
 results/theorem/stress_test.log
 results/theorem/stress_test_checkpoint.json
 results/theorem/stress_test_nohup.out
+
+# LaTeX build intermediates for paper/ (main.tex, sec_ml.tex, refs.bib and main.pdf are tracked)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.blg
+paper/*.bbl

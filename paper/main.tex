@@ -1,0 +1,2174 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Phik}{\Phi(K)}
+\newcommand{\art}[1]{{\texttt{\hyphenchar\font=`\-\relax #1}}}
+
+\title{Digesting the Four Colour Theorem:\\
+schema-robustness of the ring-$14$ obstruction,\\
+a minimum-interior theorem, and a coloring-mass law}
+
+\author{%
+  (draft --- author list to be completed)%
+}
+
+\date{Draft of \today}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\begin{abstract}
+The three machine proofs of the Four Colour Theorem (Appel--Haken 1977;
+Robertson--Sanders--Seymour--Thomas 1997; and the 2026 near-linear-time proof of
+\texttt{arXiv:2603.24880}) are accepted but opaque: what they establish beyond the
+theorem itself is largely unexamined. We report four verified structural facts
+obtained by re-deriving these proofs computationally from their published
+mathematics rather than by running their released code.
+
+\emph{First and principally}, we show that the failure of the $2026$ discharging
+schema over the ring-$\le 14$ sub-pool is a property of the \emph{rule shapes}, not
+of the published rule amounts. Fixing the $84$ discharging rule shapes of
+\texttt{arXiv:2603.24880} and restricting the published $8{,}200$-configuration
+D-reducible pool to its $5{,}895$ members of ring size $\le 14$, we prove that
+\emph{no} nonnegative amount vector $x\in\mathbb{R}^{84}_{\ge 0}$ closes the
+discharging argument. The proof is a $12$-row irreducible Farkas certificate,
+verified over exact rationals by a solver-free checker that re-derives every row
+from its source. The same machinery over the full pool is feasible and the
+published amounts satisfy every generated row, so the encoding is not vacuous.
+Two hypotheses are load-bearing and stated as such: nonnegativity of the amounts,
+and our reconstruction of the degree-$5$/$6$ half of the discharge, which the 2026
+paper discharges in a single sentence by citation. This bears directly on a question
+Steinberger \cite{steinberger2010} states he has ``no opinion'' about, namely whether
+a D-only unavoidable set of ring size $\le 14$ exists; we settle it for this pool and
+these rule shapes, and no further.
+
+\emph{Second}, we determine $f(r)$, the minimum number of interior vertices of a
+D-reducible configuration of ring size $r$, for $r=8,\dots,13$: $f = 5,5,6,7,7,8$.
+The bounds are exhaustive (over $13.2$ million plantri-generated near-triangulations,
+$10{,}319$ of which are RSST-legal configurations below threshold, none D-reducible)
+and tight (explicit catalog witnesses). This is the first quantitative extension of
+Birkhoff's 1913 result that no reducible configuration has ring size $\le 5$.
+
+\emph{Third}, we report an independent re-verification of the published 4CT
+configuration corpus by a reducibility checker written from the RSST paper rather
+than ported from its code --- the RSST $633$ ($249$ D-reducible, $384$ C-reducible),
+Steinberger's $2{,}822$, and $7{,}697$ of the 2026 pool, all with computed
+$|\Phi(K)|$ matching the published headers exactly --- together with an end-to-end
+reproduction of the 2026 C++ pipeline. Along the way we replaced a legacy C oracle
+that aborts partway through Steinberger's set, and identified $430$ configurations
+of the 2026 pool that no stage of the pipeline uses, re-verifying the whole pipeline
+without them.
+
+\emph{Fourth}, we develop a ``coloring-mass'' framework: exact wheel closed form
+$a = (2^r+2(-1)^r)/6$, an improved cap $a \le 11\cdot 2^{r+k-7}$ tight at every
+wheel, a proof of $\gamma=3/2$ at $k=2$, and an \emph{obstruction theorem} showing
+that no proof factoring through $a \le P(S,4)/24$ can reach the empirically sharp
+constant $4/3$.
+
+We are explicit about what did not work. A neural component produced a modest
+boundary-classification result and a feature extraction that failed on one of four
+folds; it did not discover any theorem here. Three mined sufficient conditions for
+reducibility were killed by adversarial mutation search, which produced $236$ false
+positives, $215$ of them confirmed by an independent implementation; a natural
+LP formulation was killed by its own negative control; the naive threshold law was
+killed by the lemma harness. We position the work
+relative to the Tao/Buzzard ``digestion'' agenda: the contribution is tooling and
+verified structural facts that make an opaque machine proof more comprehensible,
+not an automated discovery.
+\end{abstract}
+
+\tableofcontents
+
+%======================================================================
+\section{Introduction}
+%======================================================================
+
+\subsection{The digestion problem}
+
+The Four Colour Theorem has been proved three times by machine
+\cite{appel1977every,appel1977every2,rsst1997,steinberger2010,nl4ct2026} and once in
+a proof assistant \cite{gonthier2008}. In every case the proof consists of an
+\emph{unavoidable set} of configurations, each verified \emph{reducible} by a
+finite computation, together with a \emph{discharging} argument certifying
+unavoidability. The certificates are enormous --- $633$ configurations and
+$32$ discharging rules for RSST \cite{rsst1997}; $2{,}822$ configurations and $42$
+rules for Steinberger \cite{steinberger2010}; $8{,}200$ configurations and $84$
+rules for the 2026 near-linear-time proof \cite{nl4ct2026} --- and are essentially
+never inspected for structure. Correctness has been established; comprehension has
+not.
+
+This paper reports on a programme of \emph{computational digestion}: re-deriving
+these proofs from their published mathematics with independent implementations, and
+then mining the resulting data for statements that a human can hold in mind. The
+framing is Tao's and Buzzard's \cite{tao2023machine,buzzard2024}: a machine proof
+becomes mathematics when it yields transferable structure, and the bottleneck is
+tooling rather than raw computation. The unit of progress we adopt is a
+\emph{verified structural fact about the proof objects} --- a theorem about the
+class of reducible configurations, or an impossibility statement about a
+discharging schema --- rather than a shorter proof of the theorem itself.
+
+Throughout, we distinguish sharply between three epistemic grades, and we label
+every claim in the paper with one:
+\begin{itemize}
+  \item \textbf{Proven}: a mathematical argument, in some cases with a finite
+        exhaustive case analysis whose completeness argument is given.
+  \item \textbf{Certified}: a finite computation whose output is an independently
+        checkable certificate (e.g.\ a Farkas certificate verified in exact
+        rationals by a program that does not trust the certificate's own numbers).
+  \item \textbf{Corpus-supported}: a statement that survived machine testing over
+        our full labelled corpus of $59{,}142$ configurations. This is \emph{not} a
+        proof, and \S\ref{sec:negative} records what happened the one time we
+        treated it as one.
+\end{itemize}
+
+\subsection{The four contributions}
+
+\paragraph{(C1) Schema-robustness of the ring-$14$ obstruction (\S\ref{sec:lp}).}
+Steinberger \cite{steinberger2010} produced the first unavoidable set of
+\emph{D-reducible} configurations (no contracts), at the cost of ring size up to
+$16$ and $2{,}822$ configurations, and wrote that he had ``no opinion'' whether an
+unavoidable set of D-reducible configurations with ring size at most $14$ exists.
+We attack a sharply scoped version of this question. Fix the $84$ rule shapes of
+\cite{nl4ct2026} and the sub-pool $P_{14}$ of the published $8{,}200$-configuration
+D-reducible pool consisting of the $5{,}895$ configurations of ring size $\le 14$.
+Then there is no $x \in \mathbb{R}^{84}_{\ge 0}$ under which the discharging
+argument closes over $P_{14}$; a $12$-row irreducible Farkas certificate proves it,
+verified in exact rational arithmetic without a solver. The contradiction lives
+entirely at the degree-$5$/degree-$7$ interface, and $65$ of the $84$ rule shapes
+are irrelevant to it. Because the published amounts satisfy the analogous full-pool
+system with zero violations, the result distinguishes the two pools rather than
+being vacuously infeasible.
+
+\paragraph{(C2) The function $f(r)$ (\S\ref{sec:fr}).} Birkhoff \cite{birkhoff1913}
+proved that a reducible configuration has ring size at least $6$. No quantitative
+refinement --- a lower bound on the \emph{interior} size as a function of the ring
+size --- appears to have been published. We prove
+\[
+  f(8),\dots,f(13) \;=\; 5,\,5,\,6,\,7,\,7,\,8,
+\]
+exhaustively and tightly, and note the nuance that the corresponding minimum over
+\emph{C}-reducible configurations is strictly smaller at rings $8$ and $11$.
+
+\paragraph{(C3) Independent verification of the corpus (\S\ref{sec:verify}).} We
+re-verified the published catalogs with a checker implemented from the RSST paper
+\cite{rsst-reduce} rather than ported from \texttt{reduce.c}, reproduced the 2026
+pipeline end to end (four stages, $4$h$38$m wall, asserts live, all counts matching
+the paper), replaced a legacy C oracle where it aborts, and identified $430$
+configurations of the 2026 pool that no stage of the pipeline uses.
+
+\paragraph{(C4) The coloring-mass law (\S\ref{sec:mass}).} Writing $a=|\Phi(K)|$ for
+the classical RSST count of ring colorings extending to the free completion, we
+prove the exact wheel value $a=(2^r+2(-1)^r)/6$ with its equality case, the cap
+$a \le 11\cdot 2^{r+k-7}$ (tight at every wheel), and $\gamma=3/2$ at $k=2$. We
+give an \emph{obstruction theorem}: an explicit $10$-vertex configuration shows that
+no bound factoring through $a \le P(S,4)/24$ can prove the empirically sharp cap
+$a \le \frac{2^r+2}{6}(4/3)^{k-1}$, the floor for that route being $61/43$. Paired
+with an empirical threshold law, the sharp cap would reproduce the entire $f(r)$
+table analytically, to within one interior vertex at every ring.
+
+\subsection{What this paper does not claim}
+\label{sec:notclaim}
+
+We state the limitations up front because several of them are load-bearing.
+
+\begin{enumerate}
+  \item \textbf{(C1) does not settle Steinberger's question.} It is scoped to
+        \emph{these} $84$ rule shapes and \emph{this} pool. Other D-reducible
+        configurations of ring $\le 14$ exist outside the published pool, and
+        adding or replacing rule shapes is not covered. Removing the fixed-shapes
+        caveat requires column generation over planar rule patterns
+        (\S\ref{sec:open}).
+  \item \textbf{Unblocked $\ne$ realizable.} Our LP rows are generated for every
+        local structure the pool fails to block, exactly as the released C++ decides
+        which cartwheels to analyse. A structure that is geometrically impossible
+        for a reason outside the pool would yield a spurious row. This is
+        anti-conservative for an \textsc{infeasible} verdict; it is also precisely
+        the standard the published proof itself uses.
+  \item \textbf{The degree-$5$/$6$ rows are a reconstruction.} The released code
+        never enumerates hubs of degree $\le 6$; \cite{nl4ct2026} discharges that
+        case in one sentence by citation to \cite{steinberger2010}, who proved it
+        \emph{by machine} at his own amounts. \S\ref{sec:lowdeg} gives our
+        reconstruction, its verbatim textual audit against the paper source, and an
+        exhaustive refinement check. Three of the $12$ certificate rows depend on it.
+  \item \textbf{The sharp cap is a conjecture}, not a theorem, and the threshold
+        half of the coloring-mass law is corpus-supported only.
+  \item \textbf{No machine-learning discovery is claimed.} \S\ref{sec:ml} reports
+        the neural work honestly, including a replication finding that the same
+        architecture at the same accuracy learned a \emph{different} mechanism than
+        a published result of the same shape.
+  \item \textbf{Schema-incomparability.} Configuration counts across schemas are not
+        directly comparable: RSST's $633$ uses an axle-based discharging schema with
+        C-reducibility and contracts at ring $\le 14$; the 2026 schema is
+        wheel/cartwheel-based with D-reducibility only. Any claim about set size
+        must be schema-qualified.
+\end{enumerate}
+
+\subsection{Related work}
+
+\paragraph{On $f(r)$.} Birkhoff's ring-size lower bound \cite{birkhoff1913} is, as far
+as we can determine, the only published unconditional structural lower bound on the
+size of a reducible configuration. The literature contains extensive
+\emph{catalogs} --- from which per-ring interior minima can be read off, and which we
+use as our tightness witnesses --- but a catalog minimum is an upper bound on $f(r)$,
+not a lower bound; the exhaustive negative side of Theorem~\ref{thm:fr} is what is
+new. We have found no prior claim of a per-ring interior minimum beyond
+Birkhoff's ring $\ge6$, and no prior exhaustive enumeration of the small-interior
+configuration classes. The nuance that $C$-reducibility admits smaller interiors
+(\S\ref{sec:cvsd}) is implicit in the RSST catalog but, to our knowledge, has not
+been stated.
+
+\paragraph{On lower bounds for unavoidable sets.} Bounds on the \emph{number} of
+configurations needed are essentially absent from the literature; the historical
+sequence $\sim1834$ \cite{appel1977every2} $\to 633$ \cite{rsst1997} $\to 2{,}822$
+D-only \cite{steinberger2010} $\to 8{,}200$ D-only with a near-linear colouring
+algorithm \cite{nl4ct2026} records only what has been achieved. Theorem~\ref{thm:lp}
+is not a bound on set size; it is an impossibility statement about a specific
+(schema, rule-shape set, pool) triple, and we know of no comparable prior result.
+The closest antecedent in spirit is Steinberger's own remark that he has no opinion
+about the ring-$14$ question.
+
+\paragraph{On digestion.} The programme of making machine proofs comprehensible ---
+rather than merely correct --- is articulated by Tao \cite{tao2023machine} and
+Buzzard \cite{buzzard2024}, and Gonthier's Coq formalisation \cite{gonthier2008}
+settles the correctness half for the 4CT specifically. Our contribution is on the
+comprehension side and is deliberately modest in ambition: verified structural facts
+about the proof objects, plus the tooling that produced them.
+
+\paragraph{On machine learning for mathematical discovery.} The template we followed
+is that of Davies et al.\ \cite{davies2021,davies2021signature}: train a model, probe
+it, extract a human-statable conjecture. \S\ref{sec:ml} reports our attempt and its
+partial failure, together with a replication study bearing on the reliability of the
+``extract a mechanism'' step in general. We regard the honest reporting of that
+attempt as part of the contribution, not as an appendix to it.
+
+\subsection{Reproducibility}
+
+Every numerical claim in this paper is annotated with the repository artifact that
+produced it. Appendix~\ref{sec:artifacts} is a claim-to-artifact table giving, for
+each claim, the file path and what it contains. All third-party inputs (the four
+arXiv e-prints, the \texttt{plantri} generator, the released rule and configuration
+files, the released C++ checker) are pinned in-repository with recorded SHA-256
+digests.
+
+%======================================================================
+\section{Preliminaries}
+\label{sec:prelim}
+%======================================================================
+
+We follow \cite{rsst-reduce,rsst1997} throughout.
+
+\subsection{Configurations and free completions}
+
+\begin{definition}[Configuration]
+A \emph{configuration} $K$ of ring size $r$ with $k$ interior vertices is given by
+its \emph{free completion} $S=S(K)$: a simple plane near-triangulation of the closed
+disk on $n=r+k$ vertices such that
+\begin{enumerate}
+  \item the outer face is bounded by an induced (chordless) cycle $R$, the
+        \emph{ring}, of length $r$, each of whose vertices has degree $\ge 3$;
+  \item the \emph{interior} (the $k$ vertices strictly inside) is nonempty and
+        connected, and every interior vertex has degree $\ge 5$;
+  \item every bounded face is a triangle.
+\end{enumerate}
+\end{definition}
+
+RSST's reference parser \texttt{ReadConf} in \texttt{reduce.c} enforces two further
+conditions on any file it accepts, and we enforce both:
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item a \emph{labelling convention}: each ring vertex's neighbour list, written in
+        rotation order, starts at ring-neighbour $i+1$ and ends at ring-neighbour
+        $i-1$, with every entry strictly between them interior;
+  \item the degree identity $\sum_v \deg v = 6(n-1)-2r$ (automatic given 1--3);
+  \item \textbf{each interior vertex meets the ring in at most two separate
+        contiguous arcs.}
+\end{enumerate}
+Condition 6 is genuine structure, not bookkeeping: it is not implied by 1--3, and it
+removes $33\%$--$77\%$ of the near-triangulations satisfying 1--3 at the sizes we
+enumerate (\S\ref{sec:fr-enum}). Condition 4 is a serialization convention only; a
+cyclic neighbour list denotes the same rotation system whatever entry it is written
+from. Discovering that distinction cost us a real bug (\S\ref{sec:methods}).
+
+\subsection{Reducibility}
+
+Let $\Phi(K)$ be the set of colourings of $E(R)$ in three colours, taken up to the
+$S_3$ action on colours, that extend to a \emph{tri-colouring} of $S$ --- an edge
+$3$-colouring in which the three edges of every internal face receive three distinct
+colours. Set $a = a(K) = |\Phi(K)|$; this is the classical header field of an RSST
+\texttt{.conf} record. $K$ is \emph{D-reducible} if the Kempe-closure operator on
+subsets of $\Phi(K)$, iterated to its fixed point starting from $\Phi(K)$, reaches
+$\emptyset$; equivalently, no consistent set survives. $K$ is \emph{C-reducible} if
+the same holds after contracting a nonempty \emph{contract} $X$ of edges. C-reducibility
+is strictly weaker: \S\ref{sec:cvsd} exhibits catalog configurations that are
+C-reducible but not D-reducible with fewer interior vertices than $f(r)$.
+
+\begin{remark}
+Everything in \S\ref{sec:fr} is scoped to D-reducibility. The $2026$ pool
+\cite{nl4ct2026} and Steinberger's set \cite{steinberger2010} are D-only; the RSST
+$633$ are not.
+\end{remark}
+
+\subsection{Discharging and the three schemas}
+
+A discharging argument assigns an initial charge to each vertex of a hypothetical
+minimum counterexample, moves charge along edges according to a finite set of local
+\emph{rules}, and derives a contradiction from the fact that total charge is
+positive while every vertex ends non-positive. RSST use \emph{axles}; Steinberger
+and \cite{nl4ct2026} use \emph{cartwheels} (a hub with its first and second
+neighbourhoods, degrees given as intervals). The 2026 paper assigns
+$T_0(v) := 10\,(6-d(v))$, so $\sum_v T_0(v) = 120$ by Euler
+(\cite{nl4ct2026} source line 602 and Lemma \texttt{lem:120}); a rule $R$ sends
+$r(R)\in\{1,2\}$ units from $s(R)$ to $t(R)$; and the final charge is
+$T(u) = T_0(u) + \sum_{v\sim u}(\phi(v,u)-\phi(u,v))$.
+
+Crucially, \emph{survivors are permitted}: the charge argument need not kill every
+wheel, because three gluing lemmas mop up the survivors. Encoding ``the discharging
+must kill every wheel'' is therefore the \emph{wrong} condition, and
+\S\ref{sec:strongenc} reports the negative control that demonstrates it: that
+encoding is infeasible even for the full $8{,}200$-configuration pool, i.e.\ it would
+``disprove'' the published theorem.
+
+\subsection{Computational setting}
+
+Our reducibility checker \texttt{fourcolor.reduce.check} is implemented from
+\cite{rsst-reduce}'s mathematics (the \texttt{reduce.tex} write-up) rather than
+ported from \texttt{reduce.c}; the 1995 C program is compiled separately as an
+oracle (\texttt{build/reduce\_rsst}) purely for differential testing. Exhaustive
+generation uses \texttt{plantri} 5.5 \cite{brinkmann2007}, pinned with its
+SHA-256 digest, invoked as \texttt{plantri -P$r$ -c3 -a $n$}; with \texttt{-P} and
+no \texttt{-m}, \texttt{-c3} defaults to \texttt{-c3m3}, i.e.\ no chords and no
+outer-face vertex of degree $2$, exactly matching condition 1. \texttt{plantri} is a
+canonical-construction-path generator producing exactly one representative per
+isomorphism class, which is what makes ``sweep every $n$ below threshold'' an
+exhaustive search rather than a sample.
+
+%======================================================================
+\section{Schema-robustness of the ring-$\le 14$ obstruction}
+\label{sec:lp}
+%======================================================================
+
+\subsection{The question and the exact claim}
+
+Steinberger's unavoidable set \cite{steinberger2010} is D-only but reaches ring size
+$16$; RSST's $633$ stay at ring $\le 14$ but use contracts. Steinberger states the
+question and declines to conjecture
+(\art{third\_party/arxiv-0905.0043/src/4c.tex}, line 137):
+\begin{quote}\small
+``Appel and Haken used only configurations of ring-size at most $14$ \dots\ The
+unavoidable set of Robertson et al.\ also has only configurations of ring-size $14$
+or less. Our unavoidable set uses configurations of ring-size up to $16$ \dots\
+\textbf{We were not able to find an unavoidable set using only configurations of
+ring-size $14$ or less, but we have no opinion as to whether such a set exists or
+not.}''
+\end{quote}
+The 2026 pool \cite{nl4ct2026} is D-only with $8{,}200$ configurations of ring size
+up to $18$, of which $5{,}895$ have ring size $\le 14$.
+
+A preliminary experiment (\S\ref{sec:s1}) ran the released 2026 pipeline with the
+pool restricted to those $5{,}895$: it fails, with $833$ of $16{,}157$ per-wheel jobs
+aborting on an assertion. That is a statement about the \emph{published amounts}
+$x_0$. The result of this section is the much stronger statement that no re-tuning
+of the amounts can rescue it.
+
+\begin{theorem}[Certified]
+\label{thm:lp}
+Fix the $84$ discharging rule shapes of \cite{nl4ct2026}
+(\art{third\_party/discharging-rules/R}). Let $P_{14}$ be the sub-pool of the
+published $8{,}200$-configuration D-reducible pool consisting of the $5{,}895$
+configurations of ring size $\le 14$. Then there is no vector of nonnegative rule
+amounts $x \in \mathbb{R}^{84}_{\ge 0}$ under which the discharging argument closes
+over $P_{14}$: i.e.\ under which every vertex of a hypothetical minimum
+counterexample ends with charge $\le 0$.
+\end{theorem}
+
+\begin{remark}[$43$ figures, $84$ rules]
+\cite{nl4ct2026} draws $43$ rules in its Figure \texttt{fig:rules}; each is counted
+twice, once per reflection, except two that are reflection-symmetric, giving
+$43\cdot2-2 = 84$ (source lines 635--636, ``Figure \texttt{fig:rules} shows 84 rules
+since precisely two, the first and fourth last, are symmetric under the
+reflection''). This matches the $84$ files in
+\art{third\_party/discharging-rules/R} one for one, and the paper notes the rule set
+is the same as Steinberger's $42$ except that his $12$th and $13$th are merged. Our
+$x$ ranges over all $84$ independently, which is weaker than assuming reflection
+pairs share an amount, hence the safe direction for \textsc{infeasible}.
+\end{remark}
+
+The certificate is $12$ rows; it is stated in full in
+Appendix~\ref{sec:certificate}. Since all $12$ rows are non-strict, infeasibility
+holds over the reals, hence a fortiori over the integers and over the box
+$\{1,2\}^{84}$ that \cite{nl4ct2026} allows itself. Section~\ref{sec:lp-scope}
+lists the hypotheses.
+
+\subsection{The empirical precursor: the pipeline on the restricted pool}
+\label{sec:s1}
+
+Before any LP, we simply ran the released pipeline with the pool replaced by
+$P_{14}$ and the $84$ rule shapes and published amounts $x_0$ left untouched
+(\art{tools/s1\_build\_pool.py}, \art{results/p3/runs/steinberger-s1/}). The
+excluded $2{,}305$ configurations are $1{,}695$ at ring $15$, $526$ at $16$, $69$
+at $17$ and $15$ at $18$.
+
+The schema breaks, and it breaks in a structured way.
+\texttt{combine\_rules} yields $681$ non-blocked combined rules rather than the
+baseline $671$ --- ten combined rules revived, all ten predicted in advance by a
+gap analysis with $0$ unexpected re-blockings. Wheel counts are unchanged at
+$d=7,8$ and grow by $4$ and $5$ at $d=9,10$, all nine revivals again predicted ---
+so the per-wheel job count is $16{,}148 + 9 = 16{,}157$ rather than the full pool's
+$16{,}148$.
+Then \textbf{$833$ of $16{,}157$ per-wheel cartwheel jobs abort}:
+$780$ on \texttt{assert(C == 0)} ($530$ at $d=7$, $250$ at $d=8$) and $53$ on
+\texttt{assert(d == 7 || d == 8)} ($51$ at $d=9$, $2$ at $d=10$). The two failure
+kinds are perfectly stratified by hub degree, which is itself informative. The run's
+verdict is \textsc{fail} at the \texttt{enum\_cartwheels} stage.
+
+This says the published amounts do not work over $P_{14}$. It does not say no
+amounts do --- and the obvious response, ``re-tune $x$'', is exactly what
+Theorem~\ref{thm:lp} rules out. The $833$ aborted jobs are also the raw material for
+the LP: re-run against an NDEBUG build with the assertions compiled out, they yield
+$77{,}185$ additional fully refined leaves that the assert-guarded run never
+recorded.
+
+\subsection{Encoding: leaf charge is affine in $x$}
+
+The invariant the released C++ actually enforces
+(\art{third\_party/computer-checks/src/cartwheel.cpp}, \texttt{enum\_bad\_cartwheels})
+is, on every fully refined cartwheel $L$ surviving \texttt{fix\_in\_rules} and
+\texttt{fix\_out\_rules}, the conjunction
+\texttt{assert(C==0)}, \texttt{assert(d==7||d==8)},
+\texttt{assert(darts\_by\_deg[7]+[8]+[9] > 0)}.
+The corresponding necessary condition on $x$ is:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+case & requirement & why \\
+\midrule
+$d(L)\in\{9,10,11\}$ & $C(L,x) < 0$ & $L$ must be pruned before the degree assert \\
+$d(L)\in\{7,8\}$, no spoke of degree $\ge 7$ & $C(L,x) < 0$ & pruned before the spoke assert \\
+$d(L)\in\{7,8\}$, some spoke $\ge 7$ & $C(L,x) \le 0$ & $C=0$ survives to the gluing lemmas \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Note that $C=0$ is \emph{not} imposed: if $C<0$ the leaf is pruned before the assert
+is reached, so $C \le 0$ is exactly the necessary-and-sufficient charge condition at
+a leaf, weaker than what the C++ observes at $x_0$.
+
+At a leaf all $d$ spokes are fixed, so the per-spoke maximum inside
+\texttt{amount\_of\_possible\_charge\_send} never runs, and
+\texttt{prune\_by\_non\_associated\_rule} forces the spoke combined rules to be
+determined by the leaf graph. Hence
+\begin{equation}
+\label{eq:leafrow}
+  C(L,x) \;=\; 10\,(6-d) \;+\; \sum_{k} (\mathrm{IN}_k - \mathrm{OUT}_k)\, x_k,
+\end{equation}
+with $\mathrm{IN}_k = \#\{j : \texttt{always\_apply}(\text{dart}_j, R_k)\}$ counting
+darts pointing into the hub and $\mathrm{OUT}_k$ the reverse. The form is affine
+with integer coefficients: no epigraph variables, no binaries.
+
+\paragraph{Differential validation of \eqref{eq:leafrow}.} All $10{,}094$ published
+full-pool bad cartwheels in \art{third\_party/computer-checks/wheels/zero} evaluate
+to \emph{exactly} $0$ at $x_0$ under the Python form, and all $10{,}094$ satisfy
+$d\in\{7,8\}$ ($9{,}366$ at $d=7$, $728$ at $d=8$) with a spoke of degree $\ge 7$;
+i.e.\ the Python row semantics independently reproduce all three C++ assertions on
+the published output, with $0$ discrepancies
+(\art{tools/lp\_discharge.py -{}-validate}).
+
+\subsection{Why leaves observed at $x_0$ constrain every $x$}
+
+The refinement forest is explored with pruning, so the observed leaf set depends on
+$x_0$. The rows are nevertheless valid for all $x \ge 0$:
+
+\begin{lemma}[Monotonicity]
+\label{lem:mono}
+For every observed leaf $L$ and every $x \ge 0$, the necessary condition
+$C(L,x)\le 0$ (resp.\ $<0$ in the strict cases) holds.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+(a) The branching operations \texttt{update\_degree\_by\_rule},
+\texttt{concrete\_degree\_except\_tail}, \texttt{refine\_always} and
+\texttt{refine\_never} only narrow degree intervals and never change rotations, so
+branching is $x$-independent. It is \emph{not} pool-independent, since
+\texttt{fix\_in\_rules} branches over the pool-dependent non-blocked combined-rule
+set --- but it moves in the safe direction: a smaller pool blocks fewer combined
+rules, and we verified that the full-pool combined rules are a content-exact subset
+of the $P_{14}$ ones ($671 \subset 681$ files), so the full-pool forest is a
+sub-forest of the $P_{14}$ forest.
+(b) \texttt{blocked\_by\_reducible\_configuration} is $x$-independent and monotone in
+the pool; \texttt{prune\_by\_non\_associated\_rule} is independent of both.
+(c) \texttt{upper\_bound\_of\_charge} is non-increasing along refinement whenever
+$x \ge 0$: narrowing degrees can only add \texttt{always\_apply} matches (out-charge
+up --- this is the step needing $x\ge 0$) and only remove candidates surviving
+\texttt{never\_apply}.
+(d) Hence for any $x\ge 0$, either every ancestor survives and the assert demands
+$C(L,x)\le 0$, or some ancestor $A$ has $C(A,x)<0$ and then $C(L,x)\le C(A,x)<0$ by (c).
+\end{proof}
+
+An earlier draft asserted flat pool-independence in (a). That was false and was
+caught by the adversarial pass (\S\ref{sec:methods}); the corrected statement is
+what the argument needs and it holds. Since $P_{14}\subseteq P_{\text{full}}$
+(verified: $0$ of the $5{,}895$ names absent from the $8{,}200$; both are symlinks to
+the same files), every full-pool leaf row is also valid for the ring-$\le 14$
+problem, which is what lets the certificate mix rows of both origins.
+
+\begin{remark}[Direction of the relaxation]
+The row set omits the three gluing lemmas and omits every leaf the $x_0$-pruned
+search never reached. Both omissions make the encoded feasible set \emph{larger}
+than the true one. Therefore \textsc{infeasible} transfers to the true problem,
+while \textsc{feasible} is only a non-refutation.
+\end{remark}
+
+\subsection{The degree $\le 6$ half --- without which the LP is vacuous}
+\label{sec:lowdeg}
+
+The released code enumerates hubs of degree $7$--$11$ only, where the initial charge
+$10(6-d)$ is already negative. Taken alone the leaf rows are satisfied by $x=0$:
+send nothing and every hub keeps its negative initial charge. We measured exactly
+that --- the ``no low-degree'' variants in Table~\ref{tab:lpvariants} are
+\textsc{feasible} and vacuously so.
+
+The 2026 paper does not check $d\le 6$ by hand or otherwise. It asserts the
+\emph{stronger} $T(v)=0$ and discharges the obligation in one sentence by citation,
+inside the proof of its main theorem (source line 1144):
+\begin{quote}\small
+``\dots we are still missing the case where $v$ has degree at most $6$ and positive
+final charge. However, this cannot happen, for if $v$ has degree 5 or 6, then it has
+final charge 0 as proved in \cite{steinberger2010}, where exactly the same
+discharging rules as here are used.''
+\end{quote}
+And \cite{steinberger2010} does not prove it by hand either: he proves it by machine,
+with one presentation file per hub degree from $5$ to $11$, and explicitly declines
+to write the hand argument
+(\art{third\_party/arxiv-0905.0043/src/4c.tex}, line 552). So the $d\le 6$ case rests
+on a computation at Steinberger's amounts and against Steinberger's unavoidable set.
+When the LP re-tunes $x$, that citation no longer applies as proved --- which is
+exactly why we impose the necessary condition $T(v)\le 0$ directly as a row rather
+than inheriting the conclusion.
+
+For $d\in\{5,6\}$ we add rows built from a \emph{lower} bound on the hub's final
+charge, valid for any $x\ge 0$ and at any level of refinement:
+\begin{equation}
+\label{eq:lowdeg}
+  \mathrm{LB}(w,x) \;=\; 10(6-d) \;-\; \sum_i \mathrm{POSS}_i(x) \;+\; \sum_j \mathrm{ALW}_j(x)
+  \;\le\; T(v) \;\le\; 0,
+\end{equation}
+where $\mathrm{POSS}_i$ sums $x_k$ over base rules \emph{not} \texttt{never\_apply}
+out of spoke $i$ (an over-count of sends) and $\mathrm{ALW}_j$ sums $x_k$ over base
+rules that \texttt{always\_apply} into the hub from spoke $j$ (an under-count of
+receipts). Rows are generated over every spoke-degree necklace in $\{5,\dots,9\}^d$
+up to rotation that the pool does not block.
+
+\paragraph{Textual audit.} We audited \eqref{eq:lowdeg} quote by quote against the
+paper's pinned LaTeX source. Initial charge $10(6-d)$: verbatim, line 602. Total
+charge $120$: Lemma \texttt{lem:120}. $T = T_0 - \text{out} + \text{in}$: Definition
+\texttt{dfn:finalcharge}. Requirement at $d\in\{5,6\}$: the paper asserts $T(v)=0$,
+which is \emph{stronger} than our $T(v)\le 0$, so our rows are conservative. A
+degree-$5$/$6$ vertex with $T=0$ is a permitted survivor, matching our non-strict
+rows. Rule $R(1)$ decoded from the paper's own figure source
+(\art{tikz/rule.tex}, lines 967--977) is a single edge with source of degree exactly
+$5$, target of degree $\ge 5$, amount $2$, matching \art{rule001.rule} byte for byte;
+so a degree-$5$ vertex sends $2$ along every incident edge unconditionally, and the
+row $10 - 5x_{\text{rule001}} \le 0$ is forced. Full audit:
+\art{results/steinberger/degree56-verification.md}.
+
+\paragraph{The coarse-cartwheel gap, and its closure.} The low-degree rows are built
+on the \emph{coarse} cartwheel (hub plus spoke-degree necklace, second neighbourhood
+left at $[5,9]$), and blocking is tested on that coarse object. ``Refining only
+strengthens the bound'' does \emph{not} cover the danger, because refining can also
+\emph{delete the row}: if a coarse wheel is unblocked but every full refinement is
+blocked, then no vertex of a minimum counterexample carries that necklace and the row
+is spurious. That is anti-conservative for \textsc{infeasible}, so it was checked
+rather than assumed (\art{tools/lowdeg\_refinement\_check.py}).
+
+\emph{No low-degree row is spurious.} Two findings, the second strictly stronger than
+needed. (i) Exact enumeration of the certificate's four degree-$5$ necklaces over the
+full refinement space $\{5,\dots,9\}^m$, $m=10$--$12$, by compiling the blocking
+predicate into a DNF over the open slots and counting models exactly by DFS; the
+compiled predicate is differentially checked against the production
+\texttt{wheel\_is\_blocked} on $2{,}000$ random refinements per necklace ($0$
+disagreements) and exhaustively on all $625$ refinements of a $4$-slot necklace.
+
+\begin{center}
+\begin{tabular}{lrrrrr}
+\toprule
+necklace & slots & refinements & blocked & unblocked & surviving \\
+\midrule
+\texttt{d5-55767} (IIS) & 10 & 9{,}765{,}625   & 5{,}678{,}597  & 4{,}087{,}028   & 41.9\% \\
+\texttt{d5-57577} (IIS) & 11 & 48{,}828{,}125  & 30{,}711{,}497 & 18{,}116{,}628  & 37.1\% \\
+\texttt{d5-57677} (IIS) & 12 & 244{,}140{,}625 & 94{,}647{,}089 & 149{,}493{,}536 & 61.2\% \\
+\texttt{d5-55677} (19-row support) & 10 & 9{,}765{,}625 & 6{,}350{,}608 & 3{,}415{,}017 & 35.0\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Not a knife-edge: between a third and two-thirds of all refinements of each necklace
+remain unblocked. (ii) The gap closes uniformly for all $86$ low-degree rows at once:
+\texttt{PseudoConfiguration::representative\_degree} collapses any vertex with degree
+upper bound $>8$ to the single value $9$, so the coarse blocking test \emph{is} the
+blocking test of the refinement pinning every second neighbour to $9$. Verified
+mechanically over the whole sweep: all $580$ unblocked $d=5$ and all $2{,}466$
+unblocked $d=6$ necklaces have an unblocked tail-maximised refinement, $0$ exceptions
+of $3{,}046$.
+
+\paragraph{Sanity anchor.} At $x_0$, the maximum of $\mathrm{LB}$ over all $3{,}046$
+unblocked low-degree wheels is exactly $0$, never positive; it is attained e.g.\ at
+$d=5$ with all five spokes of degree $9$, where the row is literally
+$10 - 5x_{\text{rule001}} \le 0$ and $x_0$ has $x_{\text{rule001}}=2$. So $x_0$ sits
+simultaneously on the boundary of the low-degree rows and of all $3{,}425$ distinct
+full-pool leaf rows --- the signature of a tightly optimised scheme, and a strong
+consistency check: had we got the $d\le 6$ side wrong in the loose direction, $x_0$
+would have violated it. Independently, running the released C++ with
+\texttt{-{}-enum\_wheels -d 5} and \texttt{-d 6} returns exactly $580$ and $2{,}466$
+unblocked wheels, matching our generation wheel for wheel.
+
+\subsection{Code-necessary versus math-necessary}
+\label{sec:necessity}
+
+This is the objection that nearly killed the result. \texttt{upper\_bound\_of\_charge}
+counts only \texttt{always\_apply} rules outward, and \texttt{fix\_out\_rules} stops
+refining once no rule is \texttt{dominantly\_apply}-but-not-\texttt{always\_apply}.
+But \texttt{dominantly\_apply} is strictly stronger than \texttt{has\_intersection},
+so a leaf can retain rules that are neither \texttt{always\_apply} nor
+\texttt{never\_apply} on an out-dart --- rules that might fire in some realization but
+are not counted in \texttt{out\_charge\_sum}. Measured: $11$ of $5{,}292$
+(rule, out-dart) pairs across the certificate's leaves are undetermined. For those
+leaves $C$ strictly \emph{over}-estimates the hub's true final charge, so
+$C(L,x)\le 0$ would be a condition of the released \emph{verification procedure}
+rather than of the argument itself.
+
+Two blunt diagnostics confirm this is not hypothetical --- \textbf{both make the
+ring-$\le14$ LP feasible} (Table~\ref{tab:lpvariants}, last four rows). Both,
+however, are needlessly lossy: one throws rows away, the other weakens rows that did
+not need weakening.
+
+\paragraph{The repair.} Pass to the \emph{tail-maximised} leaf: narrow every open
+tail $[a,9]$, $a<9$, to $[9,9]$. Since $9$ means ``$9$ or more'' in the cartwheel
+abstraction, this restricts attention to the sub-family of realizations in which
+every unpinned second neighbour has large degree. If the tail-maximised leaf
+(1) has a fully determined OUT side, (2) yields the identical row --- same
+coefficients, same constant, same strictness --- and (3) is still unblocked by the
+pool, then in those realizations OUT is exact while IN can only exceed the branch's
+flag sum, so the true final charge is $\ge C(L,x)$, and $T\le 0$ forces
+$C(L,x)\le 0$. Undetermined IN rules are harmless precisely because they push the
+true charge up.
+
+\emph{All $12$ certificate rows pass this audit.} The nine degree-$7$ rows satisfy
+(1)--(3) individually, including the five whose original leaves had undetermined
+out-pairs; the three degree-$5$ rows are mathematically necessary by construction,
+being already in lower-bound form. Machine-readable:
+\art{results/steinberger/iis\_math\_necessity.json},
+\texttt{all\_mathematically\_necessary: true}.
+
+\subsection{Results}
+
+\begin{table}[t]
+\centering\small
+\caption{LP variants. Rows are deduplicated by (coefficients, constant, strictness).
+Reproduce with \art{tools/lp\_discharge.py -{}-all} ($\approx$14 min, $\approx$2 GB peak).}
+\label{tab:lpvariants}
+\begin{tabular}{lrrrl}
+\toprule
+variant & rows & strict & $x_0$ viol. & status \\
+\midrule
+\textbf{control}, full pool, integral, with $d\le6$ & 3{,}511 & 0 & \textbf{0} & \textbf{feasible} \\
+control, full pool, real, with $d\le6$ & 3{,}511 & 0 & 0 & feasible \\
+control, full pool, integral, no $d\le6$ & 3{,}425 & 0 & 0 & feasible (vacuous) \\
+control, full pool, real, no $d\le6$ & 3{,}425 & 0 & 0 & feasible (vacuous) \\
+\textbf{main}, ring$\le$14, integral, with $d\le6$ & 48{,}509 & 96 & 9{,}647 & \textbf{infeasible} ($y^\top b=-30$, 19 rows) \\
+\textbf{main}, ring$\le$14, real, with $d\le6$ & 48{,}509 & 96 & 9{,}551 & \textbf{infeasible} ($y^\top b=-30$, 19 rows) \\
+main, ring$\le$14, integral, no $d\le6$ & 48{,}423 & 96 & 9{,}647 & feasible (vacuous, $x=0$) \\
+main, ring$\le$14, real, no $d\le6$ & 48{,}423 & 96 & 9{,}551 & feasible (vacuous, $x=0$) \\
+\midrule
+control, \texttt{-{}-exact-only} (\S\ref{sec:necessity}) & 2{,}620 & 0 & 0 & feasible \\
+main, \texttt{-{}-exact-only} & 42{,}121 & 96 & 8{,}699 & feasible --- \emph{rows dropped, too lossy} \\
+control, \texttt{-{}-conservative} & 4{,}321 & 0 & 0 & feasible \\
+main, \texttt{-{}-conservative} & 52{,}400 & 96 & 8{,}741 & feasible --- \emph{rows weakened, too lossy} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Leaf inputs for the main run: $97{,}860$ fully refined cartwheels yielding $48{,}423$
+distinct leaf rows, to which the $86$ distinct low-degree rows are added, giving
+$48{,}509$. Composition of the leaves: $10{,}094$ published full-pool leaves; $10{,}581$ leaves
+from the $15{,}324$ per-wheel jobs that completed; $77{,}185$ leaves recovered from
+the $833$ jobs that aborted on an assert, by re-running them against an NDEBUG build
+with the asserts compiled out ($833/833$ succeeded, $21$ min wall, $8$-way parallel).
+Rows by hub degree: $d{=}7$: $40{,}257$; $d{=}8$: $8{,}070$; $d{=}9$: $93$;
+$d{=}10$: $3$; $d{=}5$: $26$; $d{=}6$: $60$ (the $3{,}046$ low-degree wheels collapse
+to only $86$ distinct rows). The $93$ $d{=}9$ and $3$ $d{=}10$ rows are exactly the
+strict rows corresponding to the $51+2$ \texttt{degree\_range} failures of
+\S\ref{sec:s1}.
+
+\paragraph{Positive control.} The full-pool LP is feasible and $x_0$ satisfies every
+one of the $3{,}511$ generated rows, with $0$ violations. The control was also run
+without the $d\le 6$ rows to demonstrate that the trivially feasible regime exists
+and is not what we report.
+
+\paragraph{Why the headline is the audited certificate.} At $x_0$, the ring-$\le14$
+system is violated in $9{,}647$ rows; but $x_0$ still violates $8{,}741$ rows even in
+the fully conservative system, with $\mathrm{LB}$ up to $+3$. So at $x_0$ the
+ring-$\le 14$ argument fails not merely as a verification artifact but genuinely, at
+thousands of degree-$7$/$8$ hubs that really do retain positive charge. The
+\texttt{-{}-exact-only} and \texttt{-{}-conservative} diagnostics lose the
+contradiction, which is why the headline is carried by the audited $12$-row
+irreducible subsystem rather than the raw $48{,}509$-row verdict.
+
+\subsection{The $12$-row irreducible core and what it says}
+
+The $19$-row Farkas support (Appendix~\ref{sec:certificate}) is not minimal. Greedy
+deletion filtering shrinks it to a $12$-row \emph{irreducible infeasible subsystem}:
+nine degree-$7$ hub rows and three degree-$5$ rows, irreducible in the strict sense
+that deleting any one alone restores feasibility (verified for all $12$). Its
+certificate has $y^\top b = -20$ with multipliers
+$75, 75, 25, 75, 55, 60, 15, 55, 25, 75, 168, 219$. All four ring-$\le14$-only rows
+survive into the core. This is the smallest human-inspectable object carrying the
+whole result, and it is legible:
+
+\begin{itemize}
+  \item \textbf{No degree-$8$, $9$ or $10$ row appears.} The contradiction needs none
+        of the $53$ \texttt{degree\_range} failures nor any of the $250$ degree-$8$
+        failures observed empirically. This sharpens the empirical picture: the
+        irreducible cause sits entirely at hub degree $7$, colliding with the
+        degree-$5$ discharge.
+  \item \textbf{Every one of the nine degree-$7$ hubs has a degree-$5$ spoke.} The
+        whole contradiction lives in the degree-$5$/degree-$7$ interface.
+  \item \textbf{Only $19$ of the $84$ rules carry a nonzero coefficient anywhere in
+        the $12$ rows} (\texttt{rule001}, \texttt{rule002}$_{1,2}$,
+        \texttt{rule003}$_{1,2}$, \texttt{rule004}$_{1,2}$, \texttt{rule008}$_{1,2}$,
+        \texttt{rule009}$_{1,2}$, \texttt{rule010}$_{1,2}$, \texttt{rule011}$_{1,2}$,
+        \texttt{rule023}$_{1,2}$, \texttt{rule032}$_{1,2}$).
+        \textbf{$65$ of the $84$ shapes are irrelevant to the obstruction} ---
+        re-tuning them cannot help.
+  \item In the Farkas combination $78$ of the $84$ rule columns cancel exactly; only
+        six carry slack. The near-total cancellation is why the contradiction is
+        tight.
+  \item Read as arithmetic: the degree-$5$ rows say a degree-$5$ vertex must give
+        away all $10$ units of charge, forcing the amounts on
+        \texttt{rule001}--\texttt{rule004} \emph{up}; the degree-$7$ rows cap what a
+        degree-$7$ hub with degree-$5$ neighbours may receive back, pulling them
+        \emph{down}. With the ring-$\le14$ pool no longer blocking four offending
+        degree-$7$ cartwheels, the two demands cannot both be met.
+\end{itemize}
+
+\paragraph{The infeasibility is genuinely caused by the ring-$\le14$-only rows.}
+Delete the four ring-$\le14$-only rows from the $19$-row support and the remaining
+$15$ --- every one of which is also valid for the full pool --- are feasible, and
+$x_0$ satisfies all $15$. The contradiction is not lurking in the full-pool
+constraints; it is created by exactly the cartwheels the ring-$\le14$ pool fails to
+block. Independently, those four rows come from wheels \texttt{d7\_3358},
+\texttt{d7\_3372}, \texttt{d7\_3376} --- precisely three of the wheels whose job the
+\emph{C++} aborted with \texttt{Assertion failed: (C == 0)}. The Python row semantics
+and the C++ asserts agree wheel by wheel on the certificate's own support.
+
+\subsection{Independent verification of the certificate}
+
+\art{tools/verify\_farkas.py} is solver-free and uses \texttt{fractions.Fraction}
+throughout --- no floating point anywhere on the checking path. Critically it does
+not trust the certificate's stored coefficients: it re-derives every row from its
+source (\texttt{.cartwheel} files re-parsed and re-run through \texttt{leaf\_row};
+low-degree tags rebuilt with \texttt{generate\_cartwheel} and re-run through
+\texttt{lowdeg\_row}) and fails loudly on any mismatch. It then checks
+(a) $y\ge 0$, (b) $y\ne 0$, (c) $(y^\top A)_k \ge 0$ for all $84$ columns,
+(d) $y^\top b < 0$, prints the contradiction chain
+$0 \le (y^\top A)x = y^\top(Ax) \le y^\top b = -30 < 0$, and independently confirms
+that $x_0$ violates $4$ of the $19$ support rows. Deliberate corruption of a single
+coefficient is rejected with an exact claimed-versus-re-derived diff.
+
+\subsection{The strong encoding, and why it is not used}
+\label{sec:strongenc}
+
+The alternative encoding --- \emph{every stage-1 wheel the pool does not block must
+have $\texttt{upper\_bound\_of\_charge} < 0$} --- is what a naive reading suggests and
+is what max-of-affine cutting-plane machinery is for. It is \emph{not} a correct
+encoding of ``the argument closes'': survivors are permitted, and the published proof
+at $x_0$ leaves $5{,}439 + 6{,}790 + 3{,}285 + 626 + 8 = 16{,}148$ stage-1 wheels
+alive on purpose. Imposing it would reject the published proof itself.
+
+We ran it anyway as a negative control, and it fails exactly as predicted: the
+\emph{full-pool} run is \textsc{infeasible} at iteration $0$ with a verified $10$-row
+certificate ($y^\top b = -175$; support: three degree-$5$, two degree-$6$ and five
+degree-$7$ rows). So the strong condition cannot be met by any nonnegative amounts
+even with the complete $8{,}200$-configuration pool --- it would ``disprove'' the
+published theorem. That is the concrete demonstration that the strong encoding is the
+wrong one. It is reported as a measurement and never as evidence for the headline.
+
+\subsection{Scope}
+\label{sec:lp-scope}
+
+\begin{enumerate}
+  \item \textbf{These $84$ shapes only.} Nothing rules out a different or larger set
+        of rule shapes. Deciding that requires column generation over planar
+        degree-interval patterns, whose pricing subproblem is a search over planar
+        patterns rather than an LP (\S\ref{sec:open}).
+  \item \textbf{This pool only.} $P_{14}$ is exactly the ring-$\le14$ part of the
+        published pool. Many D-reducible configurations of ring $\le14$ are not in it.
+  \item \textbf{The $d\le6$ rows are a reconstruction} (\S\ref{sec:lowdeg}); they are
+        load-bearing, since without them the LP is feasible.
+  \item \textbf{Unblocked $\ne$ realizable} (\S\ref{sec:notclaim}).
+  \item \textbf{$x \ge 0$ is a hypothesis}, used in Lemma~\ref{lem:mono}(c) and in
+        \eqref{eq:lowdeg}. Monotonicity was measured to hold on $2{,}145$
+        parent/child pairs with $x\ge 0$ and to \emph{fail} on $8$ of them when
+        negative amounts are allowed, so the hypothesis is exactly load-bearing, not
+        decorative. In the other direction there is nothing to hedge: the paper fixes
+        $r(R)\in\{1,2\}$ for all $84$ rules, and
+        $\{1,2\}^{84}\subset\mathbb{Z}_{\ge0}^{84}\subset\mathbb{R}_{\ge0}^{84}$, so
+        deciding infeasibility over the nonnegative reals is strictly stronger than
+        the paper's own amount space requires.
+  \item \textbf{Integrality is not needed}: all certificate rows are non-strict and
+        the real variant is infeasible with the same certificate.
+\end{enumerate}
+
+\paragraph{Adversarial pass.} The formulation was handed to a reviewer prompted to
+refute it, defaulting to ``the encoding is wrong'', across ten named attack lines.
+Outcome: one real error found and fixed (the pool-independence claim in
+Lemma~\ref{lem:mono}(a)); one genuine scope correction adopted (the code-necessary
+versus math-necessary distinction, which became \S\ref{sec:necessity}); the rest
+survived with evidence. A later pass against the paper's own LaTeX source found two
+prose errors (both corrected: the paper does \emph{not} do the degree-$5$/$6$ case by
+hand, and the e-print \emph{was} obtainable) and one genuine open gap (the coarse
+cartwheel issue), which was closed exactly and exhaustively without changing the
+certificate. Ablations: the degree-$6$ rows alone with all leaf rows are feasible;
+the degree-$5$ rows alone are already infeasible. Six solver configurations all
+report infeasible, and a uniform slack of $0.082$ on every right-hand side is the
+minimum needed to restore feasibility.
+
+%======================================================================
+\section{$f(r)$: the minimum interior size of a D-reducible configuration}
+\label{sec:fr}
+%======================================================================
+
+\subsection{Statement}
+
+\begin{theorem}[Proven, exhaustive]
+\label{thm:fr}
+For each ring size $r \in \{8,9,10,11,12,13\}$, every D-reducible configuration of
+ring size $r$ has at least $f(r)$ interior vertices, where
+\[
+\begin{array}{c|cccccc}
+ r & 8 & 9 & 10 & 11 & 12 & 13\\\hline
+ f(r) & 5 & 5 & 6 & 7 & 7 & 8
+\end{array}
+\]
+and each bound is tight: a D-reducible configuration with exactly $f(r)$ interior
+vertices exists in the published catalogs.
+\end{theorem}
+
+Birkhoff \cite{birkhoff1913} proved that a reducible configuration has ring size
+$\ge 6$. To our knowledge Theorem~\ref{thm:fr} is the first published lower bound on
+interior size as a function of ring size.
+
+\subsection{The enumeration}
+\label{sec:fr-enum}
+
+For each $r$ and each $n$ from $r+1$ to $r+f(r)-1$ we generated \emph{every}
+near-triangulation of the disk with outer face of size $r$ on $n$ vertices with
+\texttt{plantri -P$r$ -c3 -a $n$}, filtered to the RSST configuration class
+(nonempty connected interior of minimum degree $5$; RSST conditions 4--7 including
+the ring-contact-arc condition 6), and ran the D-reducibility checker on each.
+Table~\ref{tab:frsweep} reports the counts.
+
+\begin{table}[t]
+\centering\small
+\caption{The exhaustive sweep. ``raw'' = near-triangulations from \texttt{plantri};
+``cand'' = passing the interior filter; ``excl'' = additionally failing RSST
+condition 6; ``valid'' = the true RSST configuration class. Every ``D-red'' entry is
+$0$. Per-$(r,n)$ machine-readable counts in
+\art{results/theorem/fr\_table/manifest\_r*.json}; per-configuration records
+(adjacency, $a$, closure trace) in \art{configs\_r*\_n*.jsonl}.}
+\label{tab:frsweep}
+\begin{tabular}{rrrrrrr}
+\toprule
+$r$ & interior range & raw & cand & excl & \textbf{valid} & \textbf{D-red} \\
+\midrule
+8  & 1--4 & 436          & 18     & 6      & 12     & 0 \\
+9  & 1--4 & 666          & 35     & 17     & 18     & 0 \\
+10 & 1--5 & 13{,}338     & 221    & 127    & 94     & 0 \\
+11 & 1--6 & 293{,}555    & 1{,}631& 1{,}028& 603    & 0 \\
+12 & 1--6 & 509{,}288    & 4{,}092& 3{,}004& 1{,}088& 0 \\
+13 & 1--7 & 12{,}389{,}976 & 36{,}392 & 27{,}888 & 8{,}504 & 0 \\
+\midrule
+\textbf{total} & & \textbf{13{,}207{,}259} & \textbf{42{,}389} & \textbf{32{,}070} & \textbf{10{,}319} & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two remarks on the class definition, both of which cost real debugging.
+
+\emph{RSST condition 6 is genuine structure and removes a lot.} After normalising
+away the labelling convention (condition 4), a substantial fraction of accepted
+near-triangulations still fail condition 6 --- some interior vertex meets the ring in
+more than two contiguous arcs. \texttt{reduce.c}'s own \texttt{ReadConf} rejects such
+graphs outright: they are not configurations in RSST's technical sense at all. The
+exclusion rate rises from $33\%$ at $r=8$ to $77\%$ at $r=13$. Excluded graphs were
+nevertheless retained in the output with a D-reducibility verdict computed anyway, so
+that a D-reducible-but-not-RSST-legal graph would have been surfaced loudly. None
+was: every one of the $32{,}070$ exclusions is non-D-reducible too, so the filter
+never changed a verdict, only the population count.
+
+\emph{Condition 4 is a labelling convention, not structure.} \texttt{ReadConf}
+requires each ring vertex's neighbour list to start at a specific ring neighbour;
+nothing our checker computes depends on it, since a cyclic list denotes the same
+rotation system whatever entry it starts from. Naively serialising an RSST-relabelled
+configuration made \texttt{build/reduce\_rsst} reject it with \texttt{ReadErr(4,\dots)}
+even though the underlying embedded graph was fine. We added
+\texttt{rotate\_ring\_starts}, a mathematical no-op on the rotation system.
+
+The $r=13$ sweep is the expensive one: interior $6$ ($n=19$) and interior $7$
+($n=20$) were run $8$-way sharded by residue class, $\approx 2{,}250$ s and
+$\approx 13{,}300$ s per shard respectively, giving $1{,}445$ and $6{,}710$ valid
+configurations and $0$ D-reducible.
+
+\subsection{Triple verification}
+
+\paragraph{(1) Our checker vs.\ the compiled 1995 oracle.} Up to $20$ RSST-legal
+below-threshold configurations per ring were serialised and run through
+\texttt{build/reduce\_rsst}, compiled from the pinned \texttt{reduce.c}: $70$ sampled,
+\textbf{$0$ verdict mismatches}, $6$ oracle-inconclusive
+(\art{results/theorem/fr\_table/crosscheck.json}).
+
+\paragraph{(2) The six inconclusive cases, adjudicated by a third implementation.}
+On $6$ of the $70$, the oracle recomputed a \emph{different} $|\Phi(K)|$ than our
+checker supplied and aborted with \texttt{*** ERROR: DISCREPANCY IN NUMBER OF
+EXTENDING COLOURINGS ***} before printing a verdict. We wrote a third, from-scratch
+count of $|\Phi(K)|$ (\art{src/fourcolor/brute\_force.py}) sharing no code path with
+the production checker --- different edge indexing, different triangle enumeration,
+no gauge fixing, no greedy variable ordering. It agrees with our checker in all $6$
+cases and disagrees with the oracle in all $6$:
+
+\begin{center}\small
+\begin{tabular}{lrrrrr}
+\toprule
+config & $r$ & $n$ & our $a$ & \texttt{reduce\_rsst} & brute force \\
+\midrule
+\texttt{fr-r8-n12-172}    & 8  & 12 & 72  & 48  & 72 \\
+\texttt{fr-r9-n13-269}    & 9  & 13 & 147 & 94  & 147 \\
+\texttt{fr-r10-n15-4669}  & 10 & 15 & 367 & 230 & 367 \\
+\texttt{fr-r10-n15-4678}  & 10 & 15 & 365 & 243 & 365 \\
+\texttt{fr-r10-n15-4613}  & 10 & 15 & 408 & 250 & 408 \\
+\texttt{fr-r11-n17-89446} & 11 & 17 & 995 & 532 & 995 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\emph{Provenance note.} Our own and the brute-force counts, and the
+\textsc{oracle\_inconclusive} status of exactly these six, are machine-readable in
+\art{results/theorem/fr\_table/crosscheck.json} (which records
+\texttt{oracle\_returncode: 31} for each). The oracle's \emph{recomputed} counts in
+the middle column were transcribed from its \texttt{stdout} into
+\art{results/theorem/fr\_table/THEOREM.md} \S4.3 and are not retained in the JSON;
+they are the one set of numbers in this paper that is not re-derivable from a
+machine-readable artifact without re-running the oracle.
+
+Our checker agrees with the oracle's header $a$ on all $3{,}455$ hand-curated
+catalog configurations with zero mismatches (\S\ref{sec:verify}), so this is not a
+general defect. The evidence points to \texttt{reduce.c}'s \texttt{strip()}
+edge-numbering heuristic --- a hand-optimised greedy ordering routine, documented in
+its own comments as chosen to shrink the search tree --- being the outlier on a class
+of inputs (small, exhaustively generated, ``generic'' near-triangulations) its
+original validation against a hand-curated catalog never exercised. None of the six
+configurations' D-reducibility verdict is in question: all are \texttt{False}, and
+the oracle never disputed the verdict, only the intermediate count, before erroring
+out. We report it because an honest cross-verification protocol surfaces every
+discrepancy it finds.
+
+\paragraph{(3) Tightness witnesses.} For each $r$, a catalog D-reducible
+configuration with exactly $f(r)$ interior vertices, verified both by our checker and
+by the oracle (\art{results/theorem/fr\_table/tightness\_witnesses.json}):
+
+\begin{center}\small
+\begin{tabular}{rlrrrl}
+\toprule
+$r$ & witness & $n$ & interior & our $a$ & oracle \\
+\midrule
+8  & \texttt{D0003.conf} (nl4ct D) & 13 & 5 & 100   & \texttt{*** D-reducible ***} \\
+9  & \texttt{D0006.conf} (nl4ct D) & 14 & 5 & 211   & \texttt{*** D-reducible ***} \\
+10 & \texttt{D0015.conf} (nl4ct D) & 16 & 6 & 536   & \texttt{*** D-reducible ***} \\
+11 & \texttt{D0024.conf} (nl4ct D) & 18 & 7 & 1{,}363 & \texttt{*** D-reducible ***} \\
+12 & \texttt{D0143.conf} (nl4ct D) & 19 & 7 & 2{,}863 & \texttt{*** D-reducible ***} \\
+13 & \texttt{126.504366} (RSST 633) & 21 & 8 & 6{,}954 & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Across the whole labelled corpus, the minimum interior size of a D-reducible
+configuration is $4,4,5,5,6,7,7,8,9,10,10$ at $r=6,\dots,16$; the entries at
+$r=8,\dots,13$ are exactly $f(r)$, and the entries at $r=14,15,16$ are upper bounds
+on $f$ there for which we have no exhaustive lower-bound sweep.
+
+\subsection{The C-versus-D nuance}
+\label{sec:cvsd}
+
+Theorem~\ref{thm:fr} is scoped to D-reducibility (no contract). C-reducibility is
+strictly weaker, and the RSST $633$-configuration catalog itself contains
+configurations at ring sizes $8$ and $11$ with interior sizes \emph{strictly below}
+$f(r)$ that are C-reducible but not D-reducible:
+
+\begin{center}\small
+\begin{tabular}{rlrrl}
+\toprule
+ring & catalog ident & $n$ & interior & contract \\
+\midrule
+8  & \texttt{2.126}    & 12 & 4 & $\{(1,9),(3,9),(5,11),(7,11)\}$ \\
+11 & \texttt{126.7566} & 17 & 6 & $\{(15,12)\}$ \\
+11 & \texttt{128.136}  & 17 & 6 & $\{(15,12),(1,12),(3,12),(10,15)\}$ \\
+11 & \texttt{7562.126} & 17 & 6 & $\{(15,12)\}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+So the corresponding minimum over all reducible (C-or-D) configurations is, at least
+at rings $8$ and $11$, strictly smaller, and the D-qualifier in
+Theorem~\ref{thm:fr} is not decoration. (No ring-$9$, $10$ or $12$ catalog member
+exists at interior $f(r)-1$ in either catalog; that is a fact about which
+configurations the catalogs' authors happened to need, not evidence that C-reducible
+near-misses do not exist at other rings.)
+
+\subsection{A first out-of-sample test of the mass law}
+\label{sec:gap}
+
+The $f(r)$ sweep produces, as a by-product, an exhaustive population of
+\emph{below-threshold non-reducible} configurations with their exact $a$ values.
+Comparing the maximum $a$ over that population with the minimum $a$ over the
+D-reducible population at the same ring gives a clean separation at every measurable
+ring:
+
+\begin{center}\small
+\begin{tabular}{rrrr}
+\toprule
+$r$ & $\max a$ (below threshold, non-red.) & $\min a$ (D-reducible) & gap \\
+\midrule
+8  & 82      & 94      & 12 \\
+9  & 172     & 211     & 39 \\
+10 & 438     & 496     & 58 \\
+11 & 1{,}128 & 1{,}252 & 124 \\
+12 & 2{,}339 & 2{,}863 & 524 \\
+13 & 6{,}003 & 6{,}954 & 951 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The $r=13$ row is genuinely out of sample: the prediction (a gap) was made after the
+$r\le12$ data and before the $r=13$ enumeration finished. This is the empirical
+content of the threshold half of the coloring-mass law (\S\ref{sec:mass}).
+
+%======================================================================
+\section{Independent verification of the 4CT corpus}
+\label{sec:verify}
+%======================================================================
+
+Nothing in \S\ref{sec:lp}--\S\ref{sec:fr} means anything unless our reducibility
+checker is right. This section reports what we did to establish that, and what we
+found while doing it. The checker \texttt{fourcolor.reduce.check} was written from
+the mathematics of \cite{rsst-reduce} (the \texttt{reduce.tex} write-up, in
+particular its Theorem 3.2 machinery), \emph{not} ported from \texttt{reduce.c}; so
+agreement with the C programs is genuine differential evidence rather than a
+tautology.
+
+\subsection{The three catalogs}
+
+\begin{table}[h]
+\centering\small
+\caption{Independent re-verification of the published catalogs. ``Agree'' means the
+computed $|\Phi(K)|$ and $|{\rm consistent}|$ both match the published header fields
+\emph{and} the configuration is confirmed reducible.}
+\label{tab:catalogs}
+\begin{tabular}{llrrl}
+\toprule
+catalog & source & configs & agree & artifact \\
+\midrule
+RSST $633$ & \cite{rsst-reduce} \texttt{unavoidable.conf} & 633 & \textbf{633} &
+  \art{results/differential-unavoidable-r14/report.jsonl} \\
+Steinberger $\mathcal{U}_{2822}$ & \cite{steinberger2010} \texttt{U\_2822.conf} & 2{,}822 & \textbf{2{,}822} &
+  \art{results/differential-U\_2822-r16/report.jsonl} \\
+2026 pool (pruned) & \cite{nl4ct2026} \texttt{D/*.conf} & 7{,}770 & \textbf{7{,}697} &
+  \art{results/p3/pool-verify/SUMMARY.json} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three points of precision that we have seen stated loosely elsewhere, including in
+our own earlier notes.
+
+\paragraph{The RSST $633$ are not all D-reducible.} Exactly $249$ are D-reducible;
+the other $384$ are C-reducible via a nonempty published contract and are
+\emph{not} D-reducible. The compiled oracle confirms the same split
+($249$ \texttt{*** D-reducible ***}, $384$ \texttt{*** Contract confirmed ***}
+alongside $384$ \texttt{*** Not D-reducible ***}). What is verified for all $633$ is
+the header fields and reducibility in the C-or-D sense. Ring sizes run $6$--$14$,
+so no configuration was excluded by our ring bound.
+
+\paragraph{Steinberger's set is genuinely D-only.} All $2{,}822$ are D-reducible,
+all with header $b=0$ (no contract), rings $6$--$16$; $2{,}822/2{,}822$ agree with
+the published headers, $0$ disagreements, $13{,}103$ s of checker CPU. This matters
+because \S\ref{sec:lowdeg}'s citation chain rests on Steinberger's degree-$5$/$6$
+computation being against a correct set.
+
+\paragraph{The 2026 pool is verified for $7{,}697$ of $8{,}200$.} The verified run
+used the pruned pool of $7{,}770$ (see below); of those, $7{,}697$ have ring $\le16$
+and were verified D-reducible with $0$ anomalies in $12.3$ CPU-hours, and $73$ at
+rings $17$--$18$ are outside our engines' ring budget and \textbf{remain unverified
+by us}. Together with the $430$ removed configurations, the honest accounting is
+$8{,}200 = 7{,}697\ \text{verified} + 430\ \text{removed} + 73\ \text{unverified}$.
+Prior to this, the 2026 pool's reducibility had never been independently verified:
+the authors' own verification was external to the released code.
+
+\subsection{A legacy oracle that aborts, and what replaced it}
+
+We compiled two C oracles: \texttt{build/reduce\_rsst} from \cite{rsst-reduce}'s
+\texttt{reduce.c}, and \texttt{build/reduce\_stein} from the Steinberger-extended
+version (needed because the unmodified 1995 code has \texttt{MAXRING} $=14$).
+
+\texttt{reduce\_rsst} completes the $633$ cleanly
+(\texttt{Reducibility of 633 configurations verified}). \texttt{reduce\_stein}
+does \emph{not} complete Steinberger's $2{,}822$: it processes $783$ of them
+(of which $782$ print \texttt{*** D-reducible ***}) and then aborts with
+\texttt{SIGABRT} (exit $134$), truncating mid-number. The crashing input is
+preserved as \art{build/crash783.conf}: a ring-$16$ configuration with
+$n=28$ and $a=139{,}480$. Our checker completes it in $227.7$ s with
+$a = 139{,}480$, matching the published header. So the full-set verification of
+$\mathcal{U}_{2822}$ rests on our checker against the published headers, not on that
+binary; the binary corroborates the first $783$ and then dies.
+
+We also encountered the milder failure of \S\ref{sec:fr}: on six exhaustively
+generated near-triangulations, \texttt{reduce\_rsst} recomputes $|\Phi(K)|$
+incorrectly and self-aborts, and a third implementation adjudicates in our favour in
+all six. The two findings together are the practical reason the programme maintains
+\emph{three} independent counts of $|\Phi(K)|$ rather than two.
+
+\subsection{Reproducing the 2026 pipeline}
+
+We reproduced the released C++ pipeline \cite{nl4ct2026} end to end on the full
+$8{,}200$-configuration pool ($19{,}754$ configurations after symmetry expansion) and
+the $84$ rule shapes, in a Debug build with all assertions live. Total wall time
+$4$\,h\,$38$\,m. Every count matches the paper:
+
+\begin{center}\small
+\begin{tabular}{llr}
+\toprule
+stage & result & wall \\
+\midrule
+\texttt{combine\_rules}   & $1{,}832$ combined rules, $671$ non-blocked & $\approx3$ s \\
+\texttt{enum\_wheels} $d{=}7..11$ & $5{,}439 / 6{,}790 / 3{,}285 / 626 / 8$ bad wheels & $1$\,h\,$45$\,m \\
+\texttt{enum\_cartwheels} & $10{,}094$ bad cartwheels ($9{,}366$ at $d{=}7$, $728$ at $d{=}8$; zero at $d{=}9,10,11$) & $2$\,h\,$09$\,m \\
+three gluing lemmas & all passed ($5{,}365$ / $1{,}618$ / $298$ cartwheels) & $43$ m \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Separately we re-implemented the wheel-level stage in Python
+(\art{src/fourcolor/nl4ct.py}) and ran it differentially against the C++ on
+\textbf{all $5{,}692{,}937$ wheel candidates} at hub degrees $7$--$11$
+($11{,}165 + 48{,}915 + 217{,}045 + 976{,}887 + 4{,}438{,}925$): every degree reports
+\texttt{exact\_match: true} with $0$ false positives and $0$ false negatives against
+the C++ ground truth. That validation is what licenses the symbolic charge form
+\eqref{eq:leafrow} used in \S\ref{sec:lp}.
+
+We also replayed the RSST 1995 unavoidability argument: \texttt{discharge.c} from
+\cite{rsst-discharge} against the five presentation files \texttt{present7}
+through \texttt{present11}, all five verified against the $633$-configuration set
+(\art{results/discharge-rsst/replay.txt}).
+
+\subsection{Coverage measurement and a pool that is $430$ configurations too large}
+
+Measuring which pool configurations the pipeline actually uses gives a sharply
+two-level picture. At the \emph{wheel} level, only $85$ of the $8{,}200$
+configurations ever act as a blocker anywhere across $d=7..11$; the whole wheel-level
+covering structure has at most one concretization per wheel and at most $5$ blockers
+per concretization. At the \emph{cartwheel} (refinement) level, $7{,}422$ distinct
+configurations appear as blockers over $2{,}253{,}185$ logged blocking events ---
+$90.5\%$ of the pool, and that is a \emph{lower} bound, because the instrumentation
+records only the first matching configuration per event. So the intuition that a
+small core carries the proof is right at stage 1 and wrong at stage 2.
+
+We then asked which configurations are used by \emph{no} stage. A first attempt
+tracked three roles (combined-rule blocking, wheel blocking, first-match cartwheel
+blocking) and found $673$ unused; removing them made the pipeline fail --- all three
+gluing checks aborted, and the bad-cartwheel count collapsed from $10{,}094$ to $0$.
+That failure is preserved (\art{results/p3/runs/batch1/}) and it is what discovered
+a \emph{fourth} blocking role: the gluing lemmas also consult the pool ($2{,}199$
+distinct glue-blockers). Tracking all four roles gives \textbf{$430$ configurations
+with zero usage everywhere}. Removing exactly those and re-running the entire
+pipeline gives \textsc{pass} with counts \emph{identical to the full-pool proof in
+every field}: $1{,}832/671$ combined rules, $5{,}439/6{,}790/3{,}285/626/8$ wheels,
+$10{,}094$ bad cartwheels, three gluing lemmas green
+(\art{results/p3/runs/batch1b/VERDICT.txt}, \art{counts.json}).
+
+\begin{proposition}[Certified]
+The 2026 proof goes through verbatim with a pool of $7{,}770$ configurations rather
+than $8{,}200$, a reduction of $5.2\%$.
+\end{proposition}
+
+This is a floor we reached, not a claimed minimum: no further prune batch was run,
+and the honest reading of the two-level coverage picture above is that further
+reduction is bounded by the cartwheel-level usage, which is nearly the whole pool.
+
+\begin{remark}[What was designed and not built]
+Our original plan (\art{01-PROBLEM-STATEMENT.md}) was a set-cover MILP minimising
+$|U|$, with an LP-dual lower bound. \textbf{No MILP was ever built or solved}; the
+design was replaced by batched prune-and-verify once the coverage measurement showed
+that the first-match cartwheel attribution makes a one-shot set cover unsound. We
+report this because the problem statement is in the repository and a reader might
+otherwise look for a solver artifact that does not exist. Theorem~\ref{thm:lp} is
+the useful residue of that line: an LP result, but an impossibility rather than an
+optimisation.
+\end{remark}
+
+%======================================================================
+\section{The coloring-mass law}
+\label{sec:mass}
+%======================================================================
+
+\subsection{Setting}
+
+For a configuration $K$ with free completion $S$, ring size $r$, interior size $k$,
+$n=r+k$, write $a = a(K) = |\Phi(K)|$ and $W(r) := (2^r+2)/6$. The organising
+conjecture of this section has two halves.
+
+\begin{conjecture}[Coloring-Mass Law]
+\label{conj:mass}
+\emph{(T) Threshold.} There is an increasing $A(r)$ such that every D-reducible
+configuration of ring size $r$ has $a \ge A(r)$; empirically
+$A(r) \approx 2.4^{\,r}/12.79$.
+\emph{(C) Cap.} $a \le B(r,k)$ with $B$ increasing in $k$; conjecturally the
+\emph{sharp cap} $B(r,k) = W(r)\,(4/3)^{k-1}$.
+\end{conjecture}
+
+If both held, one would obtain analytic lower bounds on $f(r)$ for all $r$: the
+finite table of Theorem~\ref{thm:fr} would become an infinite structural law
+--- \emph{reducibility is a coloring-mass threshold phenomenon, and interior vertices
+supply the mass}.
+
+The Bridge Lemma below is the bridge from colourings to the chromatic polynomial and
+underlies everything that follows.
+
+\begin{lemma}[Bridge Lemma; proven]
+\label{lem:bridge}
+For every near-triangulation $S$ of the disk, the number of tri-colourings of $S$ is
+$P(S,4)/4$; the $S_3$ action permuting the three edge colours is free on
+tri-colourings, so the number of tri-colouring classes is $P(S,4)/24$; and
+consequently $a \le P(S,4)/24$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Identify the three edge colours with the nonzero elements of the Klein group
+$V=\mathbb{Z}_2^2$ and label each edge $uv$ of a proper $4$-colouring $c$ by
+$t(uv)=c(u)+c(v)$. Properness makes $t$ a tri-colouring, and translation by $V$ gives
+a $4$-to-$1$ map. Conversely a tri-colouring is a $V$-valued $1$-cochain summing to
+$0$ around every internal face; since $S$ is a triangulated disk the internal faces
+generate the cycle space, so $t$ is exact and has exactly $4$ potentials. For
+freeness: a transposition fixing $t$ would force all edges to carry the one fixed
+colour, impossible in a triangle; a $3$-cycle fixes no colour. Restriction to the ring
+sends each class of tri-colourings to one class of ring colourings, and $\Phi(K)$ is
+the image.
+\end{proof}
+
+\subsection{The wheel: exact closed form}
+
+\begin{theorem}[Proven, with equality case]
+\label{thm:wheel}
+If $k=1$ then $S$ is the wheel $W_r$ and
+\[
+   a \;=\; \frac{2^r + 2(-1)^r}{6} \;=\; \frac{P(W_r,4)}{24}.
+\]
+In particular the Bridge Lemma is \emph{tight} at every wheel; $a = W(r)$ for even
+$r$ and $a = \lfloor W(r)\rfloor$ for odd $r$.
+\end{theorem}
+
+\begin{proof}
+$k=1$ forces the internal faces to be $h x_i x_{i+1}$, so $S=W_r$, and interior
+degree $\ge5$ forces $r\ge5$. Writing $e_i$ for the rim edge colour and $s_i$ for the
+spoke colour, the face condition says $\{s_i,e_i,s_{i+1}\}$ is all three colours, so
+$s_i\ne s_{i+1}$ and $e_i$ is determined; hence
+$\#\mathrm{TriCol}(W_r) = P(C_r,3) = 2^r+2(-1)^r$.
+Let $\rho$ be the restriction to the rim. Given $(e_i)$ and $s_1$, the face condition
+forces $s_{i+1} = \tau_{e_i}(s_i)$ where $\tau_c$ transposes the two colours $\ne c$;
+so the spoke vector is determined by $s_1$, which must avoid $e_r$ and $e_1$. If
+$e_i \ne e_{i+1}$ for some $i$ then $s_{i+1}$ avoids two distinct colours and the
+fibre has size $\le1$. If $(e_i)$ is monochromatic the spokes alternate between the
+two colours $\ne c$, which closes up iff $r$ is even, giving a fibre of size exactly
+$2$ (and empty for odd $r$). An element of $S_3$ fixes $(e_i)$ iff it fixes every
+$e_i$; a $3$-cycle fixes no colour and a transposition fixes one, so the rim
+colourings with nontrivial stabiliser are exactly the three monochromatic ones.
+For odd $r$ no monochromatic rim colouring is in the image, every fibre is a
+singleton, $S_3$ acts freely, and $a = |\mathrm{TriCol}|/6=(2^r-2)/6$. For even $r$
+the six tri-colourings above the three monochromatic rim colourings form a single
+free $S_3$-orbit --- one class --- while the three rim colourings likewise form one
+element of $\Phi$, so $a = (|\mathrm{TriCol}|-6)/6 + 1 = (2^r+2)/6$.
+\end{proof}
+
+The wheel value is $P(C_r,3)/6$, the number of proper $3$-colourings of a cycle
+modulo colour symmetry. Everything in the sharp cap's constant is that one classical
+number. The theorem was adversarially re-verified four independent ways for
+$r=5..14$ --- our production checker, the brute-force tie-breaker, a from-scratch
+enumeration of spoke sequences with explicit $S_3$ canonicalisation, and the compiled
+1995 RSST oracle (which covers $r \le 12$ and hard-errors at $r\ge13$ on a
+compile-time array cap, a build limit rather than a disagreement).
+
+\subsection{The star-first cap}
+
+\begin{theorem}[Proven]
+\label{thm:star}
+For every configuration $K$ with $k\ge1$,
+\[
+   a \;\le\; \min_{h \text{ interior}} \frac{(2^{d}+2(-1)^{d})\,2^{\,n-d-1}}{6},
+   \qquad d = \deg h,
+\]
+and since every interior degree is $\ge 5$, uniformly
+\[
+   \boxed{\;a \;\le\; 11\cdot 2^{\,r+k-7} \;=\; \tfrac{11}{16}\,2^{\,r+k-3}.\;}
+\]
+The bound is exactly attained at every wheel.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Let $h$ be interior of degree $d$ and $L=N(h)$ its link, a cycle (not necessarily
+induced --- a chord only removes colourings, so $P(C_d,3)$ remains valid). Order the
+vertices $h, x_1,\dots,x_d, w_1,\dots,w_{n-d-1}$ so that every $w_j$ has two
+predecessors adjacent to each other: grow greedily from the closed star of $h$ by
+attaching any triangle sharing an edge with the built region. Such a triangle
+introduces at most one new vertex, adjacent to both ends of the shared edge. The
+greedy exhausts the rest because the dual graph of $S$ is connected and, for any
+triangle $T$ not incident with $h$, the last triangle on a dual path from $T$ to a
+star triangle shares a \emph{link} edge $x_i x_{i+1}$ (it cannot share $hx_i$, which
+lies only in star triangles). Counting along the order: $h$ has $4$ choices, $L$ has
+at most $P(C_d,3)=2^d+2(-1)^d$, and each $w_j$ has at most $2$. Divide by $24$ using
+Lemma~\ref{lem:bridge}. For the uniform form, $2^{6-d}(2^d+2(-1)^d)/6$ equals
+$10, 11, 10.5, 10.75, 10.625, \dots \to 32/3$ for $d = 5,6,7,8,9,\dots$, with maximum
+$11$ at $d=6$.
+\end{proof}
+
+Note the counter-intuitive shape: \emph{odd} interior degrees give the better bound,
+since $P(C_d,3) = 2^d-2$ for odd $d$. Consequently the worst case for the star-first
+argument is a configuration whose interior degrees are all even and $\ge6$; and if
+$S$ has an interior vertex of degree exactly $5$ (which $58{,}977$ of our $59{,}142$
+corpus configurations do) then $a \le 5\cdot 2^{r+k-6}$. The $165$ exceptions are
+all-degree-$\ge6$ interiors including the six wheels, which is exactly why the
+unconditional constant must be $11$ rather than $10$.
+
+Theorem~\ref{thm:star} improves the constant of the previously proven weak cap
+$a \le 2^{r+k-3}$ by a factor $11/16$ and is exactly tight at $k=1$; but its
+$k$-dependence is still $2^k$, so it moves the offset of the implied $f(r)$ bound and
+not its slope: $f(r) \ge \lceil 0.26303\,r - 0.1367\rceil$ instead of
+$\lceil 0.26303\,r - 0.6768\rceil$. That is $+1$ interior vertex at $6$ of $10$
+rings, real, small, and free.
+
+\subsection{$\gamma = 3/2$ at $k = 2$, and why the induction stops}
+
+Order the interior graph by BFS from a vertex $h_1$ of maximum degree $d_1$. Colour
+$h_1$ and its link; for $j\ge2$, split $\mathrm{link}(h_j)$ into maximal arcs of
+not-yet-coloured vertices, each an at-most-$3$-colour path with both ends constrained,
+so an arc of length $t$ admits at most $M(t) = 2,3,6,11,22,43,\dots$ colourings.
+Writing $g(t)=M(t)/2^t \in \{1, 3/4, 3/4, 11/16, \dots\} \to 2/3$ gives the
+per-configuration certificate
+\begin{equation}
+\label{eq:bfscert}
+  a \;\le\; \bigl(1 + 2(-1)^{d_1}2^{-d_1}\bigr)\cdot\tfrac{2}{3}\cdot 2^{\,n-3}
+      \cdot \textstyle\prod_{\text{arcs}} g(t),
+\end{equation}
+which reduces exactly to Theorem~\ref{thm:wheel} at $k=1$.
+
+\begin{theorem}[Proven, $k=2$ only]
+\label{thm:gamma32}
+For $k=2$,
+$\;a \le \bigl(1+2(-1)^{d_1}2^{-d_1}\bigr)\,\frac{2^r}{6}\cdot\frac{3}{2}
+      \le \frac{33}{32}\cdot\frac{2^r}{6}\cdot\frac{3}{2}$.
+\end{theorem}
+
+\begin{proof}
+Every edge of $S$ joining two interior vertices lies in exactly two triangles, hence
+has at least two common neighbours; a third common neighbour $z$ would make
+$h_1h_2z$ a separating triangle, which at $k=2$ is impossible since the only vertices
+are $h_1,h_2$ and the ring, and the ring lies outside. So the coloured part of
+$\mathrm{link}(h_2)$ at step $2$ is exactly $\{h_1,x,y\}$, the complementary arc is a
+single arc of $\deg(h_2)-3 \ge 2$ vertices, and $\prod g = g(\deg(h_2)-3) \le 3/4$.
+Substituting in \eqref{eq:bfscert} with $2^2\cdot(3/4)=3$ gives the claim.
+\end{proof}
+
+The ``exactly two common neighbours'' fact was machine-checked on all $610{,}846$
+interior--interior edges of the corpus with zero exceptions, but it is only
+\emph{proved} at $k=2$.
+
+\paragraph{Why the induction stops, precisely.} The natural generalisation ---
+hypothesis (H2), that every $h_j$ with $j\ge2$ contributes at least one arc of length
+$\ge2$ --- would give $\gamma=3/2$ for all $k$. \textbf{(H2) is false on the corpus.}
+Of the $372{,}008$ BFS steps with $j\ge2$, $20{,}379$ ($5.48\%$) contribute no arc at
+all and $119{,}705$ ($32.18\%$) contribute only length-$1$ arcs, which gain nothing
+since $g(1)=1$; the length-$1$-only fraction climbs from $\approx3\%$ at $k=3$ to
+$\approx60\%$ at $k=16$. The realised effective base
+$\gamma_{\text{prov}} = 2(\prod g)^{1/(k-1)}$ has maximum
+$1.5000, 1.7321, 1.8171, 1.8612, 1.8882, 1.9064, 1.9195$ at $k=2,\dots,8$ and
+$1.937082$ overall. So this scheme yields \emph{no uniform $\gamma<2$ beyond $k=2$}.
+The value $1.7321 = 2\sqrt{3/4}$ at $k=3$ is the signature of ``one gaining step out
+of two''.
+
+Moreover $g(t)\ge 2/3$ for every $t$, so \emph{no argument of this shape can ever
+give $\gamma < 4/3$}: the empirical near-tightness of $4/3$ is not an accident, it is
+the scheme's infimum, attained only for arbitrarily long arcs.
+
+\subsection{The obstruction theorem}
+
+\begin{theorem}[Proven; explicit $10$-vertex witness]
+\label{thm:obstruction}
+Let $S_0$ be the free completion of the corpus configuration
+\texttt{gen-r8-n10-2} ($r=8$, $k=2$, both interior vertices of degree $6$). Then
+exactly
+\[
+   P(S_0,4) = 1464, \qquad \frac{P(S_0,4)}{24} = 61, \qquad a(S_0) = 55,
+   \qquad W(8)\cdot\tfrac43 = \tfrac{172}{3} = 57.33\ldots
+\]
+Hence $P(S_0,4)/24 > W(8)\cdot(4/3) > a(S_0)$, so \textbf{no upper bound on $a$ that
+factors through the Bridge Lemma --- i.e.\ any proof of the form
+$a \le P(S,4)/24 \le B(r,k)$ --- can prove the sharp cap}, and more precisely no such
+proof can establish $a \le W(r)\gamma^{k-1}$ for any
+$\gamma < 61/43 = 1.4186\ldots$
+\end{theorem}
+
+Over the whole corpus the smallest $\gamma$ for which the $P/24$ form survives is
+$\max\gamma_P = 1.4186047$ at exactly this record, against $\max\gamma_a = 1.3224310$
+at \texttt{fr-r13-n15-4}; and the $P$-form of the sharp cap is outright \emph{killed},
+failing on $1{,}960$ of $59{,}142$ records ($3.3\%$), worst ratio $1.3707$.
+
+The Bridge-Lemma fibre $P(S,4)/(24a)$ --- two colour-inequivalent tri-colourings
+sharing a ring restriction --- is exactly $1$ at $k=1$ and grows like $1.05$--$1.08^k$.
+It is that factor the sharp cap silently uses. A proof of the sharp cap must
+therefore contain a mechanism that sees \emph{ring restrictions}, not just
+tri-colourings.
+
+\paragraph{The per-step barrier.} There is a second, independent reason $4/3$ is hard.
+For any order in which each vertex has $b_i \ge 2$ earlier neighbours, the edge count
+$m = 3n-r-3$ gives the exact identity $\sum_{i\ge4}(b_i-2) = k$: the ``excess
+adjacency'' budget is exactly one closing per interior vertex. A closing step with
+earlier neighbours forming a path $u\!-\!x\!-\!w$ has $2$ colours available if
+$\varphi(u)=\varphi(w)$ and $1$ otherwise, i.e.\ an average factor
+$1 + \Pr[\varphi(u)=\varphi(w)]$. So the cap base is exactly $\gamma = 1+\Pr$, and
+$\gamma=4/3$ means $\Pr \le 1/3$, i.e.\ $u$ and $w$ \emph{exactly uncorrelated} given
+their common neighbour. That is a sharp mean-field statement at a critical point: the
+$q=4$ antiferromagnetic Potts model on the triangular lattice is critical
+\cite{moore2000}, correlations do not decay exponentially, and the standard
+correlation-decay techniques \cite{salas1997} need $q\ge11$ there. Indeed
+$4/3 = (q-2)^2/(q-1)$ at $q=4$ is Shrock--Tsai's \emph{lower} bound for the
+triangular-lattice entropy \cite{shrock1997} --- a floor, not a ceiling.
+
+We measured the distribution directly. Over a stratified sample of $1{,}315$
+configurations covering every occupied $(r,k)$ cell, the exact step factors
+$f_i = P(G_i,4)/P(G_{i-1},4)$ along the star-first order are:
+
+\begin{center}\small
+\begin{tabular}{rrrrr}
+\toprule
+$b_i$ & mean $f_i$ & min & max & steps \\
+\midrule
+2   & 2.0000 & 2.0000 & 2.0000 & 14{,}886 \\
+3   & 1.3155 & 1.1754 & \textbf{1.6479} & 6{,}322 \\
+4   & 0.8583 & 0.7273 & 1.0933 & 1{,}165 \\
+$\ge5$ & 0.5138 & 0.2148 & 0.6576 & 565 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The $b_i=3$ row is exactly $1+\Pr[\varphi(u)=\varphi(w)]$. Its mean $1.3155$ sits
+just below the mean-field $4/3$ --- which is why the sharp cap fits so well on average
+--- but its \emph{maximum} is $1.6479$, i.e.\ $\Pr = 0.648 > 1/2$. So no per-closing-step
+bound can give $\gamma=3/2$, let alone $4/3$: individual closings are demonstrably
+worse than either target, and any proof must average over them.
+
+\subsection{The sharp cap survives where the Bridge Lemma does not}
+
+Baxter's ground-state entropy of the $4$-state antiferromagnetic Potts model on the
+triangular lattice is $\approx 1.4610$ per site \cite{baxter1987}, greater than
+$4/3$. A disk cut from the triangular lattice has all interior degrees $6 \ge 5$ and
+an induced boundary cycle, so it lies in our class --- and it predicts that the
+$P$-form of the cap must fail badly in the bulk. It does: on exact $P(S,4)$
+computations for hexagonal disks up to $R=7$ ($n=169$) and corner-truncated
+triangular disks up to $m=16$, the ratio $(P/24)/\text{cap}$ reaches
+$1.1\times10^4$, with fitted per-site entropy $1.541$/$1.563$.
+
+But $a=|\Phi|$ itself, computed directly on the same disks by enumerating proper
+$4$-colourings, taking Klein edge labels, restricting to the boundary cycle and
+canonicalising under $S_3$ (self-validated $12/12$ against the repository's stored
+$a$), \textbf{never violates the sharp cap, and the margin improves as the disk
+grows}:
+
+\begin{center}\small
+\begin{tabular}{lrrrrrr}
+\toprule
+disk & $r$ & $k$ & $a$ & cap & $a/\text{cap}$ & $\gamma_a$ \\
+\midrule
+HEX $R{=}1$ ($=W_6$) & 6 & 1 & 11 & 11.0 & \textbf{1.0000} & --- \\
+TRI $m{=}4$ & 9 & 3 & 140 & 152.3 & 0.9193 & 1.278 \\
+TRI $m{=}5$ & 12 & 6 & 2{,}263 & 2{,}878.2 & 0.7863 & 1.271 \\
+HEX $R{=}2$ & 12 & 7 & 2{,}756 & 3{,}837.5 & 0.7182 & 1.262 \\
+TRI $m{=}6$ & 15 & 10 & 41{,}971 & 72{,}740.1 & 0.5770 & 1.255 \\
+\textbf{TRI $m{=}7$} & \textbf{18} & \textbf{15} & \textbf{853{,}124} & \textbf{2{,}452{,}078} & \textbf{0.3479} & \textbf{1.2365} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Bridge-Lemma fibre on these disks is $1.21, 1.65, 1.93, 2.81, 6.30$ at
+$k=3,6,7,10,15$: it grows fast enough to absorb the entire bulk excess and then some.
+These disks were constructed adversarially to break the sharp cap and did not. What
+is dead is the route, not the statement.
+
+\subsection{The threshold half, empirically}
+
+Mining the corpus for the exact frontier gives, per ring, the minimum $a$ over
+D-reducible configurations:
+
+\begin{center}\small
+\begin{tabular}{rrrrl}
+\toprule
+$r$ & \#D-red & $\min a$ & $k^\ast$ & witness \\
+\midrule
+6  & 28      & 16       & 4  & \texttt{0.7322} (RSST 633) \\
+7  & 37      & 39       & 4  & \texttt{2.122} (RSST 633) \\
+8  & 1{,}435 & 94       & 5  & \texttt{gen-r8-n13-1494} (generated) \\
+9  & 2{,}168 & 211      & 5  & \texttt{2.7566} (RSST 633) \\
+10 & 1{,}891 & 496      & 6  & \texttt{122.140} (RSST 633) \\
+11 & 209     & 1{,}252  & 7  & \texttt{122.1028} (RSST 633) \\
+12 & 767     & 2{,}863  & 7  & \texttt{126.453966} (RSST 633) \\
+13 & 1{,}961 & 6{,}954  & 8  & \texttt{126.504366} (RSST 633) \\
+14 & 2{,}654 & 17{,}440 & 9  & \texttt{2039} (Steinberger) \\
+15 & 1{,}562 & 42{,}957 & 10 & \texttt{2420} (Steinberger) \\
+16 & 457     & 100{,}454& 10 & \texttt{D3848} (nl4ct pool) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two structural observations. First, \textbf{at every one of the eleven rings the
+minimum-$a$ witness sits at the minimum possible interior count} --- on rings
+$8$--$13$ that is exactly the $f(r)$ table. The coloring-mass frontier and the
+interior-count frontier are attained by the \emph{same} configurations; the mass law
+is not an independent phenomenon layered on top of Theorem~\ref{thm:fr}. Second, the
+residual $\min a(r)/2.4^{\,r}$ is flat: $0.07823$ to $0.08540$ over eleven rings, a
+spread of $1.0916$ across a range in which $2.4^r$ itself grows by a factor $6{,}340$.
+Sweeping the base in steps of $0.005$ over $[2.30,2.50]$, the spread-minimising base
+is $\beta = 2.400$ exactly. There is no detectable polynomial correction: the law is
+$A(r) = c\beta^r$ with a single constant.
+
+The tightest surviving pure-exponential form is
+\[
+   \text{(T1)}\qquad K \text{ D-reducible} \;\Longrightarrow\; a \ge 2.4^{\,r}/12.79,
+\]
+with $a \ge 2.4^r/12.78$ \textsc{killed}. Its per-ring margins lie in
+$[1.001, 1.092]$; it is the only candidate near-tight at both ends and in the middle
+at once. \textbf{(T1) is corpus-supported only.}
+
+\begin{table}[t]
+\centering\small
+\caption{$f(r)$ implied by pairing a threshold with a cap. ``$\gamma=4/3$'' is the
+sharp cap of Conjecture~\ref{conj:mass}, not proven.}
+\label{tab:implied}
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+$r$ & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 20 \\
+\midrule
+\textbf{true $f(r)$} & \textbf{5} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{7} & \textbf{8} & ? & ? & ? & ? \\
+weak cap $2^{r+k-3}$ (proven) & 2 & 2 & 2 & 3 & 3 & 3 & 4 & 4 & 4 & 5 \\
+Thm~\ref{thm:star} $11\cdot2^{r+k-7}$ (proven) & 2 & 3 & 3 & 3 & 4 & 4 & 4 & 4 & 5 & 6 \\
+$\gamma=3/2$ (proven at $k=2$ only) & 3 & 4 & 4 & 5 & 5 & 5 & 6 & 6 & 7 & 9 \\
+$\gamma=4/3$ (the target) & 4 & 5 & 5 & 6 & 6 & 7 & 8 & 8 & 9 & 12 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:implied} shows the payoff. Pairing (T1) with the sharp cap gives
+$f(r) \ge \lceil 0.63375\,r - 1.6306\rceil$, i.e.\ $4,5,5,6,6,7$ against the true
+$5,5,6,7,7,8$: \textbf{off by at most one at every ring, from two inequalities}. That
+is an analytic near-reproduction of the entire $f(r)$ theorem, valid for all $r$.
+With the \emph{proven} cap the implied slope is only $0.263$, so the entire remaining
+factor of $2.4$ in $f$-slope lives in the cap, not the threshold.
+
+\begin{remark}[The structural principle]
+Under a cap $B(r,k) = C\cdot 2^r\gamma^k$, the implied $f$-slope is
+$(\log_2\beta - 1)/(1 - \log_2\gamma)$. \emph{The entire source of $f$-growth is the
+excess of the threshold base $\beta$ over $2$}; a law with $\beta \le 2$ proves nothing
+about $f$. This kills the whole wheel-anchored family of threshold candidates as a
+route to $f$, since their $r$-dependence $2^r$ cancels against the cap's.
+\end{remark}
+
+\begin{remark}[Honest caveat on the pairing]
+(T1)'s implied slope $0.634$ slightly \emph{exceeds} the empirical $f$-slope
+($\approx 0.60$, the endpoint slope $(8{,}5)\to(13{,}8)$; least squares over the six
+points gives $0.629$, which is not significantly below $0.634$). Extrapolated at the
+endpoint slope the implied bound would overtake the truth around $r\approx 54$; at
+the least-squares slope, not until $r\approx 263$. So at least one of \{(T1), the
+sharp cap, the $0.60$ slope
+estimate\} must weaken before then.
+\end{remark}
+
+\begin{remark}[Where the corpus does and does not constrain]
+Only rings $6$--$10$ have machine-generated D-reducibles; at rings $11$--$16$ the
+entire D-reducible population is the union of the three published catalogs, and at
+rings $15$--$16$ there is not even a non-reducible negative population. A frontier
+read off rings $14$--$16$ measures what catalog authors chose to publish. We tested
+this: re-running the winners restricted to non-catalog sources ($51{,}067$ records
+evaluated, of which $5{,}478$ are the D-reducible witnesses that can bind;
+effectively rings $\le10$) leaves the generated-only frontier
+$\{6{:}19, 7{:}39, 8{:}94, 9{:}228, 10{:}516\}$ versus the all-source
+$\{6{:}16, 7{:}39, 8{:}94, 9{:}211, 10{:}496\}$, tightening the $\beta=2.4$ constant
+by only $3.9\%$; and $a \ge 2.4^r/12$ is killed by the generated population
+independently of any catalog. So the frontier is not a catalog artifact on the rings
+where we can check --- but that check covers only $r\le10$.
+\end{remark}
+
+%======================================================================
+\section{Methods: the verification architecture}
+\label{sec:methods}
+%======================================================================
+
+The programme's operating assumption is that on this material a single
+implementation's output is worthless, and that the interesting failures are the ones
+a plausible-looking pipeline produces silently. Five mechanisms carry the load.
+
+\paragraph{(M1) Two (and where needed three) independent implementations.} Our
+reducibility checker is written from the published mathematics, not ported from the
+released C. Where the two disagree, a \emph{third} implementation with no shared
+code path adjudicates (\art{src/fourcolor/brute\_force.py}: different edge indexing,
+different triangle enumeration, no gauge fixing, no greedy variable ordering). The
+same discipline is applied to the discharging side: the Python port of
+\texttt{always\_apply}/\texttt{never\_apply}/blocking was differentially validated
+against the C++ on all $5{,}692{,}937$ wheel candidates before being trusted, and
+re-validated on all $10{,}094$ published leaves before being used in
+\S\ref{sec:lp}. In both places the differential test found real defects --- in the
+legacy C in one direction (\S\ref{sec:verify}) and in our own serializer in the other
+(\S\ref{sec:fr-enum}).
+
+\paragraph{(M2) Adversarial mutation testing.} A candidate statement that holds on a
+pool has, on the evidence of \S\ref{sec:negative}, essentially no chance of being
+true. \art{tools/stress\_test\_theorem.py} attacks a candidate by generating mutants
+of pooled configurations under a single diagonal edge flip
+(\art{src/fourcolor/mutate.py}), filtering each mutant through a structural legality
+gate (a port of RSST's own \texttt{ReadConf} conditions), then through the candidate
+rule on recomputed features, then through a canonical-key novelty check; survivors
+are labelled by the reducibility checker and every false positive is re-adjudicated
+by the compiled C oracle. The one time we ran this on genuinely novel candidates it
+killed all three of them (\S\ref{sec:negative}).
+
+\paragraph{(M3) The lemma harness: test before proving.} Any candidate statement can
+be machine-checked against the entire labelled corpus of $59{,}142$ canonically
+deduplicated configurations (rings $6$--$16$, $13{,}169$ of them D-reducible)
+in about $0.2$ s for a scalar statement:
+\begin{center}\small
+\texttt{tools/test\_lemma.py -{}-check "rec.d\_reducible implies rec.a >= 2.4**rec.r/12.79"}
+\end{center}
+Each run appends a receipt to \art{results/mass-law/lemma\_log.jsonl}, content-hashed
+against the corpus signature \texttt{a2b1feba331bf2962b2b} --- a blake2b digest over
+\texttt{(canonical\_hash, r, n, a, b, d\_reducible)} for records in canonical-hash
+order, so a receipt identifies exactly which configurations with which labels a
+verdict was taken over. Every corpus-supported claim in \S\ref{sec:mass} carries such
+a receipt. The harness's verdict vocabulary is deliberately restricted: \textsc{holds}
+means ``survived the corpus'', never ``proved''. Of the $87$ logged receipts, $66$ are
+\textsc{holds} and $21$ are \textsc{killed}; the killed ones are as much of the
+output as the surviving ones.
+
+\paragraph{(M4) Exact-arithmetic certificates with re-derivation.} Where a result is
+a computation, we ask it to emit an object that an independent, simpler program can
+check. \art{tools/verify\_farkas.py} is the archetype: solver-free,
+\texttt{fractions.Fraction} throughout, and --- the part that matters --- it does not
+trust the certificate's stored coefficients, re-deriving every row from its source
+artifact and failing loudly on mismatch. Corrupting one coefficient by hand is
+rejected with an exact claimed-versus-re-derived diff. The corresponding discipline
+on the enumeration side is that generation completeness is delegated to a pinned
+canonical-construction-path generator \cite{brinkmann2007} rather than to our own
+code, and legality to a port of the original authors' own parser.
+
+\paragraph{(M5) Adversarial review of every claim before it is written down.} Each
+major result was handed to a reviewer prompted to \emph{refute} it and to default to
+``refuted'' when unsure, with independent reimplementation required. This produced,
+among other things: the discovery that the pool-independence claim in
+Lemma~\ref{lem:mono} was false (fixed); the code-necessary versus math-necessary
+distinction that became \S\ref{sec:necessity}; the coarse-cartwheel gap in the
+low-degree rows (closed exactly, \S\ref{sec:lowdeg}); the demotion of a claimed
+$\gamma=3/2$ cap for all $k$ to Theorem~\ref{thm:gamma32} at $k=2$ only, after the
+reviewer showed the enabling hypothesis fails on $90.5\%$ of the corpus; and two
+false provenance sentences about \cite{nl4ct2026} that had survived several drafts.
+We record this as a method because in every one of those cases the error was in
+prose or scope rather than in a computation, and no amount of differential testing
+would have caught it.
+
+\paragraph{Test suite and pinning.} $23$ test files, $295$ discovered test cases,
+run by \texttt{make test}; at the time of writing $293$ pass and $2$ fail. Both
+failures are a data-drift guard firing correctly rather than a defect: the ring-$8$
+trace corpus grew from $1{,}162$ to $1{,}736$ records after the ring-$8$ model was
+trained, so \texttt{verify\_split\_against\_metrics} refuses to reconstruct that
+model's train/validation split against the enlarged data. Ring $8$ carries none of
+the results reported in \S\ref{sec:ml}, which are at rings $9$ and $10$. All third-party inputs are pinned: four arXiv e-prints
+with recorded SHA-256 digests (\art{third\_party/CHECKSUMS.sha256}), three git
+commits for the released 2026 artifacts (\art{third\_party/GIT\_PINS.txt}), and
+\texttt{plantri} 5.5 with the digests of both binary and source.
+
+\input{sec_ml}
+
+%======================================================================
+\section{Negative results and killed claims}
+\label{sec:negative}
+%======================================================================
+
+We report these at length because the verification discipline of
+\S\ref{sec:methods} is only credible if its failures are visible, and because
+each of the three killed claims below was, at the moment it was killed, the most
+attractive result the project had.
+
+\subsection{Three mined sufficient conditions, killed by mutation}
+
+We mined a pool of $16{,}794$ canonically deduplicated configurations
+($11{,}919$ D-reducible / $4{,}875$ not, rings $6$--$16$, $0$ label conflicts) for
+minimal conjunctions of structural predicates that are sufficient for
+D-reducibility with zero false positives on the pool. The search space contains
+$81{,}386$ such minimal zero-false-positive rules. The three best by coverage were:
+
+\begin{center}\small
+\begin{tabular}{clrr}
+\toprule
+\# & rule & coverage & pool FPs \\
+\midrule
+1 & $n \ge 25$ \textsc{and} $\overline{\deg}_{\rm int} \ge 5.7\overline{3}$ \textsc{and} $h_5\text{-density} \le 2/7$ & 2{,}313 & \textbf{0} \\
+2 & $n \ge 25$ \textsc{and} max run of constant ring degree $\le 4$ \textsc{and} $n_{\deg 5\to\ge3\deg 5} = 0$ & 2{,}240 & \textbf{0} \\
+3 & $k \ge 11$ \textsc{and} $h_5\text{-density} \le 2/7$ \textsc{and} $n_{\deg 5\to\ge3\deg 5} = 0$ & 2{,}234 & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three survived $5$-fold cross-validation, but that survival was already weak
+evidence: across the five folds their coverage ranks are $1,1,\text{subsumed},38,1$
+for rule 1, $2,2,\text{subsumed},47,7$ for rule 2 and $12,4,\text{subsumed},43,4$
+for rule 3 --- rule 3 never reaches first or second in any fold, and all three fall
+far down in fold 4. All three are \textbf{false}.
+
+Adversarial mutation search (\S\ref{sec:methods}, M2) generated $339{,}600$ mutants
+from $9{,}391$ seeds; $248{,}861$ failed the structural legality gate, $88{,}496$ no
+longer satisfied the rule, $291$ were duplicates, and $1{,}952$ novel legal
+rule-satisfying configurations were submitted to the reducibility checker. Of those,
+\textbf{$236$ are false positives} --- configurations satisfying the rule that are
+not D-reducible: $83$ for rule 1, $44$ for rule 2, $109$ for rule 3, all with
+distinct canonical keys, at rings $13$ ($54$), $14$ ($105$), $15$ ($56$) and $16$
+($21$), arising from $113$ distinct seed configurations. The false-positive rate
+among labelled mutants is $12.1\%$. \textbf{$215$ of the $236$ were independently
+confirmed} by the compiled C oracle, with $0$ disagreements between the two
+implementations; the remaining $21$ --- exactly all the ring-$16$ cases --- could not
+be adjudicated because the oracle's output truncates before its verdict line, the
+same failure mode as \S\ref{sec:verify}.
+
+\begin{quote}
+\textbf{The lesson, stated as we now apply it:} zero false positives on a pool of
+$16{,}794$ configurations, stable across cross-validation folds, is not evidence of
+soundness. It is evidence that the pool does not contain the counterexamples, which
+in a curated catalog is what one should expect. Always mutate-stress.
+\end{quote}
+
+\subsection{The rule that survived --- and why the mutation test did not really test it}
+
+The dual, \emph{necessary}-direction rule --- ``$r=11$ and $k \le 6$ implies
+not D-reducible'', covering $1{,}630$ non-reducible configurations with zero false
+positives --- was the one candidate the mutation search did not kill, and it is the
+statement that became the $r=11$ case of Theorem~\ref{thm:fr}.
+
+Its ``survival'' should nevertheless be discounted almost entirely. Of $41{,}449$
+mutants generated, $41{,}148$ failed the legality gate, $273$ failed the rule and
+$28$ were duplicates: \textbf{zero novel rule-satisfying mutants were ever submitted
+to the checker}, and the run took one second. The tool's verdict is computed
+mechanically as ``killed if any false positive, else survived'', so
+\textsc{survived} here means ``no counterexample was found'', not ``counterexamples
+were sought and none exist''. The reason is structural and instructive: configurations
+at $r=11$ with $k \le 6$ sit on the legality boundary --- their interior vertices have
+degree exactly $5$ --- so almost every single edge flip drops a vertex below its
+minimum degree. Raising the per-seed budget to $400$ tries still yielded nothing
+testable.
+
+The real evidence for that statement is therefore not the mutation test but the
+exhaustive \texttt{plantri} sweep of \S\ref{sec:fr-enum}. We flag this because
+presenting the mutation result as independent confirmation would be exactly the kind
+of thing this section exists to prevent.
+
+\subsection{The strong LP encoding, killed by its own negative control}
+
+The natural formalisation of ``the discharging closes'' --- \emph{every unblocked
+stage-1 wheel must end with strictly negative charge} --- is wrong, because the 2026
+schema permits survivors and the published proof leaves $16{,}148$ stage-1 wheels
+alive on purpose. We implemented it anyway, with the max-of-affine cutting-plane
+machinery it requires, and ran the \emph{full-pool} control first. The control is
+\textsc{infeasible} at iteration $0$ with a verified $10$-row certificate
+($y^\top b = -175$): the encoding ``disproves'' the published theorem. We discarded
+the encoding on that basis and built the leaf-level one of \S\ref{sec:lp}
+instead.
+
+We stress the ordering. The control was run \emph{before} the ring-$\le 14$ variant,
+and the ring-$\le14$ variant under that encoding is also infeasible --- with a nicely
+large $y^\top b = -380$. Had we run the two in the other order and stopped, we would
+have published a false result with a valid-looking certificate. A negative control
+that can fail is the only defence against this, and it is cheap.
+
+\subsection{The naive threshold law, killed by the harness}
+
+The first form of the threshold half of Conjecture~\ref{conj:mass}, read off the
+$r=8$ minimum and the observed growth ratio, was
+$K \text{ D-reducible} \Rightarrow a \ge 94 \cdot 2.4^{\,r-8}$. The harness kills it
+with $43$ counterexamples in about $0.2$ s. Also killed: $a \ge 2.4^{\,r}/12$
+($15$ counterexamples, and still $2$ counterexamples when restricted to the
+machine-generated population, so this is not a catalog artifact);
+$a \ge 5\cdot2^{\,r-4}$ ($6$); $a \ge 2^{\,r-1}$ ($311$); $a \ge k\cdot 2^{\,r-4}$
+($398$); $a \ge W(r)\cdot 1.3^{\,k-1}$ with no leading constant (all $13{,}169$);
+$a \ge 3^{\,r-1}/2/(0.25\,r^2)$ ($17$). On the cap side the harness killed
+$a \le 5\cdot2^{\,r+k-6}$ with exactly six counterexamples --- the six wheels --- which
+is precisely what Theorem~\ref{thm:star}'s $\min$-over-$h$ form predicts, and is the
+reason the unconditional constant is $11$ and not $10$. The surviving forms in
+\S\ref{sec:mass} are what is left after that attrition.
+
+\subsection{Two further honest notes}
+
+\paragraph{A conjecture we would have overclaimed.} An earlier draft of
+\S\ref{sec:mass} stated $\gamma=3/2$ for all $k$, under a hypothesis (H2) about arc
+lengths that looked innocuous. (H2) fails on at least $53{,}549$ of $59{,}142$
+records ($\ge 90.5\%$) and on $37.66\%$ of individual BFS steps ($140{,}084$ of
+$372{,}008$). The adversarial reviewer called
+presenting the conclusion under that hypothesis ``a real overclaim'', and it was
+demoted to Theorem~\ref{thm:gamma32}.
+
+\paragraph{Corrections to our own record.} Two numbers circulated in this project's
+internal notes that are wrong and that we correct here: the mutation search produced
+$236$ false positives, not $26$ (an apparent dropped digit, propagated through three
+documents); and the wheel-candidate total at hub degrees $7$--$11$ is $5{,}692{,}937$,
+not $5{,}690{,}937$. Both are corrected in this paper and neither affects a verdict.
+
+%======================================================================
+\section{Discussion and open problems}
+\label{sec:open}
+%======================================================================
+
+\paragraph{The sharp cap via transfer matrices.} Theorem~\ref{thm:obstruction} says
+the sharp cap cannot be reached through $P(S,4)$; one needs a direct handle on
+$|\Phi(K)|$. Two routes remain. (a) An injection
+$\Phi(K) \hookrightarrow \Phi(K')\times[4/3]$ for a configuration $K'$ with one fewer
+interior vertex \emph{and the same ring}. Ordinary vertex deletion will not do:
+deleting an interior vertex of degree $d$ with $j$ consecutive ring neighbours yields
+ring length $r+d-2j+2$, so the ring \emph{grows} --- for $d=5$, $j=2$ it grows by $3$,
+multiplying the cap by $8$, and the induction would have to supply
+$a(K)\le a(K')/6$, an inequality of the wrong strength. Deletion-based induction on
+this class is a dead end unless the ring can be kept fixed. (b) A transfer-matrix
+bound on the \emph{ring-trace} operator, whose state space is ring colourings rather
+than tri-colourings. The Jacobsen--Salas--Sokal Temperley--Lieb machinery
+\cite{jacobsen2006} is the right formalism, and its state space --- non-crossing
+partitions of the ring --- is exactly the object $\Phi$ lives on. We regard this as
+the highest-value open problem in the programme. Failing that, proving $\gamma=3/2$
+in general (H2 is a finite, checkable link condition) already lifts the implied
+$f$-slope from $0.263$ to $0.450$ and is permitted by the Bridge route.
+
+\paragraph{Removing the fixed-shapes caveat.} Theorem~\ref{thm:lp} fixes the $84$
+published rule shapes. The natural strengthening --- ``no discharging schema of
+bounded rule complexity closes over the ring-$\le14$ pool'' --- requires column
+generation: given a violated leaf, price out a new planar degree-interval pattern
+that would fix it. The pricing subproblem is a search over planar patterns with a
+charge dart, not an LP, and it is the main technical obstacle. A tractable
+intermediate is to enumerate all rule shapes below a fixed size bound and re-run the
+same certificate machinery over the enlarged column set: infeasibility there would be
+a substantially stronger statement, and the certificate format is unchanged.
+
+\paragraph{$f(r)$ beyond $r=13$.} The $r=13$ interior-$7$ cell alone required
+$11{,}534{,}001$ plantri graphs and $\approx 30$ core-hours, $8$-way sharded
+($\approx 3.7$ h wall); $r=14$ at
+interior $8$ is roughly two orders of magnitude larger and is not reachable by the
+present pipeline on a workstation. Three ways forward: (i) prune the generation with
+a necessary condition on $a$ --- the mass law, if proven even in weak form, would
+eliminate most cells without running the reducibility check; (ii) exploit the
+observation of \S\ref{sec:mass} that the minimum-$a$ and minimum-interior frontiers
+coincide, to search only near the frontier; (iii) accept a conditional result. Note
+that the corpus already gives $f(14)\le 9$, $f(15)\le 10$, $f(16)\le 10$ from catalog
+witnesses.
+
+\paragraph{Formalisation.} The finite content of Theorem~\ref{thm:fr} is a replay of
+$10{,}319$ configuration checks. That is within reach of a proof assistant given
+Gonthier's formalisation \cite{gonthier2008} of the reducibility machinery, and it
+would upgrade the theorem from ``certified'' to ``proven'' in the strongest available
+sense. The Farkas certificate of Theorem~\ref{thm:lp} is even more tractable: $12$
+rows over the rationals, though the row-derivation step (from cartwheel to
+coefficients) carries the real formalisation burden.
+
+\paragraph{The set-size question.} Our original motivation was to minimise the number
+of configurations in an unavoidable set. We deliberately do not report a headline
+number, because a minimal $U$ in the wheel-based schema is \emph{not} comparable to
+RSST's $591$/$633$ (axle-based, C-reducibility with contracts, ring $\le14$). Any such
+claim must be schema-qualified. Theorem~\ref{thm:lp} is the useful residue of that
+line: an impossibility rather than an improvement.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\appendix
+
+%======================================================================
+\section{Claim-to-artifact table}
+\label{sec:artifacts}
+%======================================================================
+
+Every numerical claim in the paper is listed here with the repository artifact that
+produced it. Paths are relative to the repository root. A claim marked
+\textsc{corpus} is a lemma-harness verdict over the $59{,}142$-configuration
+labelled corpus with signature \texttt{a2b1feba331bf2962b2b} and carries a receipt in
+\art{results/mass-law/lemma\_log.jsonl}; \textsc{corpus} means ``survived'', never
+``proved''.
+
+{\small
+\begin{longtable}{p{0.40\textwidth}p{0.52\textwidth}}
+\toprule
+\textbf{Claim} & \textbf{Artifact and content} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Claim} & \textbf{Artifact and content} \\
+\midrule
+\endhead
+\multicolumn{2}{l}{\emph{\S\ref{sec:lp}: the ring-$\le14$ obstruction}}\\[2pt]
+$84$ rule shapes; $r(R)\in\{1,2\}$ &
+  \art{third\_party/discharging-rules/R/} (84 \texttt{.rule} files);
+  \art{third\_party/arxiv-2603.24880/src/main\_\_1\_\_\_1\_.tex} lines 624--625 \\
+$8{,}200$-config pool; $5{,}895$ of ring $\le14$ &
+  \art{third\_party/reducible-configurations/D/} (8{,}200 files);
+  \art{build/steinberger-pool-r14/D} (5{,}895); ring histogram recomputed from
+  the \texttt{N R} header of every file \\
+Affine leaf form validated on $10{,}094$ published leaves, $0$ discrepancies &
+  \art{tools/lp\_discharge.py -{}-validate}; leaves in
+  \art{third\_party/computer-checks/wheels/zero/} \\
+$8$-variant LP matrix (Table~\ref{tab:lpvariants}) &
+  \art{results/steinberger/lp\_variants\_summary.json},
+  \art{results/steinberger/lp\_control\_stats.json},
+  \art{results/steinberger/lp\_main\_stats.json} \\
+$19$-row Farkas certificate, $y^\top b=-30$ &
+  \art{results/steinberger/lp\_main\_certificate.json} \\
+$12$-row irreducible core, $y^\top b=-20$ &
+  \art{results/steinberger/lp\_main\_certificate\_iis.json} \\
+Exact-rational verification, rows re-derived &
+  \art{tools/verify\_farkas.py} $\to$ \texttt{FARKAS CERTIFICATE VERIFIED}, exit 0 \\
+All $12$ rows mathematically necessary &
+  \art{results/steinberger/iis\_math\_necessity.json},
+  \texttt{all\_mathematically\_necessary: true} \\
+$11$ of $5{,}292$ (rule, out-dart) pairs undetermined &
+  \art{tools/lp\_discharge.py -{}-audit-necessity} \\
+Low-degree refinement counts (4 necklaces, up to $2.4\times10^8$) and the
+  $3{,}046$-wheel sweep &
+  \art{tools/lowdeg\_refinement\_check.py},
+  \art{results/steinberger/lowdeg\_refinement\_check.json} \\
+$580$ / $2{,}466$ unblocked $d{=}5$ / $d{=}6$ wheels, matching the C++ &
+  released C++ \texttt{-{}-enum\_wheels -d 5}, \texttt{-d 6}; same counts in the
+  low-degree sweep above \\
+Textual audit of the $d\le6$ reconstruction &
+  \art{results/steinberger/degree56-verification.md} (quote-by-quote against the
+  pinned paper source) \\
+Strong-encoding negative control: full pool \textsc{infeasible}, $y^\top b=-175$ &
+  \art{tools/lp\_wheel\_level.py -{}-control},
+  \art{results/steinberger/wheel\_level\_control\_stats.json} \\
+$77{,}185$ leaves recovered from $833$ aborted jobs &
+  \art{tools/lp\_rerun\_failed\_wheels.sh},
+  \art{results/p3/runs/steinberger-s1/work/wheels/zero\_ndebug/},
+  \art{results/steinberger/rerun\_ndebug.log} \\
+S1: $833$ of $16{,}157$ jobs abort; $780$ \texttt{C\_positive} + $53$
+  \texttt{degree\_range}; $530/250/51/2$ by hub degree &
+  \art{results/p3/runs/steinberger-s1/failures.json};
+  job counts from the \texttt{.done}/\texttt{.FAILED} markers under
+  \art{results/p3/runs/steinberger-s1/log/} \\
+Full narrative, scope and adversarial pass &
+  \art{results/steinberger/LP-SCHEMA-RESULT.md} \\
+\emph{Narrative-only} (recorded in prose in
+  \art{LP-SCHEMA-RESULT.md}, no JSON): the $2{,}145$ monotonicity parent/child pairs
+  and their $8$ failures under negative amounts; the six solver configurations and the
+  $0.082$ uniform slack; the degree-$5$-alone / degree-$6$-alone ablations; the
+  $\approx$14\,min / $\approx$2\,GB cost of \texttt{-{}-all}
+  & re-derivable only by re-running \art{tools/lp\_discharge.py}; we flag these as
+  the claims in \S\ref{sec:lp} not backed by a stored machine-readable artifact \\
+\midrule
+\multicolumn{2}{l}{\emph{\S\ref{sec:fr}: the $f(r)$ theorem}}\\[2pt]
+Per-$(r,n)$ sweep counts (Table~\ref{tab:frsweep}) &
+  \art{results/theorem/fr\_table/manifest\_r\{8..13\}.json} (r13 additionally
+  \texttt{\_s\{0..7\}of8}); every entry has \texttt{d\_reducible\_count: 0} \\
+Per-configuration records (adjacency, $a$, closure trace, legality flag) &
+  \art{results/theorem/fr\_table/configs\_r*\_n*.jsonl} \\
+Cross-check vs.\ the compiled 1995 oracle: $70$ sampled, $0$ mismatches,
+  $6$ inconclusive &
+  \art{results/theorem/fr\_table/crosscheck.json};
+  \art{tools/fr\_table\_crosscheck.py} \\
+Third-implementation adjudication of the $6$ &
+  \art{src/fourcolor/brute\_force.py}, \art{tests/test\_brute\_force.py} \\
+Tightness witnesses at $r=8..12$ &
+  \art{results/theorem/fr\_table/tightness\_witnesses.json} \\
+Tightness at $r=13$ ($k=8$, $a=6{,}954$) and the per-ring minimum-$k$ table &
+  the labelled corpus via \art{src/fourcolor/lemma\_corpus.py} \\
+C-vs-D witnesses at rings $8$ and $11$ &
+  \art{third\_party/arxiv-1401.6481/src/anc/unavoidable.conf} idents
+  \texttt{2.126}, \texttt{126.7566}, \texttt{128.136}, \texttt{7562.126} \\
+Mass-law gap table (\S\ref{sec:gap}) &
+  recomputed from \art{results/theorem/fr\_table/configs\_r*.jsonl}
+  (max $a$ over legal below-threshold configs) against the corpus minima \\
+Enumeration completeness &
+  \art{third\_party/plantri/plantri55/} with sha256 of binary and source;
+  legality by \texttt{fourcolor.mutate.is\_legal\_configuration} \\
+Statement and protocol & \art{results/theorem/fr\_table/THEOREM.md} \\
+\midrule
+\multicolumn{2}{l}{\emph{\S\ref{sec:verify}: corpus verification}}\\[2pt]
+RSST $633$: $633/633$ agree; $249$ D-reducible, $384$ C-reducible &
+  \art{results/differential-unavoidable-r14/report.jsonl};
+  \art{results/oracle-rsst-633/stdout.txt} \\
+Steinberger $2{,}822$: $2{,}822/2{,}822$ agree, all D-reducible, all $b=0$ &
+  \art{results/differential-U\_2822-r16/report.jsonl},
+  \art{results/differential-stein-log.txt} \\
+The Steinberger C oracle aborts at config $783$ &
+  \art{results/oracle-stein-2822/stdout.txt} (ends \texttt{exit=134});
+  crashing input \art{build/crash783.conf} \\
+$7{,}697$ of the pruned pool verified, $73$ at rings $17$--$18$ unverified &
+  \art{results/p3/pool-verify/SUMMARY.json}, \art{shard\_r*.jsonl} \\
+2026 pipeline reproduced end to end, all counts matching &
+  \art{results/nl4ct-reproduction-summary.txt};
+  \art{third\_party/computer-checks/log/} \\
+Differential on all $5{,}692{,}937$ wheel candidates, $0$ FP / $0$ FN &
+  \art{results/nl4ct-differential/report\_d\{7..11\}.json}
+  (\texttt{exact\_match: true} in each) \\
+RSST 1995 discharging replay, $5/5$ presentation files &
+  \art{results/discharge-rsst/replay.txt} \\
+Wheel-level coverage: $85$ distinct blockers; cartwheel-level: $7{,}422$ over
+  $2{,}253{,}185$ events &
+  \art{results/p2-coverage/report.md},
+  \art{results/p2-coverage/wheel\_level\_stats.json},
+  \art{results/p2-coverage/cartwheel\_level\_stats.json} \\
+$430$ zero-usage configurations &
+  \art{results/p3/usage\_table\_v2\_summary.json},
+  \art{results/p3/zero4\_configs.txt} (430 entries) \\
+Pruned pool of $7{,}770$ passes the whole pipeline with identical counts &
+  \art{results/p3/runs/batch1b/} --- \art{VERDICT.txt} (\textsc{pass}),
+  \art{counts.json}, \art{checksums.sha256} \\
+The failed $673$-config prune that revealed the fourth role &
+  \art{results/p3/runs/batch1/VERDICT.txt} (\textsc{fail}, rc 134) \\
+\midrule
+\multicolumn{2}{l}{\emph{\S\ref{sec:mass}: the coloring-mass law}}\\[2pt]
+Corpus of $59{,}142$, signature \texttt{a2b1feba331bf2962b2b}, $13{,}169$ D-reducible &
+  \art{src/fourcolor/lemma\_corpus.py} (recomputed live);
+  \art{results/mass-law/lemma\_log.jsonl} \\
+Wheel closed form ($k=1$, support 6) & \textsc{corpus} receipt
+  \texttt{b2fb2220ca3e6953}; proof in \S\ref{sec:mass}; four-way adversarial
+  re-verification in \art{results/mass-law/PROOF-SHARP-CAP.md} \S6.3 \\
+$a \le 11\cdot2^{r+k-7}$; $\min$-over-$h$ form tight only at the six wheels &
+  receipts \texttt{e8beefcd5e56f5c5}, \texttt{4db503ddffcef7ee};
+  \texttt{9977aea202daca71} (the killed $5\cdot2^{r+k-6}$) \\
+Star-order claim verified on all $431{,}159$ (record, interior vertex) pairs &
+  \art{tools/star\_order\_check.py},
+  \art{results/mass-law/star-order-verification.md} \\
+Exactly two common neighbours on all $610{,}846$ interior--interior edges &
+  receipt \texttt{663fe16bb1a8ea3c} \\
+(H2) false: arc histogram, $\max\gamma_{\rm prov}=1.937082$ &
+  \art{tools/arc\_profile.py}, \art{results/mass-law/arc-profile.md} \\
+Obstruction theorem: $P(S_0,4)=1464$, $a=55$ at \texttt{gen-r8-n10-2};
+  $P$-form killed on $1{,}960$ of $59{,}142$ &
+  \art{src/fourcolor/count4.py}, \art{tools/p4\_measure.py},
+  \art{results/mass-law/p4-summary.md},
+  \art{results/mass-law/p4\_measurements.jsonl} \\
+Per-step factor table ($b_i=3$ mean $1.3155$, max $1.6479$) &
+  \art{results/mass-law/star-order-verification.md} Part 4 \\
+Lattice disks: $P$-form fails by $1.1\times10^4$; $a$ satisfies the sharp cap
+  with improving margin &
+  \art{tools/lattice\_disk\_entropy.py},
+  \art{tools/lattice\_disk\_phi.py},
+  \art{results/mass-law/lattice-disk-\{entropy,phi\}.md} \\
+Threshold frontier, $\beta=2.4$ residual band, (T1) optimal to $0.08\%$ &
+  \art{results/mass-law/threshold-candidates.md} (75 receipts) \\
+Implied $f(r)$ tables &
+  \art{results/mass-law/threshold-candidates.md} \S4,
+  \art{results/mass-law/PROOF-SHARP-CAP.md} \S7 \\
+Weak cap and Bridge Lemma & \art{results/theorem/mass-law/PROOF-CAP.md} \\
+\midrule
+\multicolumn{2}{l}{\emph{\S\ref{sec:ml} and \S\ref{sec:negative}}}\\[2pt]
+D1 training and probe ladder &
+  \art{results/d1/train\_metrics\_full\_v1.json},
+  \art{results/d1/interp/report.md} \\
+Boundary result, extraction, seed replication, error-set digestion &
+  \art{results/d1v2/v2run/interrogation.md},
+  \art{results/d1v2/extraction/report.md},
+  \art{results/d1v2/replication/report.md},
+  \art{results/d1v2/digestion/cases.md} \\
+Zeta-map replication (companion repository) &
+  companion repository \texttt{zeta\_map\_interp}: \texttt{results/train-metrics.json},
+  \texttt{results/generalization.json},
+  \texttt{results/interp/\{probes,ablation,attention-stats\}.json} \\
+Mined candidate rules, coverage, cross-validation &
+  \art{results/theorem/candidates.md},
+  \art{results/theorem/mining\_results.json};
+  \art{tools/mine\_sound\_rules.py} \\
+Mutation stress test: $339{,}600$ mutants, $1{,}952$ labelled, $236$ FPs,
+  $215$ oracle-confirmed &
+  \art{results/theorem/stress\_test.json},
+  \art{results/theorem/stress\_test.md} (every FP carries full adjacency and
+  feature vector); \art{tools/stress\_test\_theorem.py} \\
+Killed threshold forms & \textsc{corpus} receipts in
+  \art{results/mass-law/lemma\_log.jsonl}; tabulated in
+  \art{results/mass-law/threshold-candidates.md} \\
+\bottomrule
+\end{longtable}
+}
+
+%======================================================================
+\section{The Farkas certificate}
+\label{sec:certificate}
+%======================================================================
+
+Table~\ref{tab:cert} gives the $19$-row support of the certificate for
+Theorem~\ref{thm:lp}. Exact totals: $\min_k (y^\top A)_k = 0$ (need $\ge 0$),
+$y^\top b = -30$ (need $<0$), all $y_i > 0$. Every row is non-strict, so the
+certificate proves infeasibility over $\mathbb{R}^{84}_{\ge0}$ and not merely over
+the integers. The greedy-reduced $12$-row irreducible core is marked in the
+\textsc{iis} column, with its own multipliers $y'$; it has $y'^\top b = -20$ and is
+irreducible in the strict sense that deleting any single one of its $12$ rows
+restores feasibility (verified for all $12$). Machine-readable:
+\art{results/steinberger/lp\_main\_certificate.json} and
+\art{results/steinberger/lp\_main\_certificate\_iis.json}; verify with
+\art{tools/verify\_farkas.py}.
+
+\begin{table}[h]
+\centering\small
+\caption{The $19$-row Farkas support ($y$, $y^\top b = -30$) and the $12$-row
+irreducible core ($y'$, $y'^\top b = -20$; a dash marks a row absent from the core).
+$C(x_0)$ is the leaf charge at the published amounts; a positive value marks a row
+the published amounts violate. All four ring-$\le14$-only rows survive into the core.}
+\label{tab:cert}
+\begin{tabular}{rrrlrrll}
+\toprule
+$y_i$ & $y'_i$ & $d$ & spoke degrees & rhs & $C(x_0)$ & source & origin \\
+\midrule
+19 & 75 & 7 & 5,5,8,5,6,5,7 & 10 & 0 & \texttt{d7\_1155\_1}   & full $\cap$ r14 \\
+21 & --- & 7 & 5,5,5,8,5,5,7 & 10 & 0 & \texttt{d7\_166\_0}    & full $\cap$ r14 \\
+17 & 75 & 7 & 5,5,5,8,5,5,7 & 10 & 0 & \texttt{d7\_166\_1}    & full $\cap$ r14 \\
+14 & --- & 7 & 5,6,5,6,7,5,8 & 10 & 0 & \texttt{d7\_1782\_2}   & full $\cap$ r14 \\
+12 & --- & 7 & 5,6,5,8,5,7,6 & 10 & 0 & \texttt{d7\_1932\_3}   & full $\cap$ r14 \\
+4  & 25 & 7 & 5,5,7,5,5,7,7 & 10 & 0 & \texttt{d7\_710\_10}   & full $\cap$ r14 \\
+4  & --- & 7 & 5,5,7,5,5,7,7 & 10 & 0 & \texttt{d7\_710\_14}   & full $\cap$ r14 \\
+21 & 75 & 7 & 5,5,7,5,6,5,8 & 10 & 0 & \texttt{d7\_722\_3}    & full $\cap$ r14 \\
+9  & --- & 7 & 5,5,7,5,7,5,7 & 10 & 0 & \texttt{d7\_740\_16}   & full $\cap$ r14 \\
+8  & --- & 7 & 5,5,7,5,7,5,7 & 10 & 0 & \texttt{d7\_740\_18}   & full $\cap$ r14 \\
+13 & 55 & 7 & 5,5,7,5,7,5,7 & 10 & 0 & \texttt{d7\_740\_19}   & full $\cap$ r14 \\
+20 & 60 & 7 & 5,7,5,7,6,7,7 & 10 & \textbf{2} & \texttt{d7\_3358\_2133} & \textbf{ring$\le$14 only} \\
+6  & 15 & 7 & 5,7,5,7,6,7,7 & 10 & \textbf{2} & \texttt{d7\_3358\_2134} & \textbf{ring$\le$14 only} \\
+30 & 55 & 7 & 5,7,5,7,7,6,7 & 10 & \textbf{2} & \texttt{d7\_3372\_1881} & \textbf{ring$\le$14 only} \\
+4  & 25 & 7 & 5,7,5,7,7,7,7 & 10 & \textbf{3} & \texttt{d7\_3376\_1132} & \textbf{ring$\le$14 only} \\
+2  & --- & 5 & 5,5,6,7,7     & $-10$ & $-3$ & \texttt{d5-55677} & low-degree row \\
+43 & 75 & 5 & 5,5,7,6,7     & $-10$ & $-2$ & \texttt{d5-55767} & low-degree row \\
+75 & 168 & 5 & 5,7,5,7,7     & $-10$ & 0    & \texttt{d5-57577} & low-degree row \\
+85 & 219 & 5 & 5,7,6,7,7     & $-10$ & 0    & \texttt{d5-57677} & low-degree row \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
