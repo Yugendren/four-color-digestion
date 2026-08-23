@@ -18,6 +18,9 @@ third_party/*/extracted_build/
 # checksums.sha256, VERDICT.txt) is tracked.
 results/p3/runs/*/work/
 results/p3/runs/*/log/
+# Same rationale for the NDEBUG leaf-recovery re-run (tools/lp_rerun_failed_wheels.sh):
+# 833 per-wheel logs + .done markers, regenerated in ~21 min from tracked inputs.
+results/p3/runs/*/log_ndebug/
 
 # Steinberger S1 gap analysis (tools/s1_gap_analysis.py): the at-risk glued-composite
 # list is derived from the 14.6M-event full-pool gluing blocklog and is ~13MB, fully

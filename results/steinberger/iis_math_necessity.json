@@ -1,0 +1,106 @@
+{
+ "certificate": "/Users/yugendren/experiments/four_color_digestion/results/steinberger/lp_main_certificate_iis.json",
+ "pool": "/Users/yugendren/experiments/four_color_digestion/build/steinberger-pool-r14/D",
+ "rows": [
+  {
+   "source": "d7_1155_1.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": false,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d7_166_1.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": false,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d7_710_10.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": false,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d7_722_3.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": false,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d7_740_19.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": false,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d7_3358_2133.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": true,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d7_3358_2134.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": true,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d7_3372_1881.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": true,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d7_3376_1132.cartwheel",
+   "kind": "leaf",
+   "out_exact_before": true,
+   "out_exact_after_tail_maximise": true,
+   "row_unchanged_by_tail_maximise": true,
+   "blocked_after_tail_maximise": false,
+   "mathematically_necessary": true
+  },
+  {
+   "source": "d5-55767",
+   "kind": "lowdeg",
+   "mathematically_necessary": true,
+   "why": "lower-bound form: over-counts OUT, under-counts IN"
+  },
+  {
+   "source": "d5-57577",
+   "kind": "lowdeg",
+   "mathematically_necessary": true,
+   "why": "lower-bound form: over-counts OUT, under-counts IN"
+  },
+  {
+   "source": "d5-57677",
+   "kind": "lowdeg",
+   "mathematically_necessary": true,
+   "why": "lower-bound form: over-counts OUT, under-counts IN"
+  }
+ ],
+ "all_mathematically_necessary": true
+}

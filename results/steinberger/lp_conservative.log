@@ -1,0 +1,2 @@
+control {"n_leaves": 10094, "n_rows_dedup": 4321, "n_strict_rows": 0, "lp_status": "FEASIBLE", "n_x0_violations": 0, "certificate_verified": null, "yTb": null, "cert_support": null}
+main {"n_leaves": 97860, "n_rows_dedup": 52400, "n_strict_rows": 96, "lp_status": "FEASIBLE", "n_x0_violations": 8741, "certificate_verified": null, "yTb": null, "cert_support": null}

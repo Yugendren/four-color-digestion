@@ -1,0 +1,15 @@
+{
+ "status": "INFEASIBLE",
+ "support_before": 19,
+ "iis_size": 12,
+ "certificate_verified": true,
+ "detail": {
+  "n_support": 12,
+  "negative_multipliers": [],
+  "negative_columns": [],
+  "yTb": "-20",
+  "yTA_min": "0",
+  "ok": true
+ },
+ "irreducible": true
+}
