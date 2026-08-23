@@ -24,7 +24,7 @@
    `results/theorem/fr_table/configs_r*.jsonl` (below-threshold, has n_extendable) +
    `data/d1_corpus.jsonl` (D-reducible population).
 3. **Killed en route (preserved honestly):** mined *sufficient* conditions for reducibility
-   (results/theorem/candidates.md) were KILLED by adversarial mutation search — 26 oracle-confirmed
+   (results/theorem/candidates.md) were KILLED by adversarial mutation search — 236 oracle-confirmed
    false positives (results/theorem/stress_test.md; tools/stress_test_theorem.py). The dual/necessary
    direction survived and became the theorem. Lesson: pool-zero-FP ≠ sound; always mutate-stress.
 4. **Context docs:** 00-ATTACK-PLAN.md, 01-PROBLEM-STATEMENT.md, 02-P3-DESIGN.md (earlier phases:

@@ -24,7 +24,7 @@ x and R are instruments. Optimizing them serves |U| (better discharging corners 
 
 ## Problem ladder
 
-- **P1 — foundation (DONE).** Symbolic charge bound as a linear form in x, validated exactly against the C++ on all 5,690,937 wheel candidates, d=7..11.
+- **P1 — foundation (DONE).** Symbolic charge bound as a linear form in x, validated exactly against the C++ on all 5,692,937 wheel candidates, d=7..11.
 - **P2 — coverage measurement (NEXT).** For each bad wheel (and if needed each degree concretization), compute the set of pool configurations that block it. Deliverable: the coverage (incidence) structure + its measured size, and the analogous data at the cartwheel level. This determines whether P3 is a tractable MILP. Do not assume; measure — the concretization enumeration is the known exponential cliff.
 - **P3 — set-cover minimization.** Fix x = x0 (published amounts). MILP: minimize |U'| s.t. every wheel that must be blocked (those not killed by charge, and whose survival would break the downstream lemmas) is blocked by some chosen config. Two variants: (strong) block everything the current proof blocks — guaranteed-valid, conservative; (exact) allow new survivors as long as gluing still passes — requires re-running gluing per candidate, use as a refinement loop. Acceptance gate: full pipeline green + our reducibility verification of U'.
 - **P4 — lower bound.** LP-relaxation dual / MILP bound of P3's covering structure: the first lower bound on |U| for this schema. Cheap once P2 exists; publishable regardless of P3's outcome.

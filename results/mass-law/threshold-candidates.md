@@ -12,7 +12,7 @@ Corpus: all **59,142** canonically-deduped labeled configurations, rings 6–16,
 `.venv/bin/python tools/test_lemma.py --check "<statement>"`.
 
 **HOLDS means "survived the corpus", not proven.** The stress-test lesson
-(`results/theorem/stress_test.md`, 26 oracle-confirmed false positives from a pool-zero-FP rule
+(`results/theorem/stress_test.md`, 236 oracle-confirmed false positives from a pool-zero-FP rule
 set) applies in full. Rings 11–16 contain *no adversarially generated* D-reducibles at all — see
 §5.
 

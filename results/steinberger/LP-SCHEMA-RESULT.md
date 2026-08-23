@@ -573,7 +573,7 @@ every `x`.)
    result about the full pool.
 8. **`always_apply`/`never_apply`/blocking are taken as the realizability semantics**,
    exactly as the C++ does. Our Python port of them was previously differentially
-   validated against the C++ on all 5,690,937 wheel candidates at hub degrees 7–11
+   validated against the C++ on all 5,692,937 wheel candidates at hub degrees 7–11
    (`src/fourcolor/nl4ct.py` docstring), and is re-validated here on all 10,094 published
    leaves (§2).
 

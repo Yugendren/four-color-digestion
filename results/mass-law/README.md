@@ -41,7 +41,7 @@ Each line is one claim:
   `fourcolor.reduce.check`).
 
 `HOLDS` means "survived the corpus", nothing more. The lesson from
-`results/theorem/stress_test.md` (26 oracle-confirmed false positives from a
+`results/theorem/stress_test.md` (236 oracle-confirmed false positives from a
 pool-zero-FP rule set) applies: a surviving statement is a candidate worth a
 proof attempt, not a theorem.
 
