@@ -1,0 +1,132 @@
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\tikzset{deg5/.style={thick, circle, draw, fill=black, inner sep=1.5pt,}}
+\tikzset{deg6/.style={thick, circle, draw, fill=black, inner sep=0pt,}}
+\tikzset{deg7/.style={thick, circle, draw, fill=white, inner sep=2pt,}}
+\tikzset{deg8/.style={thick, rectangle, draw, fill=white, inner sep=2pt,}}
+\tikzset{deg9/.style={thick, regular polygon, regular polygon sides=3, rotate=180, draw, fill=white, inner sep=1pt,}}
+\tikzset{deg10/.style={thick, regular polygon, draw, fill=white, inner sep=2pt,}}
+\tikzset{->-/.style={decoration={
+    markings,
+    mark=at position .6 with {\arrow{>}}}, postaction={decorate}}}
+\tikzset{->>-/.style={decoration={
+    markings, 
+    mark=at position .5 with {\arrow{>}};, 
+    mark=at position .6 with {\arrow{>}};}, postaction={decorate}}}
+
+\begin{figure}[htbp]
+\begin{tabular}{ccccc}
+
+\begin{minipage}[t]{0.16\hsize}
+\centering
+% (page, row, col) = (0, 0, 0)
+\begin{tikzpicture} []
+    \node [deg5] at (1.109, 1.251) (v0) {};
+    \node [deg7] at (2.109, 1.251) (v1) {};
+    \node [above = 0.15 cm of v1, anchor=center] (v1+) { $+$ };
+    \node [deg5] at (1.418, 2.202) (v2) {};
+    \node [deg5] at (0.3, 1.839) (v3) {};
+    \node [deg5] at (1.418, 0.3) (v4) {};
+    \draw [->-] (v0) -- (v1);
+    \foreach \u / \v in {v0/v1, v0/v2, v0/v3, v0/v4, v1/v2, v1/v4, v2/v3}
+        \draw (\u) -- (\v);
+    \foreach \u / \v in {}
+        \draw[ultra thick, blue] (\u) -- (\v);
+\end{tikzpicture}
+\end{minipage}
+&
+\begin{minipage}[t]{0.16\hsize}
+\centering
+% (page, row, col) = (0, 0, 1)
+\begin{tikzpicture} []
+    \node [deg6] at (0.8, 1.166) (v0) {};
+    \node [deg7] at (1.8, 1.166) (v1) {};
+    \node [above = 0.15 cm of v1, anchor=center] (v1+) { $+$ };
+    \node [deg5] at (1.3, 2.032) (v2) {};
+    \node [deg5] at (0.3, 2.032) (v3) {};
+    \node [deg5] at (0.3, 0.3) (v4) {};
+    \node [deg5] at (1.3, 0.3) (v5) {};
+    \node [deg5] at (1.126, 3.017) (v6) {};
+    \draw [->-] (v0) -- (v1);
+    \foreach \u / \v in {v0/v1, v0/v2, v0/v3, v0/v4, v0/v5, v1/v2, v1/v5, v2/v3, v2/v6, v3/v6, v4/v5}
+        \draw (\u) -- (\v);
+    \foreach \u / \v in {}
+        \draw[ultra thick, blue] (\u) -- (\v);
+\end{tikzpicture}
+\end{minipage}
+&
+\begin{minipage}[t]{0.16\hsize}
+\centering
+% (page, row, col) = (0, 0, 2)
+\begin{tikzpicture} []
+    \node [deg6] at (0.8, 1.166) (v0) {};
+    \node [deg7] at (1.8, 1.166) (v1) {};
+    \node [above = 0.15 cm of v1, anchor=center] (v1+) { $+$ };
+    \node [deg5] at (1.3, 0.3) (v2) {};
+    \node [deg5] at (0.3, 0.3) (v3) {};
+    \node [deg6] at (0.3, 2.032) (v4) {};
+    \node [deg5] at (1.3, 2.032) (v5) {};
+    \node [deg5] at (1.126, 3.017) (v6) {};
+    \node [deg5] at (2.24, 2.374) (v7) {};
+    \draw [->-] (v0) -- (v1);
+    \foreach \u / \v in {v0/v1, v0/v2, v0/v3, v0/v4, v0/v5, v1/v2, v1/v5, v1/v7, v2/v3, v4/v5, v4/v6, v5/v6, v5/v7, v6/v7}
+        \draw (\u) -- (\v);
+    \foreach \u / \v in {}
+        \draw[ultra thick, blue] (\u) -- (\v);
+\end{tikzpicture}
+\end{minipage}
+&
+\begin{minipage}[t]{0.16\hsize}
+\centering
+% (page, row, col) = (0, 0, 3)
+\begin{tikzpicture} []
+    \node [deg7] at (1.201, 1.827) (v0) {};
+    \node [deg7] at (2.201, 1.827) (v1) {};
+    \node [deg5] at (1.824, 2.609) (v2) {};
+    \node [deg5] at (0.978, 2.802) (v3) {};
+    \node [deg5] at (0.3, 2.261) (v4) {};
+    \node [deg5] at (0.978, 0.852) (v5) {};
+    \node [deg7] at (1.824, 1.045) (v6) {};
+    \node [deg6] at (2.67, 2.802) (v7) {};
+    \node [deg7] at (1.824, 3.476) (v8) {};
+    \node [above = 0.15 cm of v8, anchor=center] (v8+) { $+$ };
+    \node [deg5] at (1.379, 0.3) (v9) {};
+    \node [deg6] at (2.65, 1.313) (v10) {};
+    \node [above = 0.15 cm of v10, anchor=center] (v10+) { $+$ };
+    \draw [->-] (v0) -- (v1);
+    \foreach \u / \v in {v0/v1, v0/v2, v0/v3, v0/v4, v0/v5, v0/v6, v1/v2, v1/v6, v1/v7, v1/v10, v2/v3, v2/v7, v2/v8, v3/v4, v3/v8, v5/v6, v5/v9, v6/v9, v6/v10, v7/v8}
+        \draw (\u) -- (\v);
+    \foreach \u / \v in {}
+        \draw[ultra thick, blue] (\u) -- (\v);
+\end{tikzpicture}
+\end{minipage}
+&
+\begin{minipage}[t]{0.16\hsize}
+\centering
+% (page, row, col) = (0, 0, 4)
+\begin{tikzpicture} []
+    \node [deg7] at (1.201, 1.275) (v0) {};
+    \node [deg8] at (2.201, 1.275) (v1) {};
+    \node [above = 0.15 cm of v1, anchor=center] (v1+) { $+$ };
+    \node [deg5] at (1.824, 0.493) (v2) {};
+    \node [deg5] at (0.978, 0.3) (v3) {};
+    \node [deg5] at (0.3, 1.709) (v4) {};
+    \node [deg6] at (0.978, 2.25) (v5) {};
+    \node [deg5] at (1.824, 2.057) (v6) {};
+    \node [deg5] at (1.824, 2.925) (v7) {};
+    \node [deg5] at (2.67, 2.25) (v8) {};
+    \draw [->-] (v0) -- (v1);
+    \foreach \u / \v in {v0/v1, v0/v2, v0/v3, v0/v4, v0/v5, v0/v6, v1/v2, v1/v6, v1/v8, v2/v3, v4/v5, v5/v6, v5/v7, v6/v7, v6/v8, v7/v8}
+        \draw (\u) -- (\v);
+    \foreach \u / \v in {}
+        \draw[ultra thick, blue] (\u) -- (\v);
+\end{tikzpicture}
+\end{minipage}
+\\
+\end{tabular}
+\caption{The cases where a vertex sends charge five even with no local obstructing cycles and no reducible configurations in $\bar B_2^8(u) \cap \bar B_2^8(v)$.}
+\label{fig:send5}
+\end{figure}
+\end{document}

@@ -23,8 +23,9 @@ Contrast: the **same** machinery over the full 8,200-configuration pool is FEASI
 not vacuously infeasible; it distinguishes the two pools, which is the whole point.
 
 Scope limits are in §8. Read them; the headline is meaningless without them. The two
-load-bearing hypotheses are `x ≥ 0` and the reconstruction of the paper's hand-checked
-degree-5/6 discharge (§4).
+load-bearing hypotheses are `x ≥ 0` and the reconstruction of the degree-5/6 discharge
+(§4) — the half of the argument the 2026 paper itself discharges in one sentence, by
+citation to Steinberger 2010.
 
 ## 1. What the pipeline actually requires (and what it does not)
 
@@ -142,11 +143,39 @@ The released code only enumerates hubs of degree 7–11, where the initial charg
 `x = 0` — send nothing, and every hub keeps its negative initial charge. **An LP over the
 d ≥ 7 rows alone decides nothing**, and we measured exactly that (§5, `nolow` rows).
 
-The lower bounds on `x` come from the other half of the discharging argument, which the
-released code never checks because the paper does it by hand: discharging preserves total
-charge (`= 120` by Euler), so the argument needs *every* vertex to end with charge ≤ 0; a
-degree-5 vertex starts at `+10` and must give it all away, a degree-6 vertex starts at `0`
-and must not end positive.
+The lower bounds on `x` come from the other half of the discharging argument: discharging
+preserves total charge (`= 120` by Euler), so the argument needs *every* vertex to end with
+charge ≤ 0; a degree-5 vertex starts at `+10` and must give it all away, a degree-6 vertex
+starts at `0` and must not end positive.
+
+**Why the released code never checks it** (corrected — an earlier draft of this file said
+"the paper does it by hand", which is false). The 2026 paper does not check `d ≤ 6` by
+hand or otherwise: it asserts the *stronger* `T(v) = 0` and discharges the obligation in a
+single sentence by citation, inside the proof of its main theorem
+(`third_party/arxiv-2603.24880/src/main__1___1_.tex:1144`):
+
+> …we are still missing the case where `$v$` has degree at most `$6$` and positive final
+> charge. However, this cannot happen, for if `$v$` has degree 5 or 6, then it has final
+> charge 0 as proved in `\cite{steinberger2010unavoidable}`, where exactly the same
+> discharging rules as here are used.
+
+And Steinberger 2010 does *not* prove it by hand either — he proves it **by machine**, with
+one presentation file per hub degree from 5 to 11, and explicitly declines to write out the
+hand argument (`third_party/arxiv-0905.0043/src/4c.tex:552`: "For cartwheels of hub degree
+5 and 6 one can also prove Lemma \ref{appears} by hand, as do Robertson et al., but we will
+not take the time to do this."). So the `d ≤ 6` case rests on a *computation*, at
+Steinberger's amounts and against Steinberger's unavoidable set `U_2822`. That dependency
+is one this project has checked: all **2,822** configurations of `U_2822` were
+independently re-verified D-reducible at ring ≤ 16, with 2,822/2,822 agreeing with the
+published headers (`results/differential-U_2822-r16/report.jsonl`). What is *not* inherited
+is the conclusion itself: Steinberger's computation is at his amounts, so when the LP
+re-tunes `x` the citation no longer applies as proved — which is exactly why this section
+imposes the necessary condition `T(v) ≤ 0` directly, as a row, instead of assuming it.
+
+The paper's initial charge is verbatim ours (`main__1___1_.tex:602`, `T_0(v) := 10(6 -
+d(v))`, summing to 120 by Euler), and its Theorem (iii) explicitly permits a degree-5/6
+vertex with final charge *exactly* 0 — matching our non-strict rows. Full quote-by-quote
+audit: `results/steinberger/degree56-verification.md`.
 
 For `d ∈ {5,6}` we add rows built from a **lower** bound on the hub's final charge, valid
 for any `x ≥ 0` and at any level of refinement:
@@ -162,7 +191,60 @@ cannot, in *any* graph extending the wheel (both tests are sound irrespective of
 the rule's pattern fits inside the wheel's 2-neighbourhood), so `LB ≤ actual final
 charge`, and `actual ≤ 0` forces `LB(w,x) ≤ 0`. Rows are generated over every spoke-degree
 necklace in `{5,…,9}^d` up to rotation that the pool does not block. Refining the wheels
-further would only strengthen the rows, so the coarsest wheels are the conservative choice.
+further would only strengthen the rows, so the coarsest wheels are the conservative choice
+*as far as the bound goes*.
+
+### 4.1 The coarse-cartwheel gap, and its closure
+
+Those rows are built on the **coarse** cartwheel `generate_cartwheel(d, degs)` returns: hub
++ spoke-degree necklace, with the second neighbourhood left at the open range `[5,9]`, and
+blocking is tested on that coarse object. "Refining only strengthens the bound" does *not*
+cover the danger here, because refining can also **delete the row entirely**: if a coarse
+wheel is unblocked but *every* full refinement of it — every way of pinning the second
+neighbourhood to concrete degrees in `{5,…,9}` — is blocked by the pool, then no vertex of a
+minimum counterexample carries that necklace and the row is spurious. That is
+anti-conservative for an INFEASIBLE verdict, so it was checked rather than assumed
+(`tools/lowdeg_refinement_check.py`, artifact
+`results/steinberger/lowdeg_refinement_check.json`).
+
+**Result: no low-degree row is spurious, and the certificate is unchanged.** Two findings,
+the second strictly stronger than needed:
+
+*(i) Exact enumeration of the certificate's four degree-5 necklaces.* The refinement space
+is `{5,…,9}^m` with `m` = 10–12 open second-neighbour slots, i.e. 10⁷–10⁸ refinements — far
+too many for 10⁸ calls to `wheel_is_blocked`. Instead the blocking predicate is *compiled*:
+the rotation system is fixed, so `PseudoConfiguration::homomorphism` branches only on
+structure and degrees only ever cause a rejection; running the BFS degree-blind turns each
+(configuration, root dart) pair into a conjunction of `slot ∈ S` literals, so "blocked" is a
+DNF over the slots whose models are counted exactly by DFS with two-sided pruning. The
+compiled predicate is differentially checked against the untouched `nl4ct.wheel_is_blocked`
+on 2,000 random refinements per necklace (**0 disagreements**), and exhaustively on all 625
+refinements of a 4-slot necklace in the tests.
+
+| necklace | slots | refinements | blocked | unblocked | share surviving |
+|---|---|---|---|---|---|
+| `d5-55767` (IIS) | 10 | 9,765,625 | 5,678,597 | **4,087,028** | 41.9 % |
+| `d5-57577` (IIS) | 11 | 48,828,125 | 30,711,497 | **18,116,628** | 37.1 % |
+| `d5-57677` (IIS) | 12 | 244,140,625 | 94,647,089 | **149,493,536** | 61.2 % |
+| `d5-55677` (19-row support) | 10 | 9,765,625 | 6,350,608 | **3,415,017** | 35.0 % |
+
+Not a knife-edge: between a third and two-thirds of all refinements of each necklace remain
+unblocked by the ring≤14 pool. Every reported witness is re-checked with the production
+`wheel_is_blocked`, and its own `lowdeg_row` coefficients dominate the coarse row's
+termwise, confirming `LB_coarse ≤ LB_refined ≤ actual` — i.e. the row we actually use is the
+weaker, conservative one.
+
+*(ii) The gap closes uniformly, for all 86 low-degree rows at once.*
+`PseudoConfiguration::representative_degree` collapses any vertex with degree upper bound
+> 8 to the single value `9`, so **the coarse blocking test *is* the blocking test of the
+refinement that pins every second neighbour to 9** — the same tail-maximised object §5 uses
+for its necessity audit. Hence every unblocked coarse wheel is automatically witnessed by an
+explicit full refinement. Verified mechanically over the whole low-degree sweep
+(`--sweep`): all **580** unblocked `d=5` and all **2,466** unblocked `d=6` necklaces have an
+unblocked tail-maximised refinement, 0 exceptions out of 3,046.
+
+Since no row is spurious, no row had to be dropped and the LP was not re-run: the 19-row
+certificate and the 12-row IIS stand exactly as reported.
 
 **Sanity anchor:** at `x0`, the maximum of `LB` over all 580 unblocked d=5 and 2,466
 unblocked d=6 wheels is **exactly 0** — never positive. It is attained e.g. at d=5 with
@@ -424,30 +506,64 @@ every `x`.)
    (there are many not in the published pool) is **not** covered. This result therefore
    does not settle Steinberger's question; it settles it for this pool and these shapes.
 3. **The d ≤ 6 rows are a reconstruction.** The released code does not check degree-5/6
-   vertices — the paper does that by hand — so §4 is our reading of the argument's other
-   half, not a port of released code. It is the load-bearing assumption: without those
-   rows the LP is feasible (§5). Evidence that the reading is right: at `x0` the bound is
+   vertices — the paper hands that case to Steinberger 2010, who proved it **by machine**
+   (hub-degree-5 and hub-degree-6 presentation files), not by hand — so §4 is our reading
+   of the argument's other half, not a port of released code. It is the load-bearing
+   assumption: without those rows the LP is feasible (§5). Evidence that the reading is
+   right: at `x0` the bound is
    ≤ 0 on all 3,046 unblocked low-degree wheels and tight (= 0) on several, exactly as an
    optimised scheme should be; and the specific tight row `10 − 5·x_rule001 ≤ 0` is
    forced by rule001's shape (degree-5 source, unconditional). Further evidence: running
    the *released C++* with `--enum_wheels -d 5` and `-d 6` returns exactly 580 and 2,466
    unblocked wheels, matching the Python generation used here wheel-for-wheel. Evidence
    that would break it: any reading under which a degree-5 vertex may end with positive
-   charge, or under which its initial charge is not `+10`. **We were not able to obtain
-   the paper text** (arXiv:2603.24880 §7–8) in this environment, so this reconstruction is
-   checked only against the code and against `x0`'s behaviour. It is the single largest
-   remaining risk, and it is load-bearing: 3 of the 12 IIS rows are degree-5 rows.
+   charge, or under which its initial charge is not `+10`.
+   **The paper text has since been obtained and pinned** — the arXiv e-print of
+   2603.24880 is a full LaTeX source tarball (423 KB, `main__1___1_.tex` 3,650 lines plus
+   `tikz/rule.tex` with all 84 rule figures), now at `third_party/arxiv-2603.24880/` with
+   its sha256 in `third_party/CHECKSUMS.sha256` (an earlier draft of this file said we
+   could not obtain it; that was wrong). Neither falsifier obtains. The two load-bearing
+   lines are verbatim:
+
+   > `main__1___1_.tex:602` — `$$ T_0(v) := 10(6 - d(v)), $$` … "It follows from Euler's
+   > formula … that `$\sum_{v\in V(G)} T_0(v) = 120$`."
+
+   > `main__1___1_.tex:1144` — "…we are still missing the case where `$v$` has degree at
+   > most `$6$` and positive final charge. However, this cannot happen, for if `$v$` has
+   > degree 5 or 6, then it has final charge 0 as proved in
+   > `\cite{steinberger2010unavoidable}`, where exactly the same discharging rules as here
+   > are used."
+
+   So the initial charge is exactly `10(6−d)` and the argument demands `T(v) = 0` — hence
+   *a fortiori* `T(v) ≤ 0` — at every degree-5/6 vertex, which is strictly more than our
+   rows assume. The residual risk is no longer about the paper's text but about its
+   *citation chain*: the `T(v) = 0` claim is Steinberger's computation at Steinberger's
+   amounts, so it does not transfer to a re-tuned `x`; §4 therefore imposes `T(v) ≤ 0` as
+   a row rather than inheriting it. Steinberger's own unavoidable set `U_2822` we have
+   independently re-verified (2,822/2,822 D-reducible at ring ≤ 16,
+   `results/differential-U_2822-r16/report.jsonl`). Quote-by-quote audit:
+   `results/steinberger/degree56-verification.md`. Still load-bearing: 3 of the 12 IIS
+   rows are degree-5 rows.
 4. **Unblocked ≠ realizable.** Rows are generated for every local structure the pool does
    not block, exactly as the C++ decides which wheels to analyse. If some such structure
    is geometrically impossible in a minimum counterexample for a reason outside the pool,
    its row is spurious. This is anti-conservative for an INFEASIBLE verdict — but it is
    the same standard the published proof itself uses (the pool *is* the unavoidable set),
-   so accepting the proof's framework means accepting these rows.
+   so accepting the proof's framework means accepting these rows. The one *pool-internal*
+   version of this worry — a coarse low-degree wheel that the pool fails to block only
+   because its second neighbourhood is unpinned — is closed in §4.1: every low-degree row
+   is witnessed by an explicit fully-pinned refinement the pool does not block.
 5. **`x ≥ 0` is a hypothesis, not a theorem.** It is used twice: in the monotonicity
    lemma (§3c) and in the low-degree bound (§4). Negative amounts — a rule that sends
    charge backwards along its dart — are outside the claim. Arguably a negative amount is
    a different rule shape rather than a different amount, but the honest statement carries
-   the hypothesis.
+   the hypothesis. **In the other direction there is nothing to hedge:** the paper fixes
+   `r(R) ∈ {1,2}` for all 84 rules (`main__1___1_.tex:624`, "We have `$r(R) = 1$` or
+   `$r(R)=2$` for all our rules"), and `{1,2}^84 ⊂ Z_{≥0}^84 ⊂ R_{≥0}^84`. Deciding
+   infeasibility over all nonnegative reals is therefore **strictly stronger than the
+   paper's own amount space requires** — the result rules out not just the published
+   amounts and not just integer re-tunings, but every real re-tuning, including the whole
+   `{1,2}^84` box the paper allows itself.
 6. **Integrality is not needed.** All 19 (and all 12 IIS) certificate rows are non-strict, and the `--real`
    variant is INFEASIBLE with the same certificate, so the claim holds over `R_{≥0}^84`.
 7. **The relaxation direction is the safe one.** The row set omits the gluing lemmas and
@@ -492,6 +608,24 @@ genuine scope correction adopted, the rest survived.**
   rows alone are already INFEASIBLE. The obstruction is a degree-5 vs degree-7 collision,
   consistent with the IIS composition.
 
+A second, later pass against the paper's own LaTeX source (now pinned at
+`third_party/arxiv-2603.24880/`) found **two prose errors and one genuine open gap**, all
+now closed:
+
+- **Prose, corrected:** "the paper does the degree-5/6 case by hand" (§4, §8.3) was false —
+  the paper cites Steinberger 2010, who did it *by machine*; and "we were not able to obtain
+  the paper text" (§8.3) was false — the e-print is a complete LaTeX tarball. The
+  mathematics of §4 was *confirmed* verbatim by that source (initial charge `10(6−d)`,
+  total charge 120, `T = T_0 − out + in`, and a requirement of `T(v) = 0` at `d ∈ {5,6}`
+  that is strictly stronger than the `T(v) ≤ 0` our rows encode). Audit:
+  `results/steinberger/degree56-verification.md`.
+- **Real gap, closed:** the low-degree rows were generated and blocked-tested on *coarse*
+  cartwheels with the second neighbourhood unpinned, so a row could in principle be
+  spurious (every full refinement blocked). Exhaustive refinement enumeration for the
+  certificate's four degree-5 necklaces, plus a tail-maximised witness for all 3,046
+  unblocked low-degree wheels, shows no row is spurious. See §4.1. The certificate did not
+  change.
+
 ## 10. Artifacts
 
 | path | what |
@@ -510,7 +644,11 @@ genuine scope correction adopted, the rest survived.**
 | `results/steinberger/iis_math_necessity.json` | per-row mathematical-necessity audit (§5) |
 | `results/steinberger/lp_{exact_only,conservative}.log` | the two §5 diagnostics |
 | `results/steinberger/wheel_level_{control,main}_stats.json` | the strong-encoding negative control (§7) |
-| `tests/test_lp_discharge.py`, `tests/test_verify_farkas.py` | fast tests (20 tests, 11 s) |
+| `tools/lowdeg_refinement_check.py` | exact refinement enumeration behind §4.1 (`--necklace/--validate/--sweep`) |
+| `results/steinberger/lowdeg_refinement_check.json` | per-necklace refinement counts + witnesses + the 3,046-wheel sweep |
+| `results/steinberger/degree56-verification.md` | quote-by-quote audit of §4 against the paper's LaTeX source |
+| `third_party/arxiv-2603.24880/` | the 2026 paper's pinned e-print (`archive.tar.gz` + `src/`, sha256 in `third_party/CHECKSUMS.sha256`) |
+| `tests/test_lp_discharge.py`, `tests/test_verify_farkas.py`, `tests/test_lowdeg_refinement_check.py` | fast tests (26 tests, ~35 s) |
 
 ## 11. Reproduce
 
@@ -536,10 +674,17 @@ bash tools/lp_rerun_failed_wheels.sh
 .venv/bin/python tools/lp_discharge.py --exact-only
 .venv/bin/python tools/lp_discharge.py --conservative
 
+# 3d. close the coarse-cartwheel gap in the d<=6 rows (§4.1)                   (~2.5 min)
+.venv/bin/python tools/lowdeg_refinement_check.py --validate 2000 --sweep
+
 # 4. INDEPENDENT verification (no solver, exact rationals, rows re-derived from source)
 .venv/bin/python tools/verify_farkas.py                                          # 19-row
 .venv/bin/python tools/verify_farkas.py --certificate results/steinberger/lp_main_certificate_iis.json
 
 # 5. tests
-.venv/bin/python -m unittest tests.test_lp_discharge tests.test_verify_farkas
+.venv/bin/python -m unittest tests.test_lp_discharge tests.test_verify_farkas \
+                            tests.test_lowdeg_refinement_check
+
+# 6. re-pin the primary sources (verifies sha256 of all four arXiv bundles)
+.venv/bin/python tools/fetch_sources.py
 ```

@@ -1,0 +1,2040 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+\algblock[TryCatchFinally]{try}{endtry}
+\algcblock[TryCatchFinally]{TryCatchFinally}{finally}{endtry}
+\algcblockdefx[TryCatchFinally]{TryCatchFinally}{catch}{endtry}
+	[1]{\textbf{catch} #1}
+	{\textbf{end try}}
+
+\algdef{SE}[REPEATN]{RepeatN}{End}[1]{\algorithmicrepeat\ #1 \textbf{times}}{\algorithmicend}
+
+\newcommand{\id}[1]{\operatorname{id}_{#1}}
+
+\section{Appendix: Pseudocodes}
+\label{sect:code}\showlabel{sect:code}
+
+Our proof relies heavily on computer checks. We have already presented an algorithmic description of these checks. In this section, we present pseudo-code implementations of these algorithms along with pointers to \Cpp-code 
+implementing the pseudo-code. The pseudo-code here serves as the connection between the algorithm and the \Cpp code. It is a precise description of the algorithm's actions, without the reasoning about why and how it is correct. To verify the overall correctness, the reader should first understand the correctness of the algorithms in the body of the paper, next verify that the pseudo-code implements the algorithms, then verify that the \Cpp-code implements pseudo-code, and finally run it on their own trusted computer. 
+%The pseudo-code, the discharging rules, and the reducible configurations are also provided. 
+
+%\mikkel{I am not sure it goes here but we could add:
+%To verify the overall correctness, the reader should first understand the correctness of the algorithms in the body of the paper, next verify that the pseudo-code implements the algorithms, then verify that the \Cpp-code implements pseudo-code, and finally run on own trusted computer,  the pseudo-code and the discharging rules and reducible configurations which are also provided.}
+
+
+\subsection{Reducibility of configurations}
+The program corresponding to the pseudocode in this section is presented in this GitHub repository \url{https://github.com/edge-coloring/reducibility_checker}.
+
+In the following pseudocodes, the four colors we use to color a graph are in $\{0,1,2,3\}$.
+
+We first present the CheckDReducibility algorithm, which takes a configuration as input and returns whether it is D-reducible.
+The definition of D-reducibility is equivalent to that used in the original 4-coloring theorem proof, and the algorithm follows previous work.
+
+In this algorithm, we use two subroutines, AllRingColorings and AllKempeChains, explained later.
+
+\begin{algorithm}[H]
+    \caption{CheckDReducibility($(Z, \delta)$)}
+    \label{alg:check-red_a}
+    \begin{algorithmic}[1]
+        \Require {A configuration $(Z, \delta)$}
+        \Ensure {\textsc{True} if the configuration is D-reducible, \textsc{False} if it is not}
+        \State $\hat{Z} \gets$ the free completion of $Z$
+        \State $R \gets$ the ring of $\hat{Z}$
+        \State $\mathcal{C} \gets $ AllRingColorings($\hat{Z}$, $R$)
+        \State isReducible $\gets$ False
+        \Repeat
+            \ForAll{$\phi \notin \mathcal{C}$}
+                \ForAll {$\mathrm{colorPair} \in \{\{0,1\}, \{0,2\}, \{0,3\}\}$}
+                    \State $R_{\phi,\mathrm{colorPair}}$ a cycle created from $R$ by contracting the edges connecting vertices colored in colors $c_1, c_2$, where $c_1,c_2 \in \mathrm{colorPair}$ or $c_1,c_2 \notin \mathrm{colorPair}$
+                    \State allKempeIsFeasible $\gets$ True
+                    \ForAll{$P \in$ AllKempeChains($R_{\phi,\mathrm{colorPair}}$)}
+                        \State changeExists $\gets$ False
+                        \ForAll{$P' \subseteq P$}
+                            \State $\psi(r) := \mathrm{flip}(\phi(r))$ if $r \in R' \in V(R_{\phi, \mathrm{colorPair}})$ such that $R' \in P'$, $\phi(r)$ otherwise
+                            \If{$\psi(r) \in \mathcal{C}$}
+                                \State changeExists $\gets$ True
+                            \EndIf
+                        \EndFor
+                        \If{changeExists is False}
+                            \State allKempeIsFeasible $\gets$ False
+                        \EndIf
+                    \EndFor
+                    \If{allKempeIsFeasible}
+                        \State $\mathcal{C} \gets \mathcal{C} \cup \phi$
+                        \Break
+                    \EndIf
+                \EndFor            
+            \EndFor
+        \Until{No more updates are made to $\mathcal{C}$}
+        \If{$\mathcal{C}$ is the set of all (proper) $4$-colorings}
+            \Return{True}
+        \EndIf
+        \State{\Return{False}}
+        
+    \end{algorithmic}
+\end{algorithm}
+
+The AllRingColorings algorithm receives a free completion $\hat{Z}$ and its ring $R$ as input and returns the set of all $4$-colorings of $R$ such that it can be properly extended to $\hat{Z}$.
+
+\begin{algorithm}[H]
+    \caption{AllRingColorings($\hat{Z}$, $R$)}
+    \label{alg:check-red_ring-coloring}
+    \begin{algorithmic}[1]
+        \Require {A free completion $\hat{Z}$ of some configuration and its ring $R$}
+        \Ensure {The set of all $4$-colorings of $R$ such that $\hat{Z}$ as a whole can be $4$-colored}
+        \State $\mathcal{C} \gets \varnothing$
+        \State $C \gets$ an empty map
+        \State $n \gets$ the number of vertices in $\hat{Z}$
+        \State $v_1, \cdots, v_n \gets$ an arbitrary ordering of the vertices in $\hat{Z}$
+        \Procedure{DFS}{$i$}
+            \If{$i > n$}
+                \State $\phi \gets$ the restriction of $C$ to $V(R)$ \Comment{Extract the ring coloring from the coloring of $Z$}
+                \State $\mathcal{C} \gets \mathcal{C} \cup \{\phi\}$
+            \EndIf
+            \ForAll{$c \in \{0,1,2,3\}$}
+                \State isColorProper $\gets$ True
+                \ForAll{$j$ such that $0 \le j < i$ and $v_i, v_j$ are adjacent in $Z$}
+                    \If{$C[j] = c$}
+                        \State isColorProper $\gets$ False
+                        \Break
+                    \EndIf
+                \EndFor
+                \If{isColorProper is True}
+                    \State $C[i] \gets c$
+                    \State DFS($i + 1$)
+                \EndIf
+            \EndFor
+        \EndProcedure
+        \State \Return{$\mathcal{C}$}
+    \end{algorithmic}
+\end{algorithm}
+
+The following algorithm generates a list of all planar Kempe chains.
+The \emph{matching parentheses} generated in Line 2 are strings that can be constructed recursively by concatenating two matching parentheses or by adding the characters ``(" and ``)" to each side of a matching parenthesis string, starting with an empty string.
+
+\begin{algorithm}[H]
+    \caption{AllPlanarKempeChains($C$)}
+    \label{alg:check-red_b}
+    \begin{algorithmic}[1]
+        \Require {A cycle $C$ of even length $n$.}
+        \Ensure {A set $P$ of partitions of $V(C)$ resembling the connections via planar Kempe chains}
+        \State $n \gets |C|$
+        \ForAll {$S$: matching parentheses of length $n$}
+            \State $T \gets$ an empty stack
+            \State $L \gets$ an empty list
+            \State Add $0$ to top of $T$
+            \State $c \gets 1$
+            \ForAll{$i = 1,\cdots, n$}
+                \If{$S_i =$ '('}
+                    \State Add $c$ to top of $T$
+                    \State Append $c$ to $L$
+                    \State $c \gets c+1$
+                \EndIf
+                \If{$S_i =$ ')'}
+                    \State Append uppermost value of $T$ to $L$
+                    \State Pop uppermost value from $T$.
+                \EndIf
+            \EndFor
+            \State $P \gets P \cup \{L\}$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Homomorphism}
+\label{sect:code-hom}
+The program corresponding to the pseudocode in the following sections is presented in this GitHub repository \url{https://github.com/near-linear-4ct/computer-checks}.
+Each pseudocode is linked to the corresponding function in our \Cpp program.
+
+% Command for GitHub link
+\newcommand{\githubbase}{https://github.com/near-linear-4ct/computer-checks/blob/49eecf5b9b59e32e2b0ef6fedb9505e6714fcd7d}
+\newcommand{\githublink}[3]{\href{\githubbase/#1\##2}{#3}} % with link to Github
+% \newcommand{\githublink}[3]{{#3}} % no link for double-blind
+
+% --- src/cartwheel.cpp ---
+\newcommand{\enumWheelsWithLink}{\githublink{src/cartwheel.cpp}{L92-L115}{enumWheels}}
+\newcommand{\generateCartwheelWithLink}{\githublink{src/cartwheel.cpp}{L117-L162}{generateCartwheel}}
+\newcommand{\enumPossibleBadWheelsWithLink}{\githublink{src/cartwheel.cpp}{L164-L180}{enumPossibleBadWheels}}
+\newcommand{\fixInRulesWithLink}{\githublink{src/cartwheel.cpp}{L183-L211}{fixInRules}}
+\newcommand{\updateDegreeByRuleWithLink}{\githublink{src/cartwheel.cpp}{L213-L227}{updateDegreeByRule}}
+\newcommand{\concreteDegreeExceptTailWithLink}{\githublink{src/cartwheel.cpp}{L229-L250}{concreteDegreeExceptTail}}
+\newcommand{\pruneWithLink}{\githublink{src/cartwheel.cpp}{L252-L267}{prune}}
+\newcommand{\pruneByNonAssociatedRuleWithLink}{\githublink{src/cartwheel.cpp}{L269-L284}{pruneByNonAssociatedRule}}
+\newcommand{\upperBoundOfChargeWithLink}{\githublink{src/cartwheel.cpp}{L286-L304}{upperBoundOfCharge}}
+\newcommand{\fixOutRulesWithLink}{\githublink{src/cartwheel.cpp}{L307-L350}{fixOutRules}}
+\newcommand{\shouldRefineWithLink}{\githublink{src/cartwheel.cpp}{L352-L355}{shouldRefine}}
+\newcommand{\refinementWithLink}{\githublink{src/cartwheel.cpp}{L357-L375}{refinement}}
+\newcommand{\refineAlwaysWithLink}{\githublink{src/cartwheel.cpp}{L377-L387}{refineAlways}}
+\newcommand{\refineNeverWithLink}{\githublink{src/cartwheel.cpp}{L389-L402}{refineNever}}
+\newcommand{\enumBadCartwheelsWithLink}{\githublink{src/cartwheel.cpp}{L404-L423}{enumBadCartwheels}}
+\newcommand{\centerDartsByDegreeWithLink}{\githublink{src/cartwheel.cpp}{L425-L434}{centerDartsByDegree}}
+
+% --- src/combine_cartwheel.cpp ---
+\newcommand{\deleteDegreeFromKToNWithLink}{\githublink{src/combine_cartwheel.cpp}{L7-L25}{deleteDegreeFromKTo9}}
+\newcommand{\checkDegEWithLink}{\githublink{src/combine_cartwheel.cpp}{L53-L80}{checkDeg8}}
+\newcommand{\checkEEWithLink}{\githublink{src/combine_cartwheel.cpp}{L82-L91}{check88}}
+\newcommand{\checkESWithLink}{\githublink{src/combine_cartwheel.cpp}{L93-L102}{check87}}
+\newcommand{\checkSESWithLink}{\githublink{src/combine_cartwheel.cpp}{L104-L133}{check787}}
+\newcommand{\containXWithLink}{\githublink{src/combine_cartwheel.cpp}{L161-L172}{containX}}
+\newcommand{\checkStriangleWithLink}{\githublink{src/combine_cartwheel.cpp}{L182-L211}{check7triangle}}
+\newcommand{\checkDegSWithLink}{\githublink{src/combine_cartwheel.cpp}{L221-L248}{checkDeg7}}
+\newcommand{\checkSSWithLink}{\githublink{src/combine_cartwheel.cpp}{L250-L259}{check77}}
+\newcommand{\checkSSSWithLink}{\githublink{src/combine_cartwheel.cpp}{L261-L275}{check777}}
+
+% --- src/configuration.cpp ---
+\newcommand{\mirrorWithLink}{\githublink{src/configuration.cpp}{L83-L89}{mirror}}
+\newcommand{\extendFromCutVerticesWithLink}{\githublink{src/configuration.cpp}{L100-L127}{extendFromCutVertices}}
+\newcommand{\findCutPairsWithLink}{\githublink{src/configuration.cpp}{L129-L156}{findCutPairs}}
+\newcommand{\removeRingWithLink}{\githublink{src/configuration.cpp}{L158-L203}{removeRing}}
+\newcommand{\maximumDegreeDartWithLink}{\githublink{src/configuration.cpp}{L205-L222}{maximumDegreeDart}}
+
+% --- src/pseudo_configuration.hpp ---
+\newcommand{\homomorphismWithLink}{\githublink{src/pseudo_configuration.hpp}{L86-L131}{homomorphism}}
+
+% --- src/pseudo_configuration.cpp ---
+\newcommand{\freeHomomorphismConfigurationWithLink}{\githublink{src/pseudo_configuration.cpp}{L97-L108}{freeHomomorphismConfiguration}}
+\newcommand{\dartIdentificationWithLink}{\githublink{src/pseudo_configuration.cpp}{L77-L94}{dartIdentification}}
+\newcommand{\resolveDegreeIssuesWithLink}{\githublink{src/pseudo_configuration.cpp}{L110-L141}{resolveDegreeIssues}}
+\newcommand{\innerSubdegreeErrorWithLink}{\githublink{src/pseudo_configuration.cpp}{L143-L152}{innerSubdegreeError}}
+\newcommand{\vertexSingleDegreeIssueWithLink}{\githublink{src/pseudo_configuration.cpp}{L154-L168}{vertexSingleDegreeIssue}}
+\newcommand{\fixSingleDegreeIssueWithLink}{\githublink{src/pseudo_configuration.cpp}{L171-L188}{fixSingleDegreeIssue}}
+\newcommand{\addBoundaryDartsWithLink}{\githublink{src/pseudo_configuration.cpp}{L190-L210}{addBoundaryDarts}}
+\newcommand{\singleOutLowerDegreeWithLink}{\githublink{src/pseudo_configuration.cpp}{L213-L224}{singleOutLowerDegree}}
+\newcommand{\containConfWithLink}{\githublink{src/pseudo_configuration.cpp}{L226-L249}{containConf}}
+\newcommand{\dartsByDegreeWithLink}{\githublink{src/pseudo_configuration.cpp}{L251-L268}{dartsByDegree}}
+\newcommand{\rootedContainConfWithLink}{\githublink{src/pseudo_configuration.cpp}{L270-L272}{rootedContainConf}}
+\newcommand{\blockedByReducibleConfigurationWithLink}{\githublink{src/pseudo_configuration.cpp}{L274-L282}{blockedByReducibleConfiguration}}
+\newcommand{\representativeDegreeWithLink}{\githublink{src/pseudo_configuration.cpp}{L284-L313}{representativeDegree}}
+\newcommand{\alwaysApplyWithLink}{\githublink{src/pseudo_configuration.cpp}{L315-L317}{alwaysApply}}
+\newcommand{\neverApplyWithLink}{\githublink{src/pseudo_configuration.cpp}{L319-L321}{neverApply}}
+\newcommand{\amountOfChargeSendWithLink}{\githublink{src/pseudo_configuration.cpp}{L323-L331}{amountOfChargeSend}}
+\newcommand{\amountOfPossibleChargeSendWithLink}{\githublink{src/pseudo_configuration.cpp}{L333-L343}{amountOfPossibleChargeSend}}
+\newcommand{\dominantlyApplyWithLink}{\githublink{src/pseudo_configuration.cpp}{L345-L351}{dominantlyApply}}
+\newcommand{\combineEachCartwheelWithLink}{\githublink{src/pseudo_configuration.cpp}{L354-L370}{combineEachCartwheel}}
+\newcommand{\combineEachCartwheelTwiceWithLink}{\githublink{src/pseudo_configuration.cpp}{L373-L388}{combineEachCartwheelTwice}}
+
+% --- src/pseudo_triangulation.cpp ---
+\newcommand{\fromVRotationsWithLink}{\githublink{src/pseudo_triangulation.cpp}{L40-L75}{fromVRotations}}
+\newcommand{\freeHomomorphismTriangulationWithLink}{\githublink{src/pseudo_triangulation.cpp}{L197-L249}{freeHomomorphismTriangulation}}
+
+% --- src/rule.cpp ---
+\newcommand{\addRuleToCombinationWithLink}{\githublink{src/rule.cpp}{L151-L174}{addRuleToCombination}}
+\newcommand{\combineRulesWithLink}{\githublink{src/rule.cpp}{L176-L199}{combineRules}}
+
+% Command
+\newcommand{\homomorphism}{\texttt{homomorphism}\xspace}
+\newcommand{\freeHomomorphismTriangualtion}{\texttt{freeHomomorphismTriangulation}\xspace}
+\newcommand{\dartIdentification}{\texttt{dartIdentification}\xspace}
+\newcommand{\resolveDegreeIssues}{\texttt{resolveDegreeIssues}\xspace}
+
+\newcommand{\alwaysApply}{\texttt{alwaysApply}\xspace}
+\newcommand{\neverApply}{\texttt{neverApply}\xspace}
+\newcommand{\dominantlyApply}{\texttt{dominantlyApply}\xspace}
+\newcommand{\amountOfChargeSend}{\texttt{amountOfChargeSend}\xspace}
+\newcommand{\amountOfPossibleChargeSend}{\texttt{amountOfPossibleChargeSend}\xspace}
+\newcommand{\enumWheels}{\texttt{enumWheels}\xspace}
+\newcommand{\generateCartwheel}{\texttt{generateCartwheel}\xspace}
+\newcommand{\enumPossibleBadWheels}{\texttt{enumPossibleBadWheels}\xspace}
+\newcommand{\fixInRules}{\texttt{fixInRules}\xspace}
+\newcommand{\updateDegreeByRule}{\texttt{updateDegreeByRule}\xspace}
+\newcommand{\concreteDegreesExceptTail}{\texttt{concreteDegreesExceptTail}\xspace}
+\newcommand{\pruneByNonAssociatedRule}{\texttt{pruneByNonAssociatedRule}\xspace}
+\newcommand{\upperBoundOfCharge}{\texttt{upperBoundOfCharge}\xspace}
+\newcommand{\prune}{\texttt{prune}\xspace}
+\newcommand{\fixOutRules}{\texttt{fixOutRules}\xspace}
+\newcommand{\refinement}{\texttt{refinement}\xspace}
+\newcommand{\shouldRefine}{\texttt{shouldRefine}\xspace}
+\newcommand{\refineAlways}{\texttt{refineAlways}\xspace}
+\newcommand{\refineNever}{\texttt{refineNever}\xspace}
+\newcommand{\enumBadCartwheels}{\texttt{enumBadCartwheels}\xspace}
+\newcommand{\CARTWHEELDEGREES}{\texttt{CARTWHEEL\_DEGREES}\xspace}
+
+
+
+%\mikkel{For the beginning af the appendix. The pseudocode is the connection between the algorithm and the \Cpp-code. It is a precise description of the actions of the algorithm without all the reasoning about why and how it is correct.}
+\newcommand{\gIntersection}{g_\textsf{intersection}}
+\newcommand{\gInclude}{g_\textsf{include}}
+The following routine, \homomorphism, finds a homomorphism $\phi^*$ from $Z$ to $Z^*$ that maps $e$ to $e^*$ and satisfies a specified degree constraint for all mapped pairs of vertices $(v, \phi^*(v))$.
+If no degree constraint is imposed, it returns a standard homomorphism between pseudo-triangulations.
+One of the common constraints we use is that the intersection of the degree ranges to be non-empty (i.e., $[\delta^-(v), \delta^+(v)] \cap [\delta^{*-}(\phi^*(v)), \delta^{*+}(\phi^*(v))] \neq \emptyset$ ), or the degree range $[\delta^{*-}(\phi^*(v)), \delta^{*+}(\phi^*(v))]$ includes the other degree range $[\delta^-(v), \delta^+(v)]$.
+We specify these constraints using the boolean functions $\gIntersection$ and $\gInclude$, respectively.
+Standard applications of this routine include verifying homomorphic images of reducible configurations and determining whether a rule applies to a specific dart.
+For references, see Algorithms \ref{alg:rooted_contain_conf}, \ref{alg:ineivtably_apply}, \ref{alg:never_apply} and \ref{alg:dominantly_apply}.
+
+Note that $V(Z)$ and $D(Z)$ denote the sets of vertices and darts of $Z$, respectively, when $Z$ is a pseudo-triangulation.
+We use a queue data structure. The queue supports 
+the following operations.
+
+\begin{itemize}
+    \item \texttt{push}($x$): Pushes $x$ into the queue.
+    \item \texttt{pop}(): Removes and returns the oldest element from the queue.
+    \item \texttt{empty}(): Returns \texttt{true} if the queue is empty, and \texttt{false} otherwise.
+\end{itemize}
+
+We adopt the dot notation for these operations for data structures (e.g., \texttt{T.root}($x$) for a union-find instance $T$, \texttt{Q.push}($x$) for a queue instance \texttt{Q}).
+For this data structure, we use \texttt{std::queue} in our \Cpp program.
+
+\begin{algorithm}[H]\caption{\homomorphismWithLink($(Z, \delta^-, \delta^+), e, (Z^*, \delta^{*-}, \delta^{*+}) ,e^*, g$)}
+    \label{alg:homomorphism}
+    \begin{algorithmic}[1]
+        \Require{A pseudo configuration $(Z,\delta^-,\delta^+)$ with a dart $e$ and a pseudo configuration $(Z^*, \delta^{*-}, \delta^{*+})$ with a dart $e^*$, a function $g$ that takes two degree-ranges and returns the boolean flag.}
+        \Ensure{The homomorphism $\phi^*$ from $Z$ to $Z^*$ mapping $e$ to $e^*$ if it exists and further satisfies $g(\delta^-(v), \delta^+(v), \delta^{*-}(v^*), \delta^{*+}(v^*))=\True$ for all vertices $v \in Z$ with  $v^*=\phi^*(v)$. It returns \texttt{null} if no such homomorphism exists.}
+        \State $\phi^* \gets$ a map from $V(Z) \cup D(Z)$ to $V(Z^*) \cup D(Z^*) \cup \{\bot\}$, initially $\phi^*(x)=\bot$ for all $x \in V(Z) \cup D(Z)$.
+        \State $\texttt{Q} \gets$ an empty queue
+        \State \texttt{Q.push}$((e,e^*))$
+        \While{not $\texttt{Q.empty()}$}
+            \State $(f, f^*) \gets \texttt{Q.pop()}$
+            \If {$\phi^*(f) \neq \bot$}
+                \If {$\phi^*(f) \neq f^*$}
+                    \State \Return \texttt{null}
+                \EndIf
+                \Continue
+            \EndIf
+            \State $\phi^*(f) \gets f^*$
+            \State $h \gets \head(f)$
+            \State $h^* \gets \head(f^*)$
+            \If {$\phi^*(h) \neq \bot$ and $\phi^*(h) \neq h^*$}
+                \State \Return \texttt{null}
+            \EndIf
+            \State $\phi^*(h) \gets h^*$
+            \If {$g(\delta^-(h), \delta^+(h), \delta^{*-}(h^*), \delta^{*+}(h^*))=\False$}
+                 \State \Return \texttt{null} \Comment{A degree constraint is not satisfied.}
+            \EndIf
+            \State \texttt{Q.push}$(\reverse(f), \reverse(f^*))$
+            \If {$\successor(f) \neq \nil$ and $\successor(f^*)=\nil$}
+                \State \Return \texttt{null} \Comment{a homomorphism from $Z$ to $Z^*$ does not exist.}
+            \ElsIf {$\successor(f) \neq \nil$ and $\successor(f^*) \neq \nil$}
+                \State \texttt{Q.push}$(\successor(f), \successor(f^*))$
+            \EndIf
+            \If {$\predecessor(f) \neq \nil$ and $\predecessor(f^*)=\nil$}
+                \State \Return \texttt{null} \Comment{a homomorphism from $Z$ to $Z^*$ does not exist.}
+            \ElsIf {$\predecessor(f) \neq \nil$ and $\predecessor(f^*) \neq \nil$}
+                \State \texttt{Q.push}$(\predecessor(f), \predecessor(f^*))$
+            \EndIf
+        \EndWhile
+        \State \Return $\phi^*$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{The free homomorphism from a pseudo-triangulation respecting identification requests}
+We present the pseudocode for computing the free homomorphism of a pseudo-triangulation respecting identification requests. Although we have already described this algorithm in Section \ref{subsub:homomorphism-tri}, we provide the pseudocode for clarity.
+
+We employ a union-find data structure, implemented as a forest of rooted trees.
+We denote by \texttt{uf}($S$) the union-find structure defined over a set $S$, where
+initially each element of $S$ is a root.
+This data structure supports the following operations.
+
+\begin{itemize}
+    \item \texttt{root}($x$): Returns the root of the tree containing $x$.
+    \item \texttt{unite}($x$, $y$): Unites the two trees containing $x$ and $y$ by setting the parent of \texttt{root}($x$) to \texttt{root}($y$).
+    \item \texttt{same}($x$, $y$): Returns \texttt{true} if the same tree contains both $x$ and $y$, and \texttt{false} otherwise.
+\end{itemize}
+
+\begin{algorithm}[H]
+    \caption{\freeHomomorphismTriangulationWithLink($Z$, $\{(e_i, f_i)\}_{i=1}^k$)}
+    \label{alg:homomorphism-tri}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-triangulation $Z$,
+        a set of pairs of darts $\{(e_i, f_i)\}_{i=1}^k$ in $D(Z)$.}
+        \Ensure{A pseudo-triangulation $Z^*$, and a homomorphism $\phi^* \colon V(Z) \cup D(Z) \to V(Z^*) \cup D(Z^*)$ respecting the identification requests $\{(e_i, f_i)\}_{i=1}^k$.}
+        \State $\texttt{uf\_V} \gets \texttt{uf}(V(Z))$
+        \State $\texttt{uf\_D} \gets$ \texttt{uf}($D(Z)$)
+        \State $\texttt{Q} \gets$ an empty queue
+        \ForAll{$i=1,\dots,k$}
+            \State $\texttt{Q.push}$$((e_i, f_i))$
+        \EndFor
+        \While{not \texttt{Q.empty}()}
+            \State $(e,f) \gets \texttt{Q.pop}()$ %\mikkel{Perhaps nicer with $(e,f)$ instead of $e,f$?}
+            \If {\texttt{uf\_D.same}($e,f$)}
+                \Continue
+            \EndIf
+            \If {not \texttt{uf\_V.same}(\head($e$), \head($f$))}
+                \State \texttt{uf\_V.unite}(\head($e$), \head($f$))\label{line:unite}
+            \EndIf
+            \State $e^* \gets \texttt{uf\_D.root}(e)$
+            \State $f^* \gets \texttt{uf\_D.root}(f)$
+            \State \texttt{uf\_D.unite}($e^*$, $f^*$) \Comment{Now, $f^*$ becomes the root representative.}
+            \State \texttt{Q.push}(\reverse($e^*$), \reverse($f^*$))
+            \If {\successor($e^*$) $\neq$ \nil\ and \successor($f^*$) $\neq$ \nil}
+                \State \texttt{Q.push}(\successor($e^*$), \successor($f^*$))
+            \EndIf
+             \If {\predecessor($e^*$) $\neq$ \nil\ and \predecessor($f^*$) $\neq$ \nil}
+                \State \texttt{Q.push}(\predecessor($e^*$), \predecessor($f^*$))
+            \EndIf
+            \If {\successor($e^*$) $\neq$ \nil\ and \successor($f^*$) $=$ \nil}
+                \State \successor($f^*$) $\gets$ \successor($e^*$)
+            \EndIf
+            \If {\predecessor($e^*$) $\neq$ \nil\ and \predecessor($f^*$) $=$ \nil}
+                \State \predecessor($f^*$) $\gets$ \predecessor($e^*$)
+            \EndIf
+        \EndWhile
+        \State $V^* \gets$ the set of $v \in V(Z)$ with \texttt{uf\_V.root}($v$) $= v$ 
+        \State $D^* \gets$ the set of $d \in D(Z)$ with \texttt{uf\_D.root}($d$) $= d$
+        \ForAll{$d \in D^*$}
+            \State \head($d$) $\gets$ \texttt{uf\_V.root}(\head($d$))
+            \State \reverse($d$) $\gets$ \texttt{uf\_D.root}(\reverse($d$))
+            \State \successor($d$) $\gets$ \nil\ if \successor($d$) $=$ \nil\ otherwise, \texttt{uf\_D.root}(\successor($d$))
+            \State \predecessor($d$) $\gets$ \nil\ if \predecessor($d$) $=$ \nil\ otherwise, \texttt{uf\_D.root}(\predecessor($d$))
+        \EndFor
+        \State $\phi^* \colon V(Z) \cup D(Z) \to V^* \cup D^*$ is a map defined $\phi^*(x)=\texttt{uf\_V.root}(x)$ if $x \in V(D)$, and $\texttt{uf\_D.root}(x)$ otherwise.
+        \State \Return $Z^*$ defined by $(V^*, D^*)$ and $\phi^*$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{The free homomorphism from a pseudo-configuration respecting identification requests}
+\label{code:hom-conf}
+In the following, we present the pseudocode for computing the free homomorphism of a pseudo-configuration in Algorithm \ref{alg:homomorphism-conf}.
+Here, we focus on the case where vertices are assigned degree ranges, as this includes the case where vertices have single concrete degrees.
+Specifically, for a pseudo-configuration with single concrete degrees $(Z, \delta)$, calling the function with input $(Z, \delta, \delta)$ yields the result for $(Z, \delta)$.
+The algorithm requires several subroutines.
+First, we introduce the subroutine \dartIdentification that identifies the darts of the underlying pseudo-triangulation obtained by forgetting the degree function from the input pseudo-configuration.
+Next, it maps the degrees, calculating the intersection of the degree ranges for each set of identified vertices.
+This procedure returns \texttt{null} if it attempts to identify vertices whose degree ranges are disjoint (a degree-mismatch error), or the resulting pseudo-configuration has a loop (a loop error).
+
+\begin{algorithm}[H]
+    \caption{\dartIdentificationWithLink($(Z, \delta^-, \delta^+)$, $\{(e_i, f_i)\}_{i=1}^k$)}
+    \label{alg:dartIdentification}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$, a set of pairs of darts $\{(e_i, f_i)\}_{i=1}^k$ in $D(Z)$.}
+        \Ensure{A pseudo-configuration $(Z^*, \delta^{*-}, \delta^{*+})$, a map $\phi^* \colon V(Z) \cup D(Z) \to V(Z^*) \cup D(Z^*)$ obtained from $Z$ by identifying all pairs of darts $\{(e_i,f_i)\}_{i=1}^k$ or \texttt{null} if the identification causes a loop, degree-mismatch error.}
+        \State $Z^*, \phi^* \gets $ \Call{freeHomomorphismTriangulation}{$Z, \{(e_i, f_i)\}_{i=1}^k$}
+        \If {$Z^*$ has a loop (i.e., a dart $d$ with $\head(d)=\head(\reverse(d))$) exists.}
+            \State \Return \texttt{null} \Comment{a loop error}
+        \EndIf
+        \State $\delta^{*-}, \delta^{*+} \colon V(Z^*) \to \mathbb{N} \cup \{\infty\}$, initially defined by $\delta^{*-}(v)=1, \delta^{*+}(v)=\infty$ for all $v \in V(Z^*)$.
+        \ForAll {$v \in V(Z)$}
+            \State $v^* \gets \phi^*(v)$
+            \If {$[\delta^{*-}(v^*), \delta^{*+}(v^*)] \cap [\delta^-(v), \delta^+(v)] = \emptyset$} \Comment{Two ranges are disjoint.}
+                \State \Return \texttt{null} \Comment{a degree-mismatch error}
+            \EndIf
+            \State $[\delta^{*-}(v^*), \delta^{*+}(v^*)]=[\delta^{*-}(v^*), \delta^{*+}(v^*)] \cap [\delta^{-}(v), \delta^{+}(v)]$ \Comment{Calculate the intersection.}
+        \EndFor
+        \State \Return $((Z^*, \delta^{*-}, \delta^{*+}), \phi^*)$
+    \end{algorithmic}
+\end{algorithm}
+
+We can optimize the \dartIdentification subroutine by using a modified version of Algorithm \ref{alg:homomorphism-tri}.
+Specifically, each time we identify two vertices in Line 13 of Algorithm \ref{alg:homomorphism-tri}, we verify that the intersection of the degree-ranges associated with these vertices is non-empty.
+To achieve this efficiently, the root representative of each set in $\texttt{uf\_V}$ maintains the intersection of the degree-ranges for all vertices in its tree.
+Consequently, at the end of the execution, the degree-ranges of the root representatives correspond exactly to the resulting degree-ranges $\delta^{*-}$ and $\delta^{*+}$ calculated in \dartIdentification subroutine.
+This modified procedure is presented in Algorithm \ref{alg:homomorphism-tri-degree}.
+The optimized \dartIdentification subroutine calls this modified algorithm, checks for the existence of any loops, and then directly returns the resulting homomorphic image along with its degree-ranges.
+However, we do not implement this since the unoptimized algorithm is fast enough.
+
+\begin{algorithm}[H]
+\caption{freeHomomorphismTriangulationWithDegreeIntersection($(Z,\delta^-,\delta^+)$, $\{(e_i, f_i)\}_{i=1}^k$)}
+    \label{alg:homomorphism-tri-degree}
+    \begin{algorithmic}[1]
+        \State \texttt{The algorithm in Line 1-11 in Algorithm \ref{alg:homomorphism-tri}}
+        \If {not \texttt{uf\_V.same}(\head($e$), \head($f$))}
+            \State $h^*_e \gets \texttt{uf\_V.root}(\head(e))$
+            \State $h^*_f \gets \texttt{uf\_V.root}(\head(f))$
+            \State \texttt{uf\_V.unite}($h^*_e$, $h^*_f$) \Comment{Now, $h^*_f$ becomes the representative root.}
+            \If {$[\delta^-(h^*_e), \delta^+(h^*_e)] \cap [\delta^-(h^*_f), \delta^+(h^*_f)] = \emptyset$} \Comment{Two ranges are disjoint.}
+                \State \Return \texttt{null} \Comment{a degree-mismatch error}
+            \EndIf
+            \State $[\delta^-(h^*_f), \delta^+(h^*_f)] \gets [\delta^-(h^*_f), \delta^+(h^*_f)] \cap [\delta^-(h^*_e), \delta^+(h^*_e)]$ \Comment{Calculate the intersection.}
+        \EndIf
+        \State \texttt{The algorithm in Line 15-44 in Algorithm \ref{alg:homomorphism-tri}}
+        \State $\delta^{*-}(v) \gets \delta^-(v)$ and $\delta^{*+}(v) \gets \delta^+(v)$ for every $v \in V^*$
+        \State \Return $(Z^*, \delta^{*-}, \delta^{*+})$ and $\phi^*$.
+  \end{algorithmic}
+\end{algorithm}
+
+Algorithm \ref{alg:homomorphism-conf} is the main routine that creates the free homomorphism respecting identification requests, described in Section \ref{subsub:homomorphism-conf} and Section \ref{sect:ranges}.
+We first identify the given pairs of darts using Algorithm \ref{alg:dartIdentification}.
+Then, if the identification is successful, we proceed to resolve potential \emph{degree-issues} by calling the \resolveDegreeIssues subroutine.
+For a pseudo-configuration with single concrete degrees, we require that $d_Z(v) < \delta(v)$ for any boundary vertex, and $d_Z(v)=\delta(v)$ for any inner vertex $v$.
+Generalizing this into degree ranges, a vertex is said to have \emph{degree-issues} if it violates the following condition.
+\begin{itemize}
+    \item $d_Z(v) < \delta^-(v)$ if $v$ is a boundary vertex and
+    \item $d_Z(v) = \delta^-(v) = \delta^+(v)$ if $v$ is an inner vertex.
+\end{itemize}
+
+\begin{algorithm}[H]
+    \caption{\freeHomomorphismConfigurationWithLink($(Z, \delta^-, \delta^+)$, $\{(e_i, f_i)\}_{i=1}^k$)}
+    \label{alg:homomorphism-conf}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$, a set of pairs of darts $\{(e_i, f_i)\}_{i=1}^k$ in $D(Z)$.}
+        \Ensure{A set $\mathcal{Z}$ of a pair of pseudo-configurations $(Z_j^*, \delta_j^{*-}, \delta_j^{*+})$ and a homomorphism $\phi_j^* \colon V(Z) \cup D(Z) \to V(Z_j^*) \cup D(Z_j^*)$ respecting the identification $\{(e_i,f_i)\}_{i=1}^k$.}
+        \State $A \gets $\Call{dartIdentification}{$(Z, \delta^-, \delta^+)$, $\{(e_i, f_i)\}_{i=1}^k$}
+        \If {$A = \texttt{null}$}
+            \State \Return $\emptyset$
+        \EndIf
+        \State $((Z^* \delta^{*-}, \delta^{*+}), \phi^*) \gets A$
+        \State $\tilde{\mathcal{Z}} \gets$ \Call{resolveDegreeIssues}{$Z^*, \delta^{*-}, \delta^{*+}$}
+        \State \Return $\{((\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}), \tilde{\phi} \circ \phi^*) \mid ((\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}), \tilde{\phi}) \in \tilde{\mathcal{Z}} \}$
+    \end{algorithmic}
+\end{algorithm}
+
+The \resolveDegreeIssues routine in Algorithm \ref{alg:resolve_degree_issues} is designed to resolve degree-issues by iteratively identifying or adding darts via several subroutines.
+$\id{X}$ denotes the identity map on a set $X$.
+We use the four subroutines.
+
+First, the \texttt{innerSubdegreeError} subroutine detects any inner vertex $v$ with $d_Z(v) < \delta^-(v)$, which implies a subdegree error.
+If such an error is detected, we immediately give up on resolving degree issues.
+We present the \texttt{innerSubdegreeError} subroutine in Algorithm \ref{alg:inner_subdegree_error}.
+Note that we decide that $v$ is a boundary vertex if some dart $e$ with $\head(e)=v$ satisfies $\successor(e)=\nil$.
+Otherwise, $v$ is considered an inner vertex.
+
+Second, the \texttt{vertexSingleDegreeIssue} subroutine detects a vertex with a single specified degree (i.e., $\delta(v) \coloneq \delta^-(v)=\delta^+(v)$) and degree-issue.
+Specifically, it searches for
+\begin{itemize}
+    \item a vertex $v$ with $\delta(v) < d_Z(v)$, or
+    \item a boundary vertex $v$ with $\delta(v) = d_Z(v)$.
+\end{itemize}
+If no such vertex exists, then this subroutine returns $\texttt{null}$.
+We present the \texttt{vertexSingleDegreeIssue} subroutine in Algorithm \ref{alg:vertex_single_degree_issue}.
+
+Third, the \texttt{fixSingleDegreeIssue} subroutine attempts to resolve a degree-issue found by \texttt{vertexSingleDegreeIssue}.
+If such a degree-issue cannot be resolved due to errors, such as a loop, subdegree, or degree-mismatch error, this subroutine returns \texttt{null}.
+We present the \texttt{fixSingleDegreeIssue} subroutine in Algorithm \ref{alg:fix_single_degree_issue}.
+More detailed implementations are given later.
+
+Fourth, the \texttt{singleOutLowerDegree} subroutine is responsible for subdividing degree ranges if it is necessary to resolve degree-issues.
+More precisely, this subroutine detects a vertex with $\delta^-(v) < \delta^+(v)$ and $\delta^-(v) \leq d_Z(v)$.
+If found, it subdivides degree range $[\delta^-(v), \delta^+(v)]$ into $[\delta^-(v), \delta^-(v)]$ and $[\delta^-(v)+1, \delta^+(v)]$, creating two corresponding copies of the given pseudo-configuration.
+This is the only subroutine that performs degree range subdivision.
+We present the \texttt{singleOutLowerDegree} subroutine in Algorithm \ref{alg:single_out_lower_deg}.
+
+We iteratively apply these subroutines.
+The process terminates successfully when the pseudo-configuration is free of degree-issues:
+if \texttt{innerSubDegreeError} returns \False, \texttt{vertexSingleDegreeIssue} returns \texttt{null}, and \texttt{singleOutLowerDegree} returns \texttt{null}.
+In this case, the resulting pseudo-configuration is added to the output set.
+
+\begin{algorithm}[H]
+    \caption{\resolveDegreeIssuesWithLink($Z, \delta^-, \delta^+$)}
+    \label{alg:resolve_degree_issues}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$ with potential degree-issues.}
+        \Ensure{A set of pseudo-configurations $(\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+)$ with $\tilde{\phi} \colon V(Z) \cup D(Z) \to V(\tilde{Z}) \cup D(\tilde{Z})$ obtained from $(Z, \delta^-, \delta^+)$ by resolving degree-issues.}
+        \State $\mathcal{Z} \gets \emptyset$
+        \State $\texttt{Q} \gets$ an empty queue
+        \State \texttt{Q.push}($(Z, \delta^-, \delta^+), \id{V(Z) \cup D(Z)}$)
+        \While {not \texttt{Q.empty}()}
+            \State $((\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+), \tilde{\phi}) \gets \texttt{Q.pop}()$
+            \If {\Call{innerSubdegreeError}{$\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+$} = \True}
+                \Continue
+            \EndIf
+            \State $v \gets $\Call{vertexSingleDegreeIssue}{$\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+$}
+            \If {$v \neq \texttt{null}$}
+                \State $A \gets $ \Call{fixSingleDegreeIssue}{$(\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+)$, $v$}
+                \If {$A \neq \texttt{null}$}
+                    \State $((Z^*, \delta^{*-}, \delta^{*+}), \phi^*) \gets A$ 
+                    \State \texttt{Q.push}($(Z^*, \delta^{*-}, \delta^{*+}), \phi^* \circ \tilde{\phi}$)
+                \EndIf
+                \Continue
+            \EndIf
+            \State $B \gets $\Call{singleOutLowerDegree}{$\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+$}
+            \If {$B \neq \texttt{null}$}
+                \State $((Z_1, \delta_1^-, \delta_1^+), (Z_2, \delta_2^-, \delta_2^+)) \gets B$
+                \State \texttt{Q.push}($(Z_1, \delta_1^-, \delta_1^+), \tilde{\phi}$)
+                \State \texttt{Q.push}($(Z_2, \delta_2^-, \delta_2^+), \tilde{\phi}$)
+                \Continue
+            \EndIf
+            \State $\mathcal{Z} \gets \mathcal{Z} \cup \{((\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+), \tilde{\phi})\}$ 
+        \EndWhile
+        \State \Return $\mathcal{Z}$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\innerSubdegreeErrorWithLink($Z, \delta^-, \delta^+$)}
+    \label{alg:inner_subdegree_error}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$.}
+        \Ensure{\True\ if an inner vertex $v$ with $d_Z(v) < \delta^-(v)$ exists, otherwise \False.}
+        \ForAll{$v \in V(Z)$}
+            \If {$v$ is an inner vertex and $d_Z(v) < \delta^-(v)$}
+                \State \Return \True
+            \EndIf
+        \EndFor
+        \State \Return \False
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\vertexSingleDegreeIssueWithLink($Z, \delta^-, \delta^+)$}
+    \label{alg:vertex_single_degree_issue}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$.}
+        \Ensure{A vertex $v$ with $\delta^-(v)=\delta^+(v)$ and degree-issue if exists, otherwise \texttt{null}.}
+        \ForAll{$v \in V(Z)$}
+            \If {$\delta^-(v) \neq \delta^+(v)$}
+                \Continue
+            \EndIf
+            \If {$\delta^-(v) < d_Z(v)$}
+                \State \Return $v$
+            \ElsIf {$v$ is a boundary vertex and $d_Z(v)=\delta^-(v)$}
+                \State \Return $v$
+            \EndIf
+        \EndFor
+        \State \Return \texttt{null}
+    \end{algorithmic}
+\end{algorithm}
+
+The following subroutine \texttt{fixSingleDegreeIssue} resolves a degree-issue, which occurred in a vertex with $\delta(v) \coloneq \delta^-(v)=\delta^+(v)$, as follows.
+\begin{enumerate}
+    \item When $v$ is a vertex $v$ with $\delta(v) < d_Z(v)$: let $e$ be a dart whose head is $v$. If $v$ is a boundary vertex, we choose the first dart. Let $f$ be the dart reached from $e$ by following \successor\ $\delta(v)$ times. We identify $e$ and $f$ via the \texttt{dartIdentification} subroutine.
+    \item When $v$ is a boundary vertex with $\delta(v) = d_Z(v)$: we make $v$ an inner vertex by appropriately adding darts and updating pointers. We employ the \texttt{addBoundaryDarts} subroutine in Algorithm \ref{alg:add_boundary_darts} to handle this case. 
+\end{enumerate}
+In any case, it may return \texttt{null}, which means that a degree-issue cannot be resolved successfully.
+
+\begin{algorithm}[H]
+    \caption{\fixSingleDegreeIssueWithLink($(Z, \delta^-, \delta^+), v$)}
+    \label{alg:fix_single_degree_issue}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$, a vertex $v$ with $\delta^-(v)=\delta^+(v)$ and degree-issue.}
+        \Ensure{A pair of pseudo-configuration $(Z^*, \delta^{*-}, \delta^{*+})$ and $\phi^* \colon V(Z) \cup D(Z) \to V(Z^*) \cup D(Z^*)$ obtained from $(Z, \delta^-, \delta^+)$ by resolving degree-issue on $v$ or \texttt{null} if it causes an error.}
+        \If {$\delta^-(v) < d_Z(v)$}
+            \State $e$ $\gets$ a dart whose head is $v$. If $v$ is a boundary vertex, we choose the first dart (i.e., \predecessor($e$)= \nil)).
+            \State $f$ $\gets$ the dart reached from $e$ by following \successor\ pointer $\delta^-(v)$ times.
+            \State \Return \Call{dartIdentification}{$(Z, \delta^-, \delta^+), \{(e, f)\}$} \Comment{It may return \texttt{null} due to a loop, degree-mismatch error.}
+        \ElsIf {$v$ is a boundary vertex and $\delta^-(v)=d_Z(v)$}
+            \State $A \gets$ \Call{addBoundaryDarts}{$(Z, \delta^-, \delta^+), v$}
+            \If {$A \neq \texttt{null}$}
+                \State $(\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+) \gets A$
+                \State \Return $((\tilde{Z}, \tilde{\delta}^-, \tilde{\delta}^+)$, $\id{V(Z) \cup D(Z)})$
+            \Else
+                \State \Return \texttt{null} \Comment{Due to a boundary error.}
+            \EndIf
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+    \caption{\addBoundaryDartsWithLink($(Z, \delta^-, \delta^+), v$)}
+    \label{alg:add_boundary_darts}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$, a boundary vertex $v$ with $\delta^-(v)=\delta^+(v)=d_Z(v)$.}
+        \Ensure{A pseudo-configuration obtained from $(Z, \delta^-, \delta^+)$ by adding darts and making $v$ an inner vertex or \texttt{null} if a boundary error occurs.}
+        \State $e_{\text{first}} \gets$ the first dart whose head is $v$ (i.e., \predecessor($e_{\text{first}}$) = \nil).
+        \State $e_{\text{last}} \gets$ the last dart whose head is $v$ (i.e., \successor($e_{\text{last}}$) = \nil).
+        \State $u \gets $\head(\reverse($e_{\text{first}})$)
+        \State $w \gets $\head(\reverse($e_{\text{last}})$)
+        \If {$u = w$}
+            \State \Return \texttt{null} \Comment{a boundary error}
+        \EndIf
+        \State $d_{uw} \gets $ a dart whose \head\ is $u$, \reverse\ is $d_{wu}$, \successor\ is \nil, \predecessor\ is \reverse($e_{\text{first}}$).
+        \State $d_{wu} \gets $ a dart whose \head\ is $w$, \reverse\ is $d_{uw}$, \successor\ is \reverse($e_{\text{last}}$), \predecessor\ is \nil.
+        \State \predecessor($e_{\text{first}}$) $\gets e_{\text{last}}$
+        \State \successor($e_{\text{last}}$) $\gets e_{\text{first}}$
+        \State \successor(\reverse($e_{\text{first}}$)) $\gets d_{uw}$
+        \State \predecessor(\reverse($e_{\text{last}}$)) $\gets d_{wu}$
+        \State $\tilde{Z} \gets$ the pseudo-triangulation defined by $V(Z)$ and $D(Z) \cup \{d_{uw}, d_{wu}\}$.
+        \State \Return $(\tilde{Z}, \delta^-, \delta^+)$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\singleOutLowerDegreeWithLink($Z, \delta^-, \delta^+)$}
+    \label{alg:single_out_lower_deg}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$.}
+        \Ensure{Two pseudo-configurations $(Z_1, \delta_1^-, \delta_1^+), (Z_2, \delta^-_2, \delta^+_2)$ if a vertex $v$ with $\delta^-(v) < \delta^+(v)$ and $\delta^-(v) \leq d_Z(v)$ exists, otherwise \texttt{null}}
+        \ForAll{$v \in V(Z)$}
+            \If {$\delta^-(v) < \delta^+(v)$ and $\delta^-(v) \leq d_Z(v)$}
+                \State $(Z_1, \delta^-_1, \delta^+_1) \gets$ a copy of $(Z, \delta^-, \delta^+)$
+                \State $\delta^+_1(v) \gets \delta^-(v)$
+                \State $(Z_2, \delta^-_2, \delta^+_2) \gets$ a copy of $(Z, \delta^-, \delta^+)$
+                \State $\delta^-_2(v) \gets \delta^-(v) + 1$
+                \State \Return $((Z_1, \delta_1^-, \delta_1^+), (Z_2, \delta^-_2, \delta^+_2))$
+            \EndIf
+        \EndFor
+        \State \Return \texttt{null}
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Functions for reading configuration, rule, cartwheel files}
+\label{sub:IO}
+\newcommand{\fromVRotations}{\texttt{fromVRotations}\xspace}
+Our \Cpp program reads and writes files representing configurations, rules, and cartwheels in specific formats.
+While we omit the detailed format descriptions here, they are provided in the documentation accompanying our program.
+%in the GitHub repository.
+In these formats, we do not use the dart representations to express an underlying pseudo-triangulation. 
+Instead, we use rotations of neighbors around each vertex.
+Additionally, the boundary is explicitly marked.
+Since the configurations, rules, and cartwheels we used have no multiple darts between two vertices, this representation contains the same information as the dart representation.
+To construct the dart representation from the rotations around each vertex, we use the \fromVRotations subroutine in Algorithm \ref{alg:from_v_rotations}.
+The \fromVRotations subroutine takes the input \texttt{rotations}, and constructs a pseudo triangulation represented by \texttt{rotations}.
+When the size of \texttt{rotations} is $N$, the vertex set consists of $v_0,\ldots,v_{N-1}$.
+When \texttt{rotations[$i$]} is a list of integers $[a_0, \ldots, a_k]$, it means that $v_i$ is adjacent to $v_{a_0}, \ldots, v_{a_k}$ in this rotations.
+If $a_i=-1$, it represents the boundary.
+It creates all the darts and assigns the appropriate pointers to them.
+
+\newcommand{\concat}{\mathbin{\|}}
+In the following, we will use list data structures whose size is changing dynamically.
+Let $\texttt{L1}, \texttt{L2}$ be instances of the list.
+In adding a new element $x$ to the back of the list $\texttt{L1}$, we write $\texttt{L1.push\_back}(x)$.
+In concatenating two lists $\texttt{L1}, \texttt{L2}$, we write $\texttt{L1} \concat \texttt{L2}$.
+The size of the list $\texttt{L1}$ is denoted by $|\texttt{L1}|$.
+For this data structure, we use \texttt{std::vector} for our \Cpp program.
+
+\begin{algorithm}[H]
+    \caption{\fromVRotationsWithLink($N, \texttt{rotations}$)}
+    \label{alg:from_v_rotations}
+    \begin{algorithmic}[1]
+        \Require{We denote the number of vertices by $N$ and a vertex set by $V=\{v_0, \ldots, v_{N-1}\}$. A list \texttt{rotations}, where \texttt{rotations[$i$]} represents the rotation of indices of vertices around $v_i \in V$, where $-1$ marks the boundary.}
+        \Ensure{The pseudo triangulation represented by $V$ and $\texttt{rotations}$ or raise an error if $\texttt{rotations}$ has multiple darts between two vertices or the rotations of two vertices have a discrepancy.}
+        \State $\texttt{darts} \gets$ an $N \times N$ array of darts, initialized by \nil.
+        \ForAll{$a \in \{0, \ldots, N-1\}$}
+            \ForAll{$i \in \{0, \ldots, |\texttt{rotations}[a]|-1\}$}
+                \State $b \gets \texttt{rotations}[a][i]$
+                \If {$b = -1$}
+                    \Continue
+                \EndIf
+                \If {$\texttt{darts}[a][b] \neq \nil$}
+                    \State \textbf{raise an error} \Comment{Multiple darts between two vertices.}
+                \EndIf
+                \State $\texttt{darts}[a][b] \gets$ a fresh dart
+            \EndFor
+        \EndFor
+        \State $D \gets \emptyset$ \Comment{$D$ becomes the dart set.}
+        \ForAll{$a \in \{0, \ldots, N-1\}$}
+            \State \texttt{size} $\gets$ $|\texttt{rotations}[a]|$
+            \ForAll{$i \in \{0, \ldots, \texttt{size}-1\}$}
+                \State $b \gets \texttt{rotations}[a][i]$
+                \If {$b = -1$}
+                    \Continue
+                \EndIf
+                \State $e \gets \texttt{darts}[a][b]$
+                \State $\head(e) \gets v_a$
+                \If {$\texttt{darts}[b][a] = \nil$}
+                    \State \textbf{raise an error} \Comment{The rotations of two vertices have a discrepancy.}
+                \EndIf
+                \State $\reverse(e) \gets \texttt{darts}[b][a]$
+                \State $s \gets \texttt{rotations}[a][i+1]$ if $i<\texttt{size}-1$ otherwise $\texttt{rotations}[a][0]$
+                \State $\successor(e) \gets \texttt{darts}[a][s]$ if $s \neq -1$ otherwise \nil
+                \State $p \gets \texttt{rotations}[a][i-1]$ if $i>0$ otherwise $\texttt{rotations}[a][\texttt{size}-1]$.
+                \State $\predecessor(e) \gets \texttt{darts}[a][p]$ if $p \neq -1$ otherwise \nil
+                \State $D \gets D \cup \{e\}$
+            \EndFor
+        \EndFor
+        \State \Return The pseudo triangulation that consists of $(V, D)$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Reducible configurations in pseudo-configurations}
+\label{code:identify-reducible}
+\def\CONFDEGMAX{\texttt{CONF\_DEG\_MAX}\xspace}
+\def\blockByReducibleConfiguration{\texttt{blockedByReducibleConfiguration}\xspace}
+\def\representativeDegree{\texttt{representativeDegree}\xspace}
+\def\containConf{\texttt{containConf}\xspace}
+\def\dartsByDegree{\texttt{dartsByDegree}\xspace}
+\def\rootedContainConf{\texttt{rootedContainConf}\xspace}
+\newcommand{\extendFromCutVertices}{\texttt{extendFromCutVertices}\xspace}
+\newcommand{\findCutPairs}{\texttt{findCutPairs}\xspace}
+\newcommand{\maximumDartDegree}{\texttt{maximumDartDegree}\xspace}
+\newcommand{\mirror}{\texttt{mirror}\xspace}
+\newcommand{\removeRing}{\texttt{removeRing}\xspace}
+
+In this section, we present a procedure to determine if a given pseudo-configuration $(Z^*, \delta^*)$ with the center $c^*$ has a homomorphic image of a reducible configuration in $\mathcal{D}$.
+The main routine is the \containConf routine in Algorithm \ref{alg:contain_conf}.
+
+\paragraph{Cut-vertices}
+First, we describe the procedure to convert a configuration in $\mathcal{D}$ to cut-vertex-free configurations, as described in Section \ref{sect:config-in-combine}.
+The \extendFromCutVertices routine in Algorithm \ref{alg:extend_from_cut_vertices} handles this process.
+Because this routine is called after reading a configuration file, it takes the rotations of neighbors around each vertex as input, not the dart representation, to construct new cut-vertex-free configurations.
+From (Z3), each cut vertex in a configuration has two neighbors in the ring.
+The \findCutPairs routine in Algorithm \ref{alg:find_cut_pairs} returns a set of pairs of ring vertices adjacent to each cut-vertex.
+The \extendFromCutVertices routine calls the \findCutPairs routine to get such a set of pairs of ring vertices $P$.
+Since our reducible configuration in $\mathcal{D}$ has at most one cut-vertex, $|P| \leq 1$.
+We consider $2^{|P|}$ different extensions.
+For each extension, we remove the vertices in the ring that are not added for the extension.
+The \removeRing routine in Algorithm \ref{alg:remove_ring} handles this process.
+
+Also, we choose a special dart $f=xy$ such that both $y$ and $x$ have fixed degrees and maximizing $(\delta^{-}(y), \delta^{-}(x))$ lexicographically, as described in Section \ref{sect:config-in-combine}.
+This fixed-degree condition is satisfied when neither $x$ nor $y$ is an auxiliary vertex added for a cut-vertex.
+The \maximumDartDegree procedure in Algorithm \ref{alg:maximum_dart_degree} handles this process.
+
+\begin{algorithm}[H]
+    \caption{\extendFromCutVerticesWithLink($N$, $R$, $\delta^-$, $\delta^+$, \texttt{rotations})}
+    \label{alg:extend_from_cut_vertices}
+    \begin{algorithmic}[1]
+        \Require{The number of vertices $N$ in a configuration and $R$ in its ring; a vertex set $V = \{v_0, \ldots, v_{N-1}\}$ containing the ring vertices $V_R = \{v_0, \ldots, v_{R-1}\}$, degree functions $\delta^-, \delta^+$ on $V \setminus V_R$, and a list \texttt{rotations} representing rotations of neighbors for each vertex in $V$.}
+        \Ensure{The set of configurations obtained by adding a neighbor for each cut-vertex, with the special dart.}
+        \State $P \gets$ \Call{findCutPairs}{$N, R, \texttt{rotations}$} \Comment{In all configurations from $\mathcal{D}$, the number of cut-vertices are at most 1, so $|P| \leq 1$.}
+        \State $\mathcal{K} \gets \emptyset$
+        \ForAll{$S \gets \{0, \ldots, 2^{|P|}\}$}
+            \State $\texttt{remove} \gets$ an array of size $R$, initialized by $\True$
+            \ForAll{$i \gets \{0, \ldots, |P|-1\}$}
+                \State $v_a, v_b \gets P[i]$
+                \If {the $i$-bit of $S$ is 1}
+                    \State $\texttt{remove}[a] \gets \False$
+                \Else 
+                    \State $\texttt{remove}[b] \gets \False$
+                \EndIf
+            \EndFor
+            \State $(Z, \delta^-, \delta^+) \gets$ \Call{removeRing}{$N, R, \delta^-, \delta^+, \texttt{rotations}, \texttt{remove}$}
+            \State $f \gets$ \Call{maximumDegreeDart}{$(Z, \delta^-, \delta^+)$}
+            \State $\mathcal{K} \gets \mathcal{K} \cup \{((Z, \delta^-, \delta^+), f)\}$
+        \EndFor
+        \State \Return $\mathcal{K}$
+    \end{algorithmic}
+\end{algorithm}
+
+In the \findCutPairs routine, for each vertex $v_i$ in a given configuration, we check whether $v_i$ is a cut-vertex.
+If $v_i$ is a cut-vertex, we add a pair of neighbors in the ring to the resulting list.
+To check whether $v_i$ is a cut-vertex, we calculate the set of vertices $U_R$ in the ring that are adjacent to $v_i$, and the number of times $t$ that $v_i$ touches the consecutive vertices of the ring.
+By (Z3), $v_i$ must be a cut-vertex if both $|U_R|$ and $t$ are $2$. 
+Also, if $t \geq 2$ and $|U_R| \neq 2$, then it would contradict (Z3).
+In this case, we raise an error since an input configuration is invalid, but all configurations in $\mathcal{D}$ satisfy (Z3), so we have no error.
+
+\begin{algorithm}[H]
+    \caption{\findCutPairsWithLink($N, R, \texttt{rotations}$)}
+    \label{alg:find_cut_pairs}
+    \begin{algorithmic}[1]
+        \Require{The number of vertices $N$ in a configuration and $R$ in its ring; a vertex set $V = \{v_0, \ldots, v_{N-1}\}$ containing the ring vertices $V_R = \{v_0, \ldots, v_{R-1}\}$, and a list \texttt{rotations} representing rotations of neighbors for each vertex in $V$.}
+        \Ensure{The set of pairs of vertices in the ring that are adjacent to cut-vertices of the input configuration, or raise an error if the input is an invalid configuration.}
+        \State $\texttt{P} \gets$ an empty array
+        \ForAll{$v_i \in \{v_R, \ldots, v_{N-1}\}$}
+            \State $U_R \gets \emptyset$ \Comment{$U_R$ is the set of vertices in the ring that is adjacent to $v_i$.}
+            \State $t \gets 0$ \Comment{$t$ represents the number of times $v_i$ touches the consecutive vertices of the ring.}
+            \State $d \gets |\texttt{rotations}[i]|$ 
+            \ForAll{$j \gets \{0, \ldots, d-1\}$}
+                \State $k_1 \gets \texttt{rotations}[i][j]$
+                \If {$k_1 < R$}
+                    \State $U_R \gets U_R \cup \{v_{k_1}\}$
+                \EndIf
+                \State $k_2 \gets \texttt{rotations}[i][(j+1) \bmod d]$
+                \If {$k_1 < R$ and $k_2 \geq R$} \Comment{border between rign and internal vertex.}
+                    \State $t \gets t + 1$
+                \EndIf
+            \EndFor
+            \If {$t \geq 2$ and $|U_R| \neq 2$}
+                \State \textbf{raise an error} \Comment{Invalid configuration}
+            \EndIf
+            \If {$t = 2$ and $|U_R|=2$} \Comment{$v_i$ is a cut-vertex.}
+                \State $v_a, v_b \gets U_R$
+                \State $\texttt{P.push\_back}((v_a, v_b))$
+            \EndIf
+        \EndFor
+        \State \Return \texttt{P}
+    \end{algorithmic}
+\end{algorithm}
+
+The \removeRing routine in Algorithm \ref{alg:remove_ring} removes the vertices $v_i$ in the ring with the input $\texttt{remove}[i]=\True$.
+This routine consists of three steps.
+First, for each remaining vertex, we assign a new vertex ID.
+Second, we construct new rotations of neighbors for each remaining vertex.
+Finally, we update the degrees of the remaining vertices.
+For each remaining vertex $u$ in the ring such that the number of incident darts is $d(u)$, we set new degrees $\delta^{\prime-}(u)=d(u)+1$, $\delta^{\prime+}(u)=\infty$.
+For each vertex not in the ring, the degree is the same as the input degree.
+The routine returns the pseudo configuration constructed from new rotations and degrees by the \fromVRotations routine in Algorithm \ref{alg:from_v_rotations}.
+
+\begin{algorithm}
+    \caption{\removeRingWithLink$(N, R, \delta^-, \delta^+, \texttt{rotations}, \texttt{remove})$}
+    \label{alg:remove_ring}
+    \begin{algorithmic}[1]
+        \Require{The number of vertices $N$ in a configuration and $R$ in its ring; a vertex set $V = \{v_0, \ldots, v_{N-1}\}$ containing the ring vertices $V_R = \{v_0, \ldots, v_{R-1}\}$, degree functions $\delta^-, \delta^+$ on $V \setminus V_R$, and a list \texttt{rotations} representing rotations of neighbors for each vertex in $V$, and a list \texttt{remove}.}
+        \Ensure{The pseudo configuration by deleting vertices $v_i$ in $V_R$ with $\texttt{remove}[i]=\True$.}
+        
+        \Comment{Step 1: Assign new vertex IDs}
+        \State \texttt{old2new} $\gets$ an array of length $N$, each element initialized by $-1$
+        \State \texttt{new\_id} $\gets 0$
+        \ForAll{$i \gets \{0, \ldots, N-1\}$}
+            \If {$i < R$ and \texttt{remove}$[i]$ $=$ \True}
+                \Continue
+            \EndIf
+            \State \texttt{old2new}$[i] \gets \texttt{new\_id}$
+            \State $\texttt{new\_id} \gets \texttt{new\_id} + 1$
+        \EndFor
+        \State $N' \gets \texttt{new\_id}$
+
+        \Comment{Step 2: Construct new rotations}
+        \State $\texttt{new\_rotations} \gets$ an list of $N'$ lists
+        \ForAll{$i \gets \{0, \ldots, N-1\}$}
+            \If {$i < R$ and \texttt{remove}$[i]$ $= \True$}
+                \Continue
+            \EndIf
+            \ForAll{$j \gets \texttt{rotations}[i]$}
+                \If {$j = -1$}
+                    \State \texttt{new\_rotations[old2new$[i]$].push\_back($-1$)}
+                \Else
+                    \State \texttt{new\_rotations[old2new$[i]$].push\_back(old2new[$j$])}
+                \EndIf
+            \EndFor
+        \EndFor
+
+        \Comment{Step 3: Update degrees}
+        \State $U' \gets \{u_0, \ldots, u_{N'-1}\}$
+        \State $\delta^{\prime-}, \delta^{\prime+} \colon U' \to \mathbb{N} \cup \{\infty\}$
+        \ForAll{$i \gets \{0, \ldots, R-1\}$}
+             \If {$\texttt{remove}[i] = \True$}
+                 \Continue
+             \EndIf
+             \State $k \gets \texttt{old2new}[i]$
+             \State $d \gets$ the number of elements, which are not $-1$ in $\texttt{new\_rotations}[k]$
+             \State $\delta^{\prime-}(u_k) \gets d + 1$, $\delta^{\prime+}(u_k) \gets \infty$
+        \EndFor
+        \ForAll{$i \gets \{R, \ldots, N-1\}$}
+            \State $k \gets \texttt{old2new}[i]$
+            \State $\delta^{\prime-}(u_k)=\delta^-(v_i)$, $\delta^{\prime+}(u_k)=\delta^+(v_i)$
+        \EndFor
+
+        \State \Return The pseudo configuration obtained by \Call{fromVRotations}{$N'$, \texttt{new\_rotations}} with degree functions $\delta^{\prime-}, \delta^{\prime+}$.
+    \end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+    \caption{\maximumDegreeDartWithLink($(Z, \delta^-, \delta^+)$}
+    \label{alg:maximum_dart_degree}
+    \begin{algorithmic}[1]
+        \Require{A configuration $(Z, \delta^-, \delta^+)$.}
+        \Ensure{The dart $f=xy$ such that both $y$ and $x$ have fixed degrees and maximizing $(\delta^-(y), \delta^-(x))$ lexicographically.}
+        \State $f \gets \nil$
+        \State $d_f \gets (0, 0)$
+        \ForAll{$e \gets D(Z)$}
+            \State $y \gets \head(e)$
+            \State $x \gets \head(\reverse(e))$
+            \If {$\delta^-(y) \neq \delta^+(y)$ or $\delta^-(x) \neq \delta^+(x)$}
+                \Continue
+            \EndIf
+            \State $d_e \gets (\delta^-(y), \delta^-(x))$
+            \If {$d_e > d_f$} \Comment{Compare them lexicographically}
+                \State $f \gets e$
+                \State $d_f \gets d_e$
+            \EndIf       
+        \EndFor
+        \State \Return $f$
+    \end{algorithmic}
+\end{algorithm}
+
+The \mirror routine in Algorithm \ref{alg:mirror} converts a given pseudo configuration into its mirror by, for every dart $e$, swapping \predecessor($e$) and \successor($e$).
+
+\begin{algorithm}[H]
+    \caption{\mirrorWithLink($Z, \delta^-, \delta^+$)}
+    \label{alg:mirror}
+    \begin{algorithmic}[1]
+        \Require{A pseudo configuration $(Z, \delta^-, \delta^+)$.}
+        \Ensure{The mirror of $(Z, \delta^-, \delta^+)$.}
+        \ForAll{$e \gets D(Z)$}
+            \State swap $\predecessor(e), \successor(e)$
+        \EndFor
+        \State \Return $(Z, \delta^-, \delta^+)$
+    \end{algorithmic}
+\end{algorithm}
+
+By calling the \extendFromCutVertices routine for each configuration in $\mathcal{D}$, we get another set of configurations with the special dart.
+Moreover, we update this set by adding all mirrors of them.
+Here, the symbol $\bar{\mathcal{D}}$ denotes this set of configurations obtained from $\mathcal{D}$.
+In the program, we use $\bar{\mathcal{D}}$.
+Note that every configuration in $\bar{\mathcal{D}}$ has the special dart chosen by the \maximumDartDegree subroutine.
+Note also that every vertex of a configuration in $\bar{\mathcal{D}}$ basically has a degree range, since auxiliary neighbors of a cut-vertex have a degree range.
+
+\paragraph{Checking configurations}
+We use the constant \CONFDEGMAX that depends on the configuration set $\mathcal{D}$.
+Specifically, \CONFDEGMAX is 12, representing the maximum value of $\delta$ for any configuration $(Z, \delta) \in \mathcal{D}$.
+
+The \containConf subroutine takes an input set of configurations $\mathcal{K}$.
+For the purpose of this algorithm, $\mathcal{K}$ is limited to either $\emptyset$, $\bar{\mathcal{D}}$, or $\bar{\mathcal{D}} \cup \{T_{7^3}\}$.
+The final one is necessary to handle Lemma \ref{lem:zero-deg7,7}.
+For $T_{7^3}$, we choose the special dart in the same way as $\bar{\mathcal{D}}$, so they all have each special dart.
+
+Every configuration $(Z', \delta^{\prime-}, \delta^{\prime+})$ from $\bar{\mathcal{D}}$ has at most one vertex $c$ with $\delta^{\prime-}(c)=\delta^{\prime+}(c) > 8$.
+We choose the special dart, say $f=xy$, of $Z'$ by maximizing the degrees of endpoints lexicographically, so the head $y$ is $c$, if such a vertex $c$ exists.
+This is checked by looking $\delta^{\prime-}(y) > 8$.
+In the \containConf routine, we only consider mapping of $c$ to the center $c^*$ in $Z^*$.
+Thus, if $\delta^{\prime-}(y) > 8$, then $f$ must be mapped to $f^*$ with $\head(f^*)=c^*$.
+
+Furthermore, we only need to consider mapping of $f$ to some dart $f^*$ in $Z^*$ whose endpoints have the same degree values.
+To facilitate this, we classify the darts $e^*$ of $(Z^*, \delta^*)$ according to the values of $\delta^*$ of $\head(e^*)$, $\tail(e^*)=\head(\reverse(e^*))$.
+This procedure is in the \dartsByDegree subroutine in Algorithm \ref{alg:darts_by_degree}.
+Since $\mathcal{K}$ is either $\emptyset$, $\bar{\mathcal{D}}$, or $\bar{\mathcal{D}} \cup \{T_{7^3}\}$, we only need to classify the darts whose endpoints have degrees of at most \CONFDEGMAX.
+
+The procedure to determine the existence of a homomorphism from $Z'$ to $Z^*$ such that $f$ maps to a specified dart $f^* \in D(Z^*)$ is in the \rootedContainConf subroutine in Algorithm \ref{alg:rooted_contain_conf}.
+
+\begin{algorithm}[H]
+    \caption{\containConfWithLink($(Z^*, \delta^*)$, $c^*$, $\mathcal{K}$)}
+    \label{alg:contain_conf}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z^*, \delta^*)$ with a center vertex $c^*$, and a set of configurations $\mathcal{K}$.}
+        \Ensure{\True\ if there exists a configuration $((Z', \delta^{\prime-}, \delta^{\prime+}), f) \in \mathcal{K}$ and a homomorphism $\phi$ from $(Z', \delta^{\prime-}, \delta^{\prime+})$ to $(Z^*, \delta^*)$ such that all $v \in V(Z')$ with $\delta^{\prime-}(v)=\delta^{\prime+}(v) > 8$ satisfy $\phi(v)=c^*$ , otherwise \False.}
+        \State \texttt{darts\_by\_degree} $\gets$ \Call{dartsByDegree}{$(Z^*, \delta^*)$}
+        \ForAll{$((Z', \delta^{\prime-}, \delta^{\prime+}), f) \in \mathcal{K}$} \Comment{$f$ is chosen by the \maximumDartDegree routine.}
+            \State $y \gets \head(f)$
+            \State $x \gets \head(\reverse(f))$
+            \State $d_y \gets \delta^{\prime-}(y)$
+            \State $d_x \gets \delta^{\prime-}(x)$
+            \ForAll{$f^* \in \texttt{darts\_by\_degree}[d_y][d_x]$}
+                 \If {$d_y > 8$ and $\head(f^*) \neq c^*$}
+                     \Continue
+                 \EndIf
+                 \If {\Call{rootedContainConf}{$(Z^*, \delta^*)$, $f^*$, $(Z', \delta^{\prime-}, \delta^{\prime+})$, $f$}}
+                     \State \Return \True
+                 \EndIf
+            \EndFor 
+        \EndFor
+        \State \Return \False
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\dartsByDegreeWithLink($Z^*, \delta^*$)}
+    \label{alg:darts_by_degree}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z^*, \delta^*)$.}
+        \Ensure{A $(\CONFDEGMAX + 1) \times (\CONFDEGMAX + 1)$ array of dart sets \texttt{darts\_by\_degree} such that \texttt{darts\_by\_degree}[$d_y$][$d_x$] is the set of darts $xy$ where $\delta^*(x)=d_x, \delta^*(y)=d_y$.}
+        \State \texttt{darts\_by\_degree} $\gets$ a $(\CONFDEGMAX + 1) \times (\CONFDEGMAX + 1)$ array of dart sets
+        \ForAll{$e \in D(Z^*)$}
+            \State $y \gets \head(e)$
+            \State $x \gets \head(\reverse(e))$
+            \State $d_y \gets \delta^*(y)$
+            \State $d_x \gets \delta^*(x)$
+            \If {$d_y > \CONFDEGMAX$ or $d_x > \CONFDEGMAX$}
+                \Continue
+            \EndIf
+            \State $\texttt{darts\_by\_degree}[d_y][d_x] = \texttt{darts\_by\_degree}[d_y][d_x] \cup \{e\}$
+        \EndFor
+        \State \Return \texttt{darts\_by\_degree}
+    \end{algorithmic}
+\end{algorithm}
+
+In the \rootedContainConf subroutine,
+we check whether the homomorphism $\phi^*$ from $(Z, \delta^-, \delta^+)$ to $(Z^*, \delta^*)$ with $e$ mapping to $e^*$ satisfy, for every $v$ in $Z$ with $v^*=\phi^*(v)$, $\delta^-(v) \leq \delta^*(v^*) \leq \delta^+(v)$ holds by calling Algorithm \ref{alg:homomorphism} with the $\gInclude$ function.
+If so, we return true; otherwise return false.
+
+\begin{algorithm}[H]
+    \caption{\rootedContainConfWithLink($(Z^*, \delta^*)$ $e^*$, $(Z, \delta^-, \delta^+)$, $e$)}
+    \label{alg:rooted_contain_conf}
+    \begin{algorithmic}[1]
+        \Require{Two pseudo-configurations $(Z^*, \delta^*)$, $(Z, \delta^-, \delta^+)$ with darts $e^* \in D(Z^*), e \in D(Z)$.}
+        \Ensure{\True\ if a homomorphism $\phi$ from $(Z, \delta^-, \delta^+)$ to $(Z^*, \delta^*)$ with $\phi(e)=e^*$ exists, otherwise \False.}
+        \State \Return \Call{homomorphism}{$(Z, \delta^-, \delta^+), e, (Z^*, \delta^*, \delta^*), e^*, \gInclude$} $\neq \texttt{null}$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Configuration with degree ranges blocked by reducible configurations}
+\label{code:blocking-by-reduc}
+
+In this section, we present the routine that determines whether a pseudo-configuration with degree ranges $(Z^*, \delta^{*-}, \delta^{*+})$ with the center $c^*$ is blocked by a given set of reducible configurations $\mathcal{K}$, as described in Section \ref{sect:block}.
+The main routine is \blockByReducibleConfiguration in Algorithm \ref{alg:block_by_reduc}.
+
+By Lemma \ref{lem:bounded-ranges}, we first select a finite set of degrees from $[\delta^{*-}(v), \delta^{*+}(v)]$, for each vertex $v \in Z$, that are representative to check blocking by reducible configurations in $\bar{\mathcal{D}}$.
+We then generate all combinations of these degrees across all vertices.
+Specifically, we select 
+\begin{itemize}
+    \item all degrees from $[\delta^{*-}(c^*), \delta^{*+}(c^*)]$ if $\delta^{*+}(c^*) \leq \CONFDEGMAX$, otherwise use only $\delta^{*+}(c^*)$, or
+    \item all degrees from $[\delta^{*-}(v^*), \delta^{*+}(v^*)]$ if $\delta^{*+}(v^*) \leq 8$, otherwise use only $\delta^{*+}(v^*)$, if $v^* \neq c^*$.
+\end{itemize}
+This procedure is in the \representativeDegree subroutine in Algorithm \ref{alg:split}.
+
+Next, for each pseudo-configuration with a single specified degree obtained by the \representativeDegree subroutine, we check whether some configuration from $\mathcal{K}$ has a homomorphic image into it satisfying the mapping condition about $c^*$ using the \containConf subroutine in Algorithm \ref{alg:contain_conf}.
+
+\begin{algorithm}[H]
+    \caption{\blockedByReducibleConfigurationWithLink($(Z^*, \delta^{*-}, \delta^{*+})$, $c^*$, $\mathcal{K}$)}
+    \label{alg:block_by_reduc}
+    \begin{algorithmic}[1]
+        \Require{A pseudo configuration $(Z^*, \delta^{*-}, \delta^{*+})$, a center vertex $c^*$, a set of configurations $\mathcal{K}$.}
+        \Ensure{\True\ if $(Z^*, \delta^{*-}, \delta^{*+})$ is blocked by $\mathcal{K}$, otherwise \False.}
+        \ForAll{$(\tilde{Z}, \tilde{\delta}) \in$ \Call{representativeDegree}{($Z^*, \delta^{*-}, \delta^{*+}$), $c^*$}}
+            \If {\Call{containConf}{$(\tilde{Z}, \tilde{\delta})$, $c^*$, $\mathcal{K}$} = \False}
+                \State \Return \False
+            \EndIf
+        \EndFor
+        \State \Return \True
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\representativeDegreeWithLink($(Z^*, \delta^{*-}, \delta^{*+})$, $c^*$)}
+    \label{alg:split}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z^*, \delta^{*-}, \delta^{*+})$ with a center vertex $c^*$.}
+        \Ensure{A set of pseudo-configurations $\{(Z^*, \delta')\}$ obtained from $(Z^{*}, \delta^{*-}, \delta^{*+})$ by
+        generating all combinations of single representative degrees for each vertex.}
+        \State $\mathcal{T}' \gets \{\delta\}$,
+        where $\delta$ is any map from $V(Z^*)$ to $\mathbb{N}$.
+        \ForAll {$v^* \in V(Z^*)$ \bf{one at the time}}
+            \If {$v^* = c^*$ and $\delta^+(v^*) > \CONFDEGMAX$}
+                \State $L \gets \{\delta^{*+}(v^*)\}$
+            \ElsIf {$v^* \neq c^*$ and $\delta^+(v^*) > 8$}
+                \State $L \gets \{\delta^{*+}(v^*)\}$
+            \Else
+                \State $L \gets \{d \mid \delta^{*-}(v) \leq d \leq \delta^{*+}(v)\}$
+            \EndIf
+            \State $\tilde{\mathcal{T}} \gets \emptyset$
+            \ForAll{$\delta' \in \mathcal{T}'$}
+                \ForAll {$d \in L$}
+                    \State $\tilde{\delta} \gets$ a copy of $\delta'$.
+                    \State $\tilde{\delta}(v) \gets d$
+                    \State $\tilde{\mathcal{T}} \gets \tilde{\mathcal{T}} \cup \{ \tilde{\delta}\}$
+                \EndFor
+            \EndFor
+            \State $\mathcal{T}' \gets \tilde{\mathcal{T}}$
+        \EndFor
+        \State \Return $\{(Z^*, \delta') \mid \delta' \in \mathcal{T}'\}$
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Free combination of discharging rules with degree ranges}
+\newcommand{\addRuleToCombination}{\texttt{addRuleToCombination}\xspace}
+\newcommand{\combineRules}{\texttt{combineRules}\xspace}
+In this subsection, we present the pseudo-code that combines discharging rules to prove Lemma \ref{lem:vsends}, \ref{lem:vsends-noconf}.
+Although we have already described the algorithm in Section \ref{subsub:combine_rules}, we provide the pseudocode for clarity.
+In our \Cpp program, a free combination $R^*$ of discharging rules has the flag representing the subset of rules $\tilde{R} \subseteq \mathcal{R}$ that lead to $R^*$.
+The flag is represented by $f \colon \mathcal{R} \to \{\True, \False\}$ satisfying $f(R)=\True$ if and only if $R \in \tilde{R}$.
+This flag is used in the \pruneByNonAssociatedRule subroutine in Algorithm \ref{alg:prune_non_assoc_rule}.
+
+% \yuta{new}
+\begin{algorithm}[H]
+    \caption{\addRuleToCombinationWithLink($R^*, R, \mathcal{K}$)}
+    \label{alg:add_rule}
+    \begin{algorithmic}[1]
+        \Require{A combined rule $R^*$, a rule $R$, a configuration set $\mathcal{K}$
+        is the set of configurations to be avoided.}
+
+        \Ensure{Finds the set of rules combined from $R^*$ and $R$ that are not blocked by  $\mathcal{K}$.}
+        \State $(Z^*, \delta^{*-}, \delta^{*+}, e^*, r^*, f^*) \gets R^*$
+        \State $(Z, \delta^-, \delta^+, e, r) \gets R$
+        \State $\tilde{\mathcal{Z}} \gets$ \Call{freeHomomorphismConfiguration}{$(Z^*, \delta^{*-}, \delta^{*+}) \sqcup (Z, \delta^-, \delta^+), \{(e^*,e)\}$}
+        \State $f^*(R) \gets \True$
+        \State $\tilde{\mathcal{R}} \gets \{(\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}, \tilde{\phi}(e^*), r^* + r, f^*) \mid ((\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}), \tilde{\phi}) \in \tilde{\mathcal{Z}}\}$
+        \If {$\mathcal K=\emptyset$}
+            \State \Return $\tilde{\mathcal{R}}$
+        \EndIf
+        \State $\mathcal{R}^* \gets \emptyset$
+        \ForAll{$(\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}, \tilde{e}, \tilde{r}, \tilde{f}) \in \tilde{\mathcal{R}}$}
+            \If {\Call{blockedByReducibleConfiguration}{$(\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}), \head(\tilde{e}), \mathcal{K}$} $=$ \True}
+                \Continue
+            \EndIf
+            \State $\mathcal{R}^* \gets \mathcal{R}^* \cup \{(\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}, \tilde{e}, \tilde{r}, \tilde{f})\}$
+        \EndFor
+        \State \Return $\mathcal{R}^*$
+    \end{algorithmic}
+\end{algorithm}
+
+% \yuta{new}
+\begin{algorithm}[H]
+    \caption{\combineRulesWithLink($\mathcal{R}$, $\mathcal{K}$) - Lemma \ref{lem:vsends}, \ref{lem:vsends-noconf}}
+    \label{alg:combine_rules}
+    \begin{algorithmic}[1]
+        \Require{A set of rules $\mathcal{R}$, a set of configurations $\mathcal{K}$}
+        \Ensure{The set $\cR^*$ of combined rules, each is a free combination of some subset $ \tilde{\mathcal{R}} \subseteq \mathcal{R}$ but only combinations not blocked by $\mathcal{K}$ with the map $f$ such that $f(R) = \True$ if and only if $R \in \tilde{\mathcal{R}}$}
+        \State $f_0 \colon \mathcal{R} \to \{\True, \False\}$, initialized by $f_0(R)=\False$ for all $R \in \mathcal{R}$
+        \State $\mathcal{R}^* \gets \{(Z_0, \delta_0^-, \delta_0^+, e_0, 0, f_0)\}$, where $(Z_0, \delta_0^-, \delta_0^+)$ is a pseudo-configuration with $V(Z_0) = \{s_0,t_0\}$, $D(Z_0) = \{s_0t_0, t_0s_0\}$, $\delta_0^-(s_0)=\delta_0^-(t_0)=1$, $\delta_0^+(s_0)=\delta_0^+(t_0)=\infty$, and $e_0=s_0t_0$.
+        \ForAll{$R \in \mathcal{R}$}
+            \State $\mathcal{R}^{*'} \gets \mathcal{R}^*$
+            \ForAll{$R^* \in \mathcal{R}^*$}
+                \State $\mathcal{R}^{*'} \gets \mathcal{R}^{*'} \cup$ \Call{addRuleToCombination}{$R^*, R, \mathcal{K}$}
+            \EndFor
+            \State $\mathcal{R}^* \gets \mathcal{R}^{*'}$
+        \EndFor
+        \State \Return $\mathcal{R}^*$
+    \end{algorithmic}
+\end{algorithm}
+
+% \yuta{old}
+% \begin{algorithm}[H]
+%     \caption{\addRuleToCombinationWithLink($R^*, R, \mathcal{K}$)}
+%     \label{alg:add_rule}
+%     \begin{algorithmic}[1]
+%         \Require{A combined rule $R^*$, a rule $R$, a configuration set $\mathcal{K}$
+%         is the set of discharging rules to be avoided.}
+
+%         \Ensure{Finds the set of rules combined from $R^*$ and $R$ that are not blocked by  $\mathcal{K}$.}
+%         \State $(Z^*, \delta^{*-}, \delta^{*+}, e^*, r^*) \gets R^*$
+%         \State $(Z, \delta^-, \delta^+, e, r) \gets R$
+%         \State $\tilde{\mathcal{Z}} \gets$ \Call{freeHomomorphismConfiguration}{$(Z^*, \delta^{*-}, \delta^{*+}) \sqcup (Z, \delta^-, \delta^+), \{(e^*,e)\}$}
+%         \State $\tilde{\mathcal{R}} \gets \{(\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}, \tilde{\phi}(e^*), r^* + r) \mid ((\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}), \tilde{\phi}) \in \tilde{\mathcal{Z}}\}$
+%         \If {$\mathcal K=\emptyset$}
+%             \State \Return $\tilde{\mathcal{R}}$
+%         \EndIf
+%         \State $\mathcal{R}^* \gets \emptyset$
+%         \ForAll{$(\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}, \tilde{e}, \tilde{r}) \in \tilde{\mathcal{R}}$}
+%             \If {\Call{blockedByReducibleConfiguration}{$(\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}), \head(\tilde{e}), \mathcal{K}$} $=$ \True}
+%                 \Continue
+%             \EndIf
+%             \State $\mathcal{R}^* \gets \mathcal{R}^* \cup \{(\tilde{Z}, \tilde{\delta}^{-}, \tilde{\delta}^{+}, \tilde{e}, \tilde{r})\}$
+%         \EndFor
+%         \State \Return $\mathcal{R}^*$
+%     \end{algorithmic}
+% \end{algorithm}
+
+% \yuta{old}
+% \begin{algorithm}[H]
+%     \caption{\combineRulesWithLink($\mathcal{R}$, $\mathcal{K}$) - Lemma \ref{lem:vsends}, \ref{lem:vsends-noconf}}
+%     \label{alg:combine_rules}
+%     \begin{algorithmic}[1]
+%         \Require{A set of rules $\mathcal{R}$, a set of configurations $\mathcal{K}$}
+%         \Ensure{The set $\cR^*$ of combined rules, each is a free combination of some subset of $\mathcal{R}$ but only combinations not blocked by $\mathcal{K}$.}
+%         \State $\mathcal{R}^* \gets \{(Z_0, \delta_0^-, \delta_0^+, e_0, 0)\}$, where $(Z_0, \delta_0^-, \delta_0^+)$ is a pseudo-configuration with $V(Z_0) = \{s_0,t_0\}$, $D(Z_0) = \{s_0t_0, t_0s_0\}$, $\delta_0^-(s_0)=\delta_0^-(t_0)=1$, $\delta_0^+(s_0)=\delta_0^+(t_0)=\infty$.
+%         \ForAll{$R \in \mathcal{R}$}
+%             \State $\mathcal{R}^{*'} \gets \mathcal{R}^*$
+%             \ForAll{$R^* \in \mathcal{R}^*$}
+%                 \State $\mathcal{R}^{*'} \gets \mathcal{R}^{*'} \cup$ \Call{addRuleToCombination}{$R^*, R, \mathcal{K}$}
+%             \EndFor
+%             \State $\mathcal{R}^* \gets \mathcal{R}^{*'}$
+%         \EndFor
+%         \State \Return $\mathcal{R}^*$
+%     \end{algorithmic}
+% \end{algorithm}
+
+By calling the \combineRules routine with input $\mathcal{R}$ being the set of rules depicted in Figure \ref{fig:rules} and $\mathcal{K}=\emptyset$, we can obtain the set $\mathcal{R}^*$ in Lemma \ref{lem:free-comb-rules}.
+We check the following Lemma.
+
+\begin{lem}
+\label{comp:vsends-noconf}
+\showlabel{comp:vsends-noconf}
+    Let $\mathcal{R}^*$ be the output for Algorithm \ref{alg:combine_rules} with inputs $\mathcal{R}$ being the set of rules depicted in Figure \ref{fig:rules} and $\mathcal{K}=\emptyset$.
+    The maximum value of $r^*$ for all $(Z^*, \delta^{*-}, \delta^{*+}, e^*, r^*) \in \mathcal{R}^*$ is 8.
+    Moreover, if it is exactly 8, then $(Z^*, \delta^{*-}, \delta^{*+})$ is isomorphic to one of pseudo-configurations depicted in Figure \ref{fig:any_send8} with $e^*$ mapping to the edge with the arrow.
+\end{lem}
+
+Similarly, by calling the \combineRules routine with input $\mathcal{R}$ being the set of rules depicted in Figure \ref{fig:rules} and $\mathcal{K}=\bar{\mathcal{D}}$, we can obtain the set $\mathcal{R}^{*-\mathcal{D}}$ in Lemma \ref{lem:free-comb-rules}.
+We check the following Lemma.
+
+\begin{lem}
+\label{comp:vsends}
+\showlabel{comp:vsends}
+    Let $\mathcal{R}^{*-\mathcal{D}}$ be the output for Algorithm \ref{alg:combine_rules} with inputs $\mathcal{R}$ being the set of rules depicted in Figure \ref{fig:rules} and $\mathcal{K}=\bar{\mathcal{D}}$.
+    The maximum value of $r^*$ for all $(Z^*, \delta^{*-}, \delta^{*+}, e^*, r^*) \in \mathcal{R}^*$ is 5.
+    Moreover, if it is exactly 5, then $(Z^*, \delta^{*-}, \delta^{*+})$ is isomorphic to one of pseudo-configurations depicted in Figure \ref{fig:send5} with $e^*$ mapping to the edge with the arrow.
+\end{lem}
+
+
+\subsection{Enumerating bad cartwheels with tail ranges}
+In this section, we present the pseudocodes corresponding to the algorithm for enumerating bad cartwheels, as described in Section \ref{sub:overcharged_cartwheel_enumeration}.
+
+
+\subsubsection{Charges along an edge and a bound on the final charge}
+In this section, we introduce several algorithms for rule application, as described in Section \ref{sect:hom-to-ranges}.
+We use these routines to calculate the lower and upper bounds on the amount of charge transferred by the rules.
+
+Recall that $\gInclude, \gIntersection$ are defined in Section \ref{sect:code-hom}.
+The \alwaysApply subroutine checks whether a rule $R$ {\bf always} applies to $e^*$ in $(Z^*, \delta^{*-}, \delta^{*+})$.
+This routine calls Algorithm \ref{alg:homomorphism} with the $\gInclude$ function, and returns \True\ if such a homomorphism $\phi^*$ from $R$ to $Z^*$ exists.
+Similarly, the \neverApply subroutine checks whether a rule $R$ {\bf never} applies to $e^*$ in $(Z^*, \delta^{*-}, \delta^{*+})$.
+This routine calls Algorithm \ref{alg:homomorphism} with the $\gIntersection$ function, and returns \True\ if no such homomorphism exists.
+
+The \amountOfChargeSend subroutine calculates the amount of charge transferred across $e$ by the rule set $\mathcal{R}$ for every $(Z_C, \delta_C) \in (Z_C, \delta_C^-, \delta_C^+)$.
+This value is computed as the sum of the charges associated with the rules that always apply to $e$ in $(Z_C, \delta_C^-, \delta_C^+)$.
+The \amountOfPossibleChargeSend subroutine calculates the maximum possible charge transferred across $e$ by the rule set $\mathcal{R}$ for any $(Z_C, \delta_C) \in (Z_C, \delta_C^-, \delta_C^+)$ that contains no centered reducible configuration from $\mathcal{D}$.
+This value is computed as the maximum charge associated with the combined rules in $\mathcal{R}^{*-\mathcal{D}}$, excluding the rules that never apply to $e$ in $(Z_C, \delta_C^-, \delta_C^+)$.
+
+\begin{algorithm}[H]
+    \caption{\alwaysApplyWithLink($(Z^*, \delta^{*-}, \delta^{*+}), e^*, R$)}
+    \label{alg:ineivtably_apply}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z^*, \delta^{*-}, \delta^{*+})$ with a dart $e^*$ and a rule $R$.}
+        \Ensure{\True\ if $R$ applies to $e^*$ for every $(Z^*, \delta^*) \in (Z^*, \delta^{*-}, \delta^{*+})$, otherwise \False.}
+        \State $(Z, \delta^-, \delta^+, e, r) \gets R$
+        \State \Return \Call{homomorphism}{$(Z, \delta^-, \delta^+), e, (Z^*, \delta^{*-}, \delta^{*+}), e^*, \gInclude$} $\neq$ \texttt{null}
+    \end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+    \caption{\neverApplyWithLink($(Z^*, \delta^{*-}, \delta^{*+}), e^*, R$)}
+    \label{alg:never_apply}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z^*, \delta^{*-}, \delta^{*+})$ with a dart $e^*$ and a rule $R$.}
+        \Ensure{\True\ if $R$ does not apply to $e^*$ for any $(Z^*, \delta^*) \in (Z^*, \delta^{*-}, \delta^{*+})$, otherwise \False.}
+        \State $(Z, \delta^-, \delta^+, e, r) \gets R$
+        \State \Return \Call{homomorphism}{$(Z, \delta^-, \delta^+), e, (Z^*, \delta^{*-}, \delta^{*+}), e^*, \gIntersection$} $=$ \texttt{null}
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\amountOfChargeSendWithLink($(Z_C, \delta_C^-, \delta_C^+), e, \mathcal{R}$)}
+    \label{alg:amount_of_charge_send}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z_C, \delta_C^-, \delta_C^+)$ with a dart $e$, a set of rules $\mathcal{R}$.}
+        \Ensure{The sum of charges $r$ associated with $R \in \mathcal{R}$ that always applies to $e$ in $(Z_C, \delta_C^-, \delta_C^+)$.}
+        \State $a \gets 0$
+        \ForAll{$R \in \mathcal{R}$}
+            \If {\Call{alwaysApply}{$(Z_C, \delta_C^-, \delta_C^+), e, R$}}
+                 \State $a \gets a + r(R)$
+            \EndIf
+        \EndFor
+        \State \Return $a$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\amountOfPossibleChargeSendWithLink($(Z_C, \delta_C^-, \delta_C^+), e, \mathcal{R}^{*-\mathcal{D}}$)}
+    \label{alg:amount_of_possible_charge_send}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z_C, \delta_C^-, \delta_C^+)$ with a dart $e$, a set of rules $\mathcal{R}$.}
+        \Ensure{The maximum of charge $r^*$ associated with $R^* \in \mathcal{R}^{*-\mathcal{D}}$ except when $R^*$ never applies to $e$ in $(Z_C, \delta_C^-, \delta_C^+)$.}
+        \State $a \gets 0$
+        \ForAll{$R^* \in \mathcal{R}^{*-\mathcal{D}}$}
+            \If {\Call{neverApply}{$(Z_C, \delta_C^-, \delta_C^+), e, R^*$}}
+                \Continue
+            \EndIf
+            \State $a \gets \max(a, r(R))$
+        \EndFor
+        \State \Return $a$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Enumerating degrees of neighbors}
+
+In this section, we describe the procedure to enumerate degrees of neighbors of the center, described in Section \ref{subsub:enum-degree-neighbor}.
+The main routine is the \enumPossibleBadWheels routine in Algorithm \ref{alg:enum_possible_bad_wheels}.
+We use the array $\CARTWHEELDEGREES \texttt{ = [5,6,7,8,9]}$, which represents the possible degrees assigned to vertices except the center for free cartwheels with limited degrees.
+In the \enumWheels routine in Algorithm \ref{alg:enum_wheel}, given a center degree $d$, we enumerate all degree assignments for neighbors up to rotational equivalence.
+To achieve this, we generate all arrays of length $d$ whose elements are chosen from $\CARTWHEELDEGREES$, and retain only those for which every rotation is lexicographically greater than or equal to the array itself.
+Considering this condition, we slightly prune the search as follows: for each $d_0$ in \CARTWHEELDEGREES, we first assign $d_0$ to $\texttt{degrees}[0]$ and do not assign any element smaller than it to the remaining positions in the array.
+This is justified because no array containing an element strictly smaller than its first element satisfies the above condition.
+
+Then, we call the \generateCartwheel subroutine in Algorithm \ref{alg:generate_cartwheel} to generate a free cartwheel with limited degrees with all the second neighbors having tail ranges $[5,9]$.
+
+\begin{algorithm}[H]
+    \caption{\enumWheelsWithLink($d$)}
+    \label{alg:enum_wheel}
+    \begin{algorithmic}[1]
+        \Require{A degree of the center $d$.}
+        \Ensure{A set of free cartwheels with limited degrees and tail ranges $(Z, \delta^-, \delta^+)$ such that the center has degree $d$, the degrees of its neighbors are chosen from \CARTWHEELDEGREES, and all the degree-ranges of its second neighbors are $[5,9]$.}
+        \State $\mathcal{W} \gets \emptyset$
+        \Procedure{enumDegree}{$\texttt{degrees}, i, i_{\mathrm{lowest}}$}
+            \If {$i=d$}
+                \If {some rotation of \texttt{degrees} is lexicographically strictly smaller than \texttt{degrees}}
+                    \State \Return
+                \EndIf
+                \State $(Z, \delta^-, \delta^+) \gets$ \Call{generateCartWheel}{$d$, \texttt{degrees}}
+                \State $\mathcal{W} \gets \mathcal{W} \cup \{(Z, \delta^-, \delta^+)\}$
+                \State \Return
+            \EndIf
+            \ForAll{$j \in \{i_{\mathrm{lowest}}, \ldots, 4\}$}
+                \State $\texttt{degrees}[i] \gets \CARTWHEELDEGREES[j]$
+                \State \Call{enumDegree}{$\texttt{degrees}, i+1, i_{\mathrm{lowest}}$}
+            \EndFor
+            \State \Return
+        \EndProcedure
+        \State $\texttt{degrees} \gets$ an array of size $d$.
+        \ForAll{$j \in \{0, \ldots, 4\}$}
+            \State $\texttt{degrees[0]} \gets \CARTWHEELDEGREES[j]$
+            \State \Call{enumDegree}{$\texttt{degrees}, 1, j$}
+        \EndFor
+        \State \Return $\mathcal{W}$
+    \end{algorithmic}
+\end{algorithm}
+
+
+In the \generateCartwheel subroutine in Algorithm \ref{alg:generate_cartwheel},
+we construct $\texttt{rotations}$ representing the rotation of vertices around each vertex.
+When $\texttt{rotations}[i]$ is a list of integers $[a_0, \ldots, a_k]$, it means that $v_i$ is adjacent to $v_{a_0}, \ldots, v_{a_k}$ in this rotation.
+If $a_i=-1$, it represents the boundary.
+
+First, we compute the rotations for the vertices within the neighbors of the center.
+Second, we add the second neighbors of the center, if they are adjacent to the neighbor of the center of degree not $9$.
+More precisely, for each neighbor $v_i$ of the center $v$, we add neighbors of it so that $v_i$ has a specified degree, if this degree is not $9$.
+Every time we add new vertices, we extend $\texttt{rotations}$.
+Finally, we add $-1$ to all second neighbors and to neighbors of degree $9$ to represent the boundary.
+Then, we call the \fromVRotations subroutine in Algorithm \ref{alg:from_v_rotations} to get the pseudo triangulation represented by \texttt{rotations}.
+
+\begin{algorithm}[H]
+    \caption{\textsc{\generateCartwheelWithLink}($d, \texttt{degrees}$)}
+    \label{alg:generate_cartwheel}
+    \begin{algorithmic}[1]
+        \Require{The degree of the center $d$, and an array $\texttt{degrees}$ specifying the degrees of its neighbors.}
+        \Ensure{A free cartwheel with limited degrees and tail ranges $C$ such that the center has degree $d$, the degrees of its neighbors are specified by \texttt{degrees}, and all the degree-ranges of its second neighbors are $[5,9]$.}
+        
+        \State $\texttt{rotations} \gets \text{ a list of $d+1$ lists}$.
+        \State $\texttt{rotations}[0] \gets [1, \ldots, d]$
+        
+        \ForAll{$i \in \{1, \ldots, d\}$}
+            \State $i' \gets i+1 \text{ if } i < d \text{ otherwise } 1$
+            \State $i'' \gets i-1 \text{ if } i > 1 \text{ otherwise } d$
+            \State $\texttt{rotations}[i] \gets [i', 0, i'']$
+        \EndFor
+        
+        \State $k \gets d + 1$ \Comment{$k$ is the next vertex id to assign.}
+        \ForAll{$i \in \{1, \dots, d\}$}
+            \If{$\texttt{degrees}[i-1] = 9$} \Comment{Do not add second neighbors if the degree is $9$.}
+                \State \textbf{continue}
+            \EndIf
+            \State $A \gets \texttt{degrees}[i-1] - |\texttt{rotations}[i]|$ \Comment{Number of new neighbors to add to $v_i$}
+            \RepeatN{$A$}
+                \State $i_\text{last} \gets \text{the last element of } \texttt{rotations}[i]$
+                \State $\texttt{rotations.push\_back}([])$
+                \State $\texttt{rotations}[k] \gets [i, i_\text{last}]$
+                \State $\texttt{rotations}[i]\texttt{.push\_back}(k)$
+                \State $\texttt{rotations}[i_\text{last}] \gets [k] \concat \texttt{rotations}[i_\text{last}]$
+                \State $k \gets k + 1$
+            \End
+            \State $i_\text{first} \gets \text{the first element of } \texttt{rotations}[i]$
+            \State $i_\text{last} \gets \text{the last element of } \texttt{rotations}[i]$
+            \State $\texttt{rotations}[i_\text{first}]\texttt{.push\_back}(i_\text{last})$
+            \State $\texttt{rotations}[i_\text{last}] \gets [i_\text{first}] \concat \texttt{rotations}[i_\text{last}]$
+        \EndFor
+        
+        \ForAll{$i \in \{1, \dots, k-1\}$}
+            \If{$i > d \text{ \textbf{or} } \texttt{degrees}[i-1] = 9$}
+                \State $\texttt{rotations}[i]\texttt{.push\_back}(-1)$ \Comment{$-1$ represents the boundary}
+            \EndIf
+        \EndFor
+        
+        % \State $V \gets \{v_0, v_1, \ldots, v_{k-1}\}$
+        \State $Z \gets$ \Call{fromVRotations}{$k, \texttt{rotation}$} \Comment{$V(Z)=\{v_0, \ldots, v_{k-1}\}$}
+        \State $\delta^-, \delta^+ \colon V(Z) \to \mathbb{N}$ such that
+        $\delta^-(v_0)=\delta^+(v_0)=d$,
+        $\delta^-(v_i)=\delta^+(v_i)=\texttt{degrees}[i-1]$ if $0 < i \leq d$, and
+        $\delta^-(v_i)=5$, $\delta^+(v_i)=9$ if $d < i < k$.
+        \State \Return $(Z, \delta^-, \delta^+)$
+    \end{algorithmic}
+\end{algorithm}
+
+In the \enumPossibleBadWheels routine, we call the \enumWheels subroutine to obtain all combinations of degrees for neighbors of the center.
+Then, we remove free cartwheels with limited degrees and tail ranges if (i) an upper bound of the final charge is less than 0, or (ii) blocked by reducible configurations from $\bar{\mathcal{D}}$ by calling the \prune routine in Algorithm \ref{alg:prune}.
+
+\begin{algorithm}[H]
+    \caption{\enumPossibleBadWheelsWithLink($d, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$)}
+    \label{alg:enum_possible_bad_wheels}
+    \begin{algorithmic}[1]
+        \Require{The center degree $d$, the set of rules $\mathcal{R}$, the set of combined rules $\mathcal{R}^{*-\mathcal{D}}$, the set of configurations $\bar{\mathcal{D}}$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges, where the center degree is $d$, all the second neighbors of the center have degree-ranges $[5,9]$, and it can contain possibly bad cartwheels.}
+        \State $\mathcal{C}^d_{0} \gets \emptyset$
+        \ForAll{$(Z, \delta^-, \delta^+) \in$ \Call{enumWheels}{$d$}}
+             \If {\Call{prune}{$(Z, \delta^-, \delta^+), \emptyset, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$}}
+             \Continue
+             \EndIf
+        \State $\mathcal{C}^d_0 \gets \mathcal{C}^d_0 \cup \{(Z, \delta^-, \delta^+)\}$
+        \EndFor
+        \State \Return $\mathcal{C}^d_0$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Fixing rules applied from neighbors to the center.}
+In this section, we present the pseudocode for fixing the set of rules applied from neighbors to the center, described in Section \ref{subsub:fix_in_rules}.
+The main routine is Algorithm \ref{alg:fix_in_rules}.
+As described in Section \ref{subsub:fix_in_rules}, we decide the set of rules $\mathcal{R}_i$ applied to $v_iv$.
+We take a free combination $R_i^* \in \mathcal{R}^{*-\mathcal{D}}$ and update the degree-ranges of the current free cartwheel so that $\mathcal{R}_i$ is the set of rules that lead to the free combination $\mathcal{R}_i$.
+
+The \updateDegreeByRule subroutine in Algorithm \ref{alg:update_degree_by_rule} updates the degree-ranges as above.
+Every time we decide $\mathcal{R}_i$ by updating degree-ranges, we check whether the updated free cartwheel with limited degrees and tail ranges is removed by the pruning method by the \prune routine in Algorithm \ref{alg:prune}.
+
+\begin{algorithm}[H]
+    \caption{\fixInRulesWithLink($(Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+), \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$)}
+    \label{alg:fix_in_rules}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+)$ such that all degree-ranges of second neighbors of the center are $[5,9]$, a set of rules $\mathcal{R}$, a set of combined rules $\mathcal{R}^{*-\mathcal{D}}$, a set of configurations $\bar{\mathcal{D}}$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges obtained from $(Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+)$ by determining degrees by fixing a set of rules $\mathcal{R}_i$ applied from each neighbor $v_i$ to the center $v$.}
+        \State $\mathcal{C}_0 \gets \{((Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+), \emptyset)\}$
+        \ForAll{$i \in \{1, \ldots, d\}$}
+            \State $\mathcal{C}_i \gets \emptyset$
+            \ForAll{$((Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^{i-1}) \in \mathcal{C}_{i-1}$}
+                \ForAll{$R_i^* \in \mathcal{R}^{*-\mathcal{D}}$}
+                    \State $\mathcal{C}' \gets$ \Call{updateDegreeByRule}{$(Z_C, \delta_C^-, \delta_C^+), v_iv, R_i^*$}
+                    \ForAll{$(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+) \in \mathcal{C}'$}
+                        \If {\Call{prune}{$(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+), \{R_j^*\}_{j=1}^i, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$}}
+                            \Continue
+                        \EndIf
+                        \State $\mathcal{C}_i \gets \mathcal{C}_i \cup \{((Z_{C'}, \delta_{C'}^-, \delta_{C'}^+), \{R_j^*\}_{j=1}^i)\}$
+                    \EndFor
+                \EndFor
+            \EndFor
+        \EndFor
+        \State \Return $\mathcal{C}_d$
+    \end{algorithmic}
+\end{algorithm}
+
+In the \updateDegreeByRule subroutine in Algorithm \ref{alg:update_degree_by_rule}, we get a homomorphism $\phi^*$ from $R^*$ to $(Z_C, \delta_C^-, \delta_C^+)$ with $e_R^*$ mapping to $e$ in $Z_C$.
+We update the degree-ranges of each vertex $v$ in the image of $\phi^*$ in $Z_C$ by calculating the intersection of the degree-ranges of $v_R$ with $v=\phi^*(v_R)$.
+After that, we enumerate concrete degrees except for tail ranges of updated free cartwheels with limited degrees and tail ranges by the \concreteDegreesExceptTail subroutine.
+
+\begin{algorithm}
+    \caption{\updateDegreeByRuleWithLink($(Z_C, \delta_C^-, \delta_C^+)$, $e$, $R^*$)}
+    \label{alg:update_degree_by_rule}
+    \begin{algorithmic}
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$, a dart $e$ in $Z_C$, a combined rule $R^*$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges by updating degree-ranges of $(Z_C, \delta_C^-, \delta_C^+)$ so that all rules associated with $R^*$ apply to $e$ in $(Z_C, \delta_C^-, \delta_C^+)$.}
+        \State $(Z_R^*, \delta_R^{*-}, \delta_R^{*+}, e_R^*, r_R^*, f_R^*) \gets R^*$
+        \State $\phi^* \gets$ \Call{homomorphism}{$(Z_R^*, \delta_R^{*-}, \delta_R^{*+}), e_R^*, (Z_C, \delta_C^-, \delta_C^+), e, \gIntersection$}
+        \If {$\phi^* = \texttt{null}$}
+            \State \Return $\emptyset$
+        \EndIf
+        \State $(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+) \gets$ a copy of $(Z_C, \delta_C^-, \delta_C^+)$
+        \ForAll{$v_R \in V(Z_R^*)$}
+            \State $v_C \gets \phi^*(v_R)$
+            \State $[\delta_{C'}^-(v_C), \delta_{C'}^+(v_C)] \gets [\delta_C^-(v_C), \delta_C^+(v_C)] \cap [\delta_R^{*-}(v_R), \delta_R^{*+}(v_R)]$
+        \EndFor
+        \State \Return \Call{concreteDegreeExceptTail}{$(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+)$}
+    \end{algorithmic}
+\end{algorithm}
+
+The \concreteDegreesExceptTail subroutine in Algorithm \ref{alg:concrete_degree} enumerates free cartwheels with limited degrees and tail ranges by taking combinations of concrete degrees except for tail ranges.
+
+\begin{algorithm}[H]
+    \caption{\concreteDegreeExceptTailWithLink($(Z_C, \delta_C^-, \delta_C^+)$)}
+    \label{alg:concrete_degree}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees $(Z_C, \delta_C^-, \delta_C^+)$ that may have degree-ranges other than tail range.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges by taking combinations of concrete degrees within their degree-ranges if it is not tail range.}
+        \State $\tilde{\mathcal{C}} \gets \{(Z_C, \delta_C^-, \delta_C^+)\}$
+        \ForAll{$v \in V(Z_C)$}
+            \If {$\delta_C^-(v)=\delta_C^+(v)$ or $\delta_C^+(v)=9$}
+                \Continue
+            \EndIf
+            \State $\mathcal{C}' \gets \emptyset$
+            \ForAll{$i \in \{0, \ldots, 3\}$}
+                \State $d \gets \CARTWHEELDEGREES[i]$
+                \If {$\delta^-(v) \leq d \leq \delta^+(v)$}
+                    \ForAll{$(\tilde{Z}_C, \tilde{\delta}_C^-, \tilde{\delta}_C^+) \in \tilde{\mathcal{C}}$}
+                         \State $(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+) \gets$ a copy of $(\tilde{Z}_C, \tilde{\delta}_C^-, \tilde{\delta}_C^+)$
+                         \State $\delta_{C'}^-(v)=\delta_{C'}^+(v)=d$
+                         \State $\mathcal{C}' \gets \mathcal{C}' \cup \{(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+)\}$
+                    \EndFor
+                \EndIf
+            \EndFor
+            \State $\tilde{\mathcal{C}} \gets \mathcal{C}'$
+        \EndFor
+        \State \Return $\tilde{\mathcal{C}}$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Pruning}
+In this section, we present the pseudocode of the pruning methods described in Section \ref{subsub:fix_in_rules}.
+The \prune routine in Algorithm \ref{alg:prune} is the main routine that checks whether a given free cartwheel with limited degrees and tail ranges is cut.
+The \pruneByNonAssociatedRule subroutine in Algorithm \ref{alg:prune_non_assoc_rule} checks whether a rule in $\mathcal{R} \setminus \mathcal{R}_j$ {\bf always} applies to $v_jv$ for each $1 \leq j \leq i$.
+Note that for each free combination $R_j^*$, we computed the flag $f_j$ such that $f_j(R)=\True$ if and only if $R \in \mathcal{R}_j$ in the \combineRules routine in Algorithm \ref{alg:combine_rules}.
+Thus, we can easily check $R \in \mathcal{R} \setminus \mathcal{R}_j$.
+The \upperBoundOfCharge subroutine in Algorithm \ref{alg:upperbound_of_charge} calculates the upper bound of the final charge of the center of a given free cartwheel with limited degrees and tail ranges, guaranteed by Lemma \ref{lem:estimate_charge}.
+
+\begin{algorithm}[H]
+    \caption{\pruneWithLink($(Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^i, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$)}
+    \label{alg:prune}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$ with combined rules $\{R^*_j\}_{j=1}^i$, the set of rules $\mathcal{R}$, the set of combined rules $\mathcal{R}^{*-\mathcal{D}}$, the set of configurations $\bar{\mathcal{D}}$.}
+        \Ensure{\True\ if every free cartwheel with limited degrees in $(Z_C, \delta_C^-, \delta_C^+)$ such that the set of rules applied to $v_jv$ is exactly $\mathcal{R}_j$ associated with $R^*_j$ for every $1 \leq j \leq i$ either contains centered reducible configurations from $\bar{\mathcal{D}}$ or has the final charge of less than $0$; otherwise, \False.}
+        \If {\Call{pruneByNonAssociatedRule}{$(Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^i, \mathcal{R}$}}
+            \State \Return \True
+        \EndIf
+        \If {\Call{upperBoundOfCharge}{$(Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^i, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}$)} $< 0$}
+            \State \Return \True
+        \EndIf
+        \If {\Call{blockedByReducibleConfiguration}{$(Z_C, \delta_C^-, \delta_C^+), v, \bar{\mathcal{D}}$}}
+            \State \Return \True
+        \EndIf
+        \State \Return \False
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\pruneByNonAssociatedRuleWithLink($(Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^i, \mathcal{R}$)}
+    \label{alg:prune_non_assoc_rule}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$ with combined rules $\{R^*_j\}_{j=1}^i$, the set of rules $\mathcal{R}$.}
+        \Ensure{\True\ if some $R \in \mathcal{R} \setminus \mathcal{R}_j$ always applies to $v_jv$ for some $1 \leq j \leq i$: otherwise \False.}
+        \ForAll{$j \in \{1, \ldots, i\}$}
+            \State $f_j \colon \mathcal{R} \to \{\True, \False\}$ such that $f_j(R)=\True$ if and only if $R \in \mathcal{R}_j \subseteq \mathcal{R}$ where $R^*_j$ is a free combination of $\mathcal{R}_j$.
+            \ForAll {$R \in \mathcal{R}$}
+                \If {$f_j(R) = \False$ and \Call{alwaysApply}{$(Z_C, \delta_C^-, \delta_C^+)$, $v_jv$, $R$}}
+                    \State \Return \True
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \Return \False
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\upperBoundOfChargeWithLink($(Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^i, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}$)}
+    \label{alg:upperbound_of_charge}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$ with combined rules $\{R^*_j\}_{j=1}^i$, the set of rules $\mathcal{R}$, the set of combined rules $\mathcal{R}^{*-\mathcal{D}}$.}
+        \Ensure{The upper bound of the final charge of the center $v$ for all free cartwheels with limited degrees such that they are refinements of $(Z_C, \delta_C^-, \delta_C^+)$, the set of rules applied to $v_jv$ is exactly $\mathcal{R}_j$ for $1 \leq j \leq i$, and contains no centered configurations from $\mathcal{D}$.}
+        \ForAll{$j \in \{1, \ldots, i\}$}
+            \State $r_j^* \gets$ the amount of charge associated with $R^*_j$
+        \EndFor
+        \ForAll{$j \in \{i+1, \ldots, d\}$}
+            \State $r'_j \gets$ \Call{amountOfPossibleChargeSend}{$v_jv, \mathcal{R}^{*-\mathcal{D}}$}
+        \EndFor
+        \ForAll{$j \in \{1, \ldots, d\}$}
+            \State $s_j \gets$ \Call{amountOfChargeSend}{$vv_j, \mathcal{R}$}
+        \EndFor
+        \State $T_0 \gets 10 \cdot (6 - d)$
+        \State \Return $T_0 + \sum_{j=1}^i r^*_j + \sum_{j=i+1}^d r'_j - \sum_{j=1}^d s_j$
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Refinement}
+In this section, we present the pseudocode regarding the refinement procedure, described in Section \ref{subsub:refinement}.
+The main routine for constructing $\mathcal{C}$ from $\mathcal{C}_d$ is given in Algorithm \ref{alg:fix_out_rules}.
+First, this routine pushes each element in $\mathcal{C}_d$ into the queue.
+While the queue is not empty, we pop one element from the queue.
+Then, we iterate through every rule $R$ in $\mathcal{R}$ and every neighbor $v_i$.
+We use the \shouldRefine subroutine in Algorithm \ref{alg:should_refine} to check whether we should refine based on whether $R$ {\bf always} or {\bf never} applies to $vv_i$.
+If \shouldRefine subroutine returns \True, we assign \texttt{refined\_flag} to \True, and do the refinement procedure in the \refinement subroutine in Algorithm \ref{alg:refinement}.
+For each refined free cartwheel with limited degrees and tail ranges, we call the \prune subroutine to check whether it is cut.
+If \texttt{refined\_flag} is $\False$ at the end of iterations of all pairs of rules and neighbors, no refinement is performed.
+In this case, we add it to the resulting set $\mathcal{C}$.
+
+\begin{algorithm}[H]
+    \caption{\fixOutRulesWithLink($\mathcal{C}_d, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$)}
+    \label{alg:fix_out_rules}
+    \begin{algorithmic}[1]
+        \Require{A set of free cartwheels with limited degrees and tail ranges $\mathcal{C}_d$, the set of rules $\mathcal{R}$, the set of combined rules $\mathcal{R}^{*-\mathcal{D}}$, and the set of reducible configurations $\bar{\mathcal{D}}$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges $\mathcal{C}$, obtained by refining the cartwheels in $\mathcal{C}_d$ based on whether a rule in $\mathcal{R}$ applies from the center.}
+        \State \texttt{Q} $\gets$ an empty queue
+        \ForAll{$((Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^d) \in \mathcal{C}_d$}
+            \State $\texttt{Q.push}(((Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^d))$
+        \EndFor
+        \State $\mathcal{C} \gets \emptyset$
+        \While{not \texttt{Q.empty()}}
+            \State $((Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^d) \gets \texttt{Q.pop}()$
+            \State \texttt{refined\_flag} $\gets$ \False
+            \ForAll{$i \in [1,d]$}
+                \ForAll{$R \in \mathcal{R}$}
+                    \If {\Call{shouldRefine}{$(Z_C, \delta_C^-, \delta_C^+), i, R$} $=$ \False}
+                        \Continue
+                    \EndIf
+                    \State \texttt{refined\_flag} $\gets$ \True
+                    \State $\mathcal{Z}_{C'} \gets$ \Call{refinement}{$(Z_C, \delta_C^-, \delta_C^+), i, R$}
+                    \ForAll {$(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+) \in \mathcal{Z}_{C'}$}
+                         \If {\Call{prune}{$(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+), \{R_j\}_{j=1}^d, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$}}
+                             \Continue
+                         \EndIf
+                         \State \texttt{Q.push}(($(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+), \{R^*_j\}_{j=1}^d$))
+                    \EndFor
+                    \Break
+                \EndFor
+                \If {\texttt{refined\_flag} = \True}
+                    \Break
+                \EndIf
+            \EndFor
+            \If {\texttt{refined\_flag} = \False}
+                \State $\mathcal{C} \gets \mathcal{C} \cup \{((Z_C, \delta_C^-, \delta_C^+), \{R^*_j\}_{j=1}^d)\}$
+            \EndIf
+        \EndWhile
+        \State \Return $\mathcal{C}$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\dominantlyApplyWithLink($(Z^*, \delta^{*-}, \delta^{*+}), e^*, R$)}
+    \label{alg:dominantly_apply}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z^*, \delta^{*-}, \delta^{*+})$ with a dart $e^*$ and a rule $R$.}
+        \Ensure{\True\ if $R$ dominantly applies to $e^*$ in $(Z^*, \delta^{*-}, \delta^{*+})$; otherwise \False}
+        \State $g_\textsf{dominant}$ takes two degree-ranges $[\delta^-(v), \delta^+(v)]$, $[\delta^{*-}(v^*), \delta^{*+}(v^*)]$ and returns \True\ if and only if the intersection of them is non-empty and $\delta^+(v)=\infty$ or $\delta^{*+}(v^*)<9$ holds.
+        \State $(Z, \delta^-, \delta^+, e, r) \gets R$
+        \State \Return \Call{homomorphism}{$(Z, \delta^-, \delta^+), e, (Z^*, \delta^{*-}, \delta^{*+}), e^*, g_\textsf{dominant}$} $\neq \texttt{null}$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\shouldRefineWithLink($(Z_C, \delta_C^-, \delta_C^+), i, R$)}
+    \label{alg:should_refine}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$, an index $1 \leq i \leq d$, a rule $R$.}
+        \Ensure{\True\ if we should refine $(Z_C, \delta_C^-, \delta_C^+)$ for $R$ to always/never applies to $vv_i$; otherwise \False.}
+        \State \Return \Call{alwaysApply}{$(Z_C, \delta_C^-, \delta_C^+), vv_i, R$} $=\False$ and \Call{dominantlyApply}{$(Z_C, \delta_C^-, \delta_C^+), vv_i, R$} $=\True$
+    \end{algorithmic}
+\end{algorithm}
+
+The \refinement routine in Algorithm \ref{alg:refinement} refines $(Z_C, \delta_C^-, \delta_C^+)$ into $\mathcal{C}_{\textsf{always}}$ and $\mathcal{C}_{\textsf{never}}$ depending on whether $R$ always/never applies to $vv_i$.
+First, we calculate the homomorphism $\phi$ from $Z_R$ to $Z_C$ with $e_R$ mapping to $vv_i$.
+Then, we construct the set of vertices $U_R$ in $Z_R$.
+Then, we refine degrees-ranges of $U=\phi(U_R)$ in the \refineAlways and \refineNever subroutines.
+The \refineAlways subroutine in Algorithm \ref{alg:refine_always} generates $\mathcal{C}_{\textsf{always}}$, while the \refineNever subroutine in Algorithm \ref{alg:refine_never} generates $\mathcal{C}_{\textsf{never}}$.
+The algorithms for generating them are the same as those described in Section \ref{subsub:refinement}.
+
+\begin{algorithm}[H]
+    \caption{\refinementWithLink($(Z_C, \delta_C^-, \delta_C^+), i, R$)}
+    \label{alg:refinement}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$, an index $1 \leq i \leq d$, a rule $R$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges by refining $(Z_C, \delta_C^-, \delta_C^+)$ for $R$ to always/never apply to $vv_i$.}
+        \State $(Z_R, \delta_R^-, \delta_R^+, e_R, r_R) \gets R$
+        \State $\phi \gets$ \Call{homomorphism}{$(Z_R, \delta_R^-, \delta_R^+), e_R, (Z_C, \delta_C^-, \delta_C^+), vv_i, \gIntersection$}
+        \State $U_R \gets \emptyset$
+        \ForAll{$u_R$ in vertices of $Z_R$}
+            \State $u \gets \phi(u_R)$
+            \If {$\delta_C^+(u)=9$ and $\delta_C^-(u) < \delta_R^-(u_R)$}
+                \State $U_R \gets U_R \cup \{u_R\}$
+            \EndIf
+        \EndFor
+        \State \Return \Call{refineAlways}{$(Z_C, \delta_C^-, \delta_C^+), U_R, \phi, R$} $\cup$ \Call{refineNever}{$(Z_C, \delta_C^-, \delta_C^+), U_R, \phi, R$}
+    \end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+    \caption{\refineAlwaysWithLink($(Z_C, \delta_C^-, \delta_C^+), U_R, \phi, R$)}
+    \label{alg:refine_always}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$, the set of vertices $U_R$, the homomorphism $\phi$ from $R$ to $(Z_C, \delta_C^-, \delta_C^+)$ with mapping $e_R$ to $vv_i$ for some $i$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges by refining $(Z_C, \delta_C^-, \delta_C^+)$ for $R$ to always apply to $vv_i$.}
+        \State $(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+) \gets$ a copy of $(Z_C, \delta_C^-, \delta_C^+)$
+        \ForAll{$u_R \in U_R$}
+             \State $u \gets \phi(u_R)$
+             \State $\delta_{C'}^-(u) \gets \delta_R^-(u_R)$
+        \EndFor
+        \State $\mathcal{C}_\textsf{always} \gets \{(Z_{C'}, \delta_{C'}^-, \delta_{C'}^+)\}$
+        \State \Return $\mathcal{C}_\textsf{always}$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\refineNeverWithLink($(Z_C, \delta_C^-, \delta_C^+), U_R, \phi, R$)}
+    \label{alg:refine_never}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$, the set of vertices $U_R$, the homomorphism $\phi$ from $R$ to $(Z_C, \delta_C^-, \delta_C^+)$ with mapping $e_R$ to $vv_i$ for some $i$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges by refining $(Z_C, \delta_C^-, \delta_C^+)$ for $R$ to never apply to $vv_i$.}
+        \State $\mathcal{C}_\textsf{never} \gets \emptyset$
+        \ForAll{$v_R \in U_R$}
+            \State $u \gets \phi(v_R)$
+            \State $(Z^u_{C}, \delta_{C}^{u-}, \delta_{C}^{u+}) \gets$ a copy of $(Z_C, \delta_C^-, \delta_C^+)$
+            \State $\delta_{C}^{u+}(u) \gets \delta_R^-(v_R) - 1$
+            \State $\mathcal{C}_\textsf{never} \gets \mathcal{C}_\textsf{never} \cup$ \Call{concreteDegreeExceptTail}{($Z^u_{C}, \delta_{C}^{u-}, \delta_{C}^{u+}$)}
+        \EndFor
+        \State \Return $\mathcal{C}_\textsf{never}$
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Overall algorithm}
+\newcommand{\enumAllBadCartwheels}{\texttt{enumAllBadCartwheels}\xspace}
+The overall algorithm for constructing $\mathcal{C}_{\textsf{all}}$ to enumerate all bad cartwheels described in Section \ref{sub:overcharged_cartwheel_enumeration} is presented in the \enumAllBadCartwheels routine in Algorithm \ref{alg:enum_all_bad_cartwheel}.
+The \enumAllBadCartwheels routine is not directly implemented as a \Cpp function, but is implemented as a shell script.
+When generating $\mathcal{C}_0$ and $\mathcal{C}_{\textsf{all}}$ in the \enumAllBadCartwheels routine, we execute the algorithm in parallel.
+Note that the parallel updates to $\mathcal{C}_0$ and $\mathcal{C}_{\textsf{all}}$ in the \enumAllBadCartwheels routine do not cause race conditions.
+This is because, in practice, $\mathcal{C}_0$ and $\mathcal{C}_{\textsf{all}}$ are handled as directories, and each process simply writes its output cartwheel to a uniquely named file within them.
+The \enumAllBadCartwheels routine calls the \enumBadCartwheels subroutine in Algorithm \ref{alg:enum_bad_cartwheel} to enumerate bad cartwheels generated from a given singleton set $\{(Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+)\}$.
+
+\begin{algorithm}[H]
+    \caption{enumAllBadCartwheels($\mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$)}
+    \label{alg:enum_all_bad_cartwheel}
+    \begin{algorithmic}[1]
+        \Require{The set of rules $\mathcal{R}$, the set of combined rules $\mathcal{R}^{*-\mathcal{D}}$, the set of reducible configurations $\bar{\mathcal{D}}$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$ such that the center degree $d$ is in $\{7,8,9,10,11\}$ and at least one $(Z_C, \delta_C) \in (Z_C, \delta_C^-, \delta_C^+)$ is bad.}
+        \State $\mathcal{C}_0 \gets \emptyset$
+        \ForAll{$d \in \{7,8,9,10,11\}$ \textbf{in parallel}}
+            \State $\mathcal{C}_0 \gets \mathcal{C}_0 \cup $ \Call{enumPossibleBadWheels}{$d, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$}
+        \EndFor
+        \State $\mathcal{C}_{\textsf{all}} \gets \emptyset$
+        \ForAll{$(Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+) \in \mathcal{C}_0$ \textbf{in parallel}} 
+            \State $\mathcal{C}_{\textsf{all}} \gets \mathcal{C}_{\textsf{all}} \cup$ \Call{enumBadCartwheels}{$(Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+), \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$}
+        \EndFor
+        \State \Return $\mathcal{C}_{\textsf{all}}$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\enumBadCartwheelsWithLink($(Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+), \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$) - Lemma \ref{lem:positive-comp}}
+    \label{alg:enum_bad_cartwheel}
+    \begin{algorithmic}[1]
+        \Require{The set of rules $\mathcal{R}$, the set of combined rules $\mathcal{R}^{*-\mathcal{D}}$, the set of reducible configurations $\bar{\mathcal{D}}$.}
+        \Ensure{The set of free cartwheels with limited degrees and tail ranges $(Z_C, \delta_C^-, \delta_C^+)$ such that the center degree $d$ is in $\{7,8,9,10,11\}$ and at least one $(Z_C, \delta_C) \in (Z_C, \delta_C^-, \delta_C^+)$ is bad.}
+        \State $\mathcal{C}_d \gets$ \Call{fixInRules}{$(Z_{C_0}, \delta_{C_0}^-, \delta_{C_0}^+), \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$}
+        \State $\mathcal{C} \gets$ \Call{fixOutRules}{$\mathcal{C}_d, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}, \bar{\mathcal{D}}$}
+        \ForAll {$((Z_C, \delta_C^-, \delta_C^+), \{\mathcal{R}_j^*\}_{j=1}^d) \in \mathcal{C}$}
+            \State $C \gets$ \Call{upperBoundOfCharge}{$(Z_C, \delta_C^-, \delta_C^+), \{\mathcal{R}_j^*\}_{j=1}^d, \mathcal{R}, \mathcal{R}^{*-\mathcal{D}}$}
+            \State $d \gets \delta_C^-(v)$, where $v$ is the center of $Z_C$.
+            \State $\texttt{center\_darts} \gets$ \Call{centerDartsByDegree}{$(Z_C, \delta_C^-, \delta_C^+)$}
+            \State \textbf{assert} $C=0$
+            \State \textbf{assert} $d=7$ or $d=8$
+            \State \textbf{assert} $|\texttt{center\_darts}[7]|+|\texttt{center\_darts}[8]|+|\texttt{center\_darts}[9]| > 0$
+        \EndFor
+        \State $\mathcal{C}' \gets \{(Z_C, \delta_C^-, \delta_C^+) \mid ((Z_C, \delta_C^-, \delta_C^+), \{\mathcal{R}_j^*\}_{j=1}^d) \in \mathcal{C}\}$
+        \State \Return $\mathcal{C}'$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\centerDartsByDegreeWithLink($(Z_C, \delta_C^-, \delta_C^+)$)}
+    \label{alg:center_darts_by_degree}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel $(Z_C, \delta_C^-, \delta_C^+)$.}
+        \Ensure{The array of darts so that the $d$-th array represents all the center darts whose tail has degree $d$.}
+        \State $\texttt{center\_darts} \gets$ the array of size $10$
+        \ForAll{$e \gets$ each dart whose head is the center $v$ in cyclic order}
+            \State $d \gets \delta_C^-(\head(\reverse(e))$ \Comment{The values for $\delta_C^-, \delta_C^+$ are the same.}
+            \State \texttt{center\_darts}[$d$].push\_back($e$)
+        \EndFor
+        \State \Return \texttt{center\_darts}
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{lem}
+\label{lem:for-lem:positive-comp}
+    The assertions in Lines 7, 8, and 9 of Algorithm \ref{alg:enum_bad_cartwheel} always hold for all inputs in Algorithm \ref{alg:enum_all_bad_cartwheel}.
+\end{lem}
+
+\subsection{Free combinations of free cartwheels}
+\newcommand{\deleteDegreeFromKtoN}{\texttt{deleteDegreeFromKto9}\xspace}
+\newcommand{\combineEachCartwheel}{\texttt{combineEachCartwheel}\xspace}
+\newcommand{\combineEachCartwheelTwice}{\texttt{combineEachCartwheelTwice}\xspace}
+\newcommand{\checkDegE}{\texttt{checkDeg8}\xspace}
+\newcommand{\checkEE}{\texttt{check88}\xspace}
+\newcommand{\checkES}{\texttt{check87}\xspace}
+\newcommand{\checkSES}{\texttt{check787}\xspace}
+\newcommand{\containX}{\texttt{containX}\xspace}
+\newcommand{\checkStriangle}{\texttt{check7triangle}\xspace}
+\newcommand{\checkDegS}{\texttt{checkDeg7}\xspace}
+\newcommand{\checkSS}{\texttt{check77}\xspace}
+\newcommand{\checkSSS}{\texttt{check777}\xspace}
+In this section, we provide the pseudocodes corresponding to the algorithms described in Section \ref{subsect:combine-cartwheel}.
+
+We use the \deleteDegreeFromKtoN routine to convert the set of free cartwheels $\mathcal{C}_{\textsf{all}}$.
+To prove Lemma \ref{lem:zero-deg7,8}, we convert $\mathcal{C}_{\textsf{all}}$ by calling \deleteDegreeFromKtoN with $k=9$.
+Furthermore, to prove Lemma \ref{lem:777}, we convert the resulting set by calling \deleteDegreeFromKtoN with $k=8$.
+
+
+Note that, for every free cartwheel $(Z_C, \delta_C^-, \delta_C^+)$ in $\mathcal{C}_{\textsf{all}}$, the center $v$ has a fixed degree (i.e., $\delta_C^-(v)=\delta_C^+(v)$).
+Each neighbor of the center also has a fixed degree. 
+
+\begin{algorithm}[H]
+    \caption{\deleteDegreeFromKToNWithLink($\mathcal{C}, k$)}
+    \label{alg:delete_degree_k}
+    \begin{algorithmic}[1]
+        \Require{A set of free cartwheels $\mathcal{C}$, an positive integer $k \leq 9$.}
+        \Ensure{The set of free cartwheels obtained from $\mathcal{C}$ by deleting free cartwheels containing vertices of fixed degree $k$ and updating degree range $[k-1,9]$ to fixed degree $k-1$.}
+        \State $\mathcal{C}' \gets \emptyset$
+        \ForAll{$(Z_C, \delta_C^-, \delta_C^+) \in \mathcal{C}$}
+            \State $\texttt{remove} \gets \False$
+            \ForAll{$v \in V(Z_C)$}
+                \If {$\delta_C^-(v)=\delta_C^+(v)=k$}
+                    \State $\texttt{remove} \gets \True$
+                    \Break
+                \ElsIf {$\delta_C^-(v)=k-1$ and $\delta_C^+(v)=9$}
+                    \State $\delta_C^+(v) \gets k-1$
+                \EndIf
+            \EndFor
+            \If {$\texttt{remove} = \False$}
+                \State $\mathcal{C}' \gets \mathcal{C}' \cup \{(Z_C, \delta_C^-, \delta_C^+)\}$
+            \EndIf
+        \EndFor
+        \State \Return $\mathcal{C}'$
+    \end{algorithmic}
+\end{algorithm}
+
+The \combineEachCartwheel routine combines a given pseudo-configuration by identifying $e$ with each center dart $e'$ of $(Z', \delta^{\prime-}, \delta^{\prime+}) \in \mathcal{C}$ that are not blocked by an input configuration set $\mathcal{K}$.
+Note that the input $\mathcal{K}$ is $\bar{\mathcal{D}}$ or $\bar{\mathcal{D}} \cup \{T_{7^3}\}$.
+The latter set is necessary to handle Lemma \ref{lem:zero-deg7,7}.
+The \combineEachCartwheelTwice routine combines two free cartwheels in $\mathcal{C}$ by calling the \combineEachCartwheel subroutine twice.
+
+\begin{algorithm}[H]
+    \caption{\combineEachCartwheelWithLink($(Z, \delta^-, \delta^+), e, \mathcal{C}, \mathcal{K}$)}
+    \label{alg:combine_each_cartwheel}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$ with a specified dart $e$, a set of cartwheels $\mathcal{C}$, a set of configurations $\mathcal{K}$.}
+        \Ensure{The set of all pseudo-configurations obtained by combining $(Z, \delta^-, \delta^+)$ and $(Z', \delta^{\prime-}, \delta^{\prime+}) \in \mathcal{C}$ by identifying $e$ with a center dart $e'$ of $(Z', \delta^{\prime-}, \delta^{\prime+})$, and not blocked by $\mathcal{K}$ with a homomorphism from $Z$ to it.}
+        \State $\mathcal{Z} \gets \emptyset$
+        \ForAll{$(Z', \delta^{\prime-}, \delta^{\prime+}) \in \mathcal{C}$}
+            \ForAll{$e' \gets$ the dart whose head is the center $v$ of $(Z', \delta^{\prime-}, \delta^{\prime+})$}
+                \State $\mathcal{Z}^* \gets$ \Call{freeHomomorphismConfiguration}{$(Z, \delta^-, \delta^+) \sqcup (Z', \delta^{\prime-}, \delta^{\prime+}), \{(e, e')\}$}
+                \ForAll{$((Z^*, \delta^{*-}, \delta^{*+}), \phi^*) \in \mathcal{Z}^*$}
+                    \State $c^* \gets$ an arbitrary vertex in $Z^*$
+                    \If {\Call{blockedByReducibleConfiguration}{$(Z^*, \delta^{*-}, \delta^{*+}), c^*, \mathcal{K}$} $=$ \True}
+                        \Continue
+                    \EndIf
+                    \State $\mathcal{Z} \gets \mathcal{Z} \cup \{((Z^*, \delta^{*-}, \delta^{*+}), \phi^*_{|Z}) \}$
+                \EndFor
+            \EndFor
+        \EndFor
+        \State \Return $\mathcal{Z}$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\combineEachCartwheelTwiceWithLink($(Z, \delta^-, \delta^+), e_1, e_2, \mathcal{C}, \mathcal{K}$)}
+    \label{alg:combine_each_cartwheel_twice}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$ with two specified darts $e_1, e_2$, a set of cartwheels $\mathcal{C}$, a set of configurations $\mathcal{K}$.}
+        \Ensure{The set of pseudo-configurations $Z^{**}$ by combining $(Z, \delta^-, \delta^+)$ and $(Z', \delta^{\prime-}, \delta^{\prime+}), (Z'', \delta^{\prime\prime-}, \delta^{\prime\prime+}) \in \mathcal{C}$ by identifying $e_1$ with a center dart of $(Z', \delta^{\prime-}, \delta^{\prime+})$, $e_2$ with a center dart of $(Z'', \delta^{\prime\prime-}, \delta^{\prime\prime+})$, and not blocked by $\mathcal{K}$ with a homomorphism from $Z$ to it.}
+        \State $\mathcal{Z}^* \gets$ \Call{combineEachCartwheel}{$(Z, \delta^-, \delta^+), e_1, \mathcal{C}, \bar{\mathcal{D}}$}
+        \State $\mathcal{Z}^{**} \gets \emptyset$
+            \ForAll{$((Z^*, \delta^{*-}, \delta^{*+}), \phi^*_{|Z}) \in \mathcal{Z}^*$}
+                \ForAll {$((Z^{**}, \delta^{**-}, \delta^{**+}), \phi^{**}) \in$ \Call{combineEachCartwheel}{$(Z^*, \delta^{*-}, \delta^{*+}), \phi^*_{|Z}(e_2), \mathcal{C}, \mathcal{K}$}}
+                    \State $\mathcal{Z}^{**} \gets \mathcal{Z}^{**} \cup \{((Z^{**}, \delta^{**-}, \delta^{**+}), \phi^{**} \circ \phi^*_{|Z})\}$
+                \EndFor
+            \EndFor
+        \State \Return $\mathcal{Z}^{**}$
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{A vertex of degree 8}
+The main routine to check Lemma \ref{lem:zero-deg7,8} is \checkDegE in Algorithm \ref{alg:for-lem:zero-deg7,8}. As explained in Section \ref{subsect:combine-cartwheel}, we have a lemma below.
+Recall that in Lemma \ref{lem:zero-deg7,8} (iii), we require that two neighbors of degree $7$ are as close as possible in the successor order.
+Thus, in the \checkSES routine in Algorithm \ref{alg:for-lem:zero-deg7,8(iii)}, we calculate the minimum distance of the successor order, and only check pairs of neighbors satisfying this minimum distance.
+
+\begin{algorithm}[H]
+    \caption{\checkDegEWithLink($\mathcal{C}_{\textsf{all}}, \bar{\mathcal{D}}$) - Lemma \ref{lem:zero-deg7,8}}
+    \label{alg:for-lem:zero-deg7,8}
+    \begin{algorithmic}[1]
+        \Require{The set of free cartwheels $\mathcal{C}_{\textsf{all}}$, the set of configurations $\bar{\mathcal{D}}$.}
+        \State $\mathcal{C} \gets$ \Call{deleteDegreeFromKto9}{$\mathcal{C}_\textsf{all}, 9$}
+        \ForAll{$(Z_C, \delta_C^-, \delta_C^+) \in \mathcal{C}$ \textbf{in parallel}}
+            \State $v \gets$ the center of $Z_C$
+            \If {$\delta_C^-(v)=8$} \Comment{$\delta_C^-(v)=\delta_C^+(v)$ trivially holds.}
+                \State $\texttt{center\_darts} \gets$ \Call{centerDartsByDegree}{$(Z_C, \delta_C^-, \delta_C^+)$}
+                \If {$|\texttt{center\_darts}[8]| > 0$}
+                    \State \Call{check88}{$(Z_C, \delta_C^-, \delta_C^+), \texttt{center\_darts}[8], \mathcal{C}, \bar{\mathcal{D}}$} \Comment{Lemma \ref{lem:zero-deg7,8}(i)}
+                \ElsIf {$|\texttt{center\_darts}[7]|=1$}
+                    \State \Call{check87}{$(Z_C, \delta_C^-, \delta_C^+), \texttt{center\_darts}[7], \mathcal{C}, \bar{\mathcal{D}}$} \Comment{Lemma \ref{lem:zero-deg7,8}(ii)}
+                \ElsIf {$|\texttt{center\_darts}[7]|>1$}
+                    \State \Call{check787}{$(Z_C, \delta_C^-, \delta_C^+), \texttt{center\_darts}[7], \mathcal{C}, \bar{\mathcal{D}}$} \Comment{Lemma \ref{lem:zero-deg7,8}(iii)}
+                \EndIf
+            \EndIf
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+    \caption{\checkEEWithLink($(Z_C, \delta_C^-, \delta_C^+), \texttt{darts8}, \mathcal{C}, \bar{\mathcal{D}}$) - Lemma \ref{lem:zero-deg7,8}(i)}
+    \label{alg:for-lem:zero-deg7,8(i)}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel $(Z_C, \delta_C^-, \delta_C^+)$, \texttt{darts8} is the set of center darts in $Z_C$ where the tail has degree $8$, a set of free cartwheels $\mathcal{C}$, the set of configurations $\bar{\mathcal{D}}$.}
+        % \Ensure{}
+        \ForAll{$e \gets$ each dart in \texttt{darts8}}
+            \State \textbf{assert} \Call{CombineEachCartwheel}{$(Z, \delta^-, \delta^+), \reverse(e), \mathcal{C}, \bar{\mathcal{D}}$} $= \emptyset$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\checkESWithLink($(Z_C, \delta_C^-, \delta_C^+), \texttt{darts7}, \mathcal{C}, \bar{\mathcal{D}}$) - Lemma \ref{lem:zero-deg7,8}(ii)}
+    \label{alg:for-lem:zero-deg7,8(ii)}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel $(Z_C, \delta_C^-, \delta_C^+)$, \texttt{darts7} is the set of center darts in $Z_C$ where the tail has degree $7$, a set of free cartwheels $\mathcal{C}$, the set of configurations $\bar{\mathcal{D}}$.}
+        \State $e \gets$ the single element of \texttt{darts7}.
+        \State \textbf{assert} \Call{combineEachCartwheel}{$(Z_C, \delta_C^-, \delta_C^+), \reverse(e), \mathcal{C}, \bar{\mathcal{D}}$} $=\emptyset$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\checkSESWithLink($(Z_C, \delta_C^-, \delta_C^+), \texttt{darts7}, \mathcal{C}, \bar{\mathcal{D}}$) - Lemma \ref{lem:zero-deg7,8}(iii)}
+    \label{alg:for-lem:zero-deg7,8(iii)}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel $(Z_C, \delta_C^-, \delta_C^+)$, \texttt{darts7} is the set of center darts in $Z_C$ where the tail has degree $7$, a set of free cartwheels $\mathcal{C}$, the set of configurations $\bar{\mathcal{D}}$.}
+        \State $\texttt{min\_dist} \gets \infty$
+        \State $\texttt{dist} \gets$ an array of size $|\texttt{darts7}|$ filled with zeros
+        \ForAll{$i \gets \{0, \ldots, |\texttt{darts7}|-1\}$}
+            \State $e_1 \gets \texttt{darts7}[i]$ 
+            \State $e_2 \gets$  $\texttt{darts7}[0]$ if $i=|\texttt{darts7}|-1$ otherwise $\texttt{darts7}[i+1]$
+            \While{$e_1 \neq e_2$}
+                \State $e_1 \gets \successor(e_1)$
+                \State $\texttt{dist}[i] \gets \texttt{dist}[i] + 1$
+            \EndWhile
+            \State $\texttt{min\_dist} \gets \min(\texttt{min\_dist}, \texttt{dist}[i])$
+        \EndFor
+        \ForAll{$i \gets \{0, \ldots, |\texttt{darts7}|-1\}$}
+            \If {$\texttt{dist}[i] > \texttt{min\_dist}$}
+                \Continue
+            \EndIf
+            \State $e_1 \gets \texttt{darts7}[i]$ 
+            \State $e_2 \gets$  $\texttt{darts7}[0]$ if $i=|\texttt{darts7}|-1$ otherwise $\texttt{darts7}[i+1]$
+            \State $\mathcal{Z}^{**} \gets$ \Call{combineEachCartwheelTwice}{$(Z_C, \delta_C^-, \delta_C^+), \reverse(e_1), \reverse(e_2), \mathcal{C}, \bar{\mathcal{D}}$}
+            \ForAll{$((Z^{**}, \delta^{**-}, \delta^{**+}), \phi^{**}_{Z_C}) \gets \mathcal{Z}^{**}$}
+                \State $c^{**} \gets \phi^{**}_{Z_C}(v)$, where $v$ is the center of $Z_C$ 
+                \State \textbf{assert} \Call{containX}{$(Z^{**}, \delta^{**-}, \delta^{**+}), c^{**}$}
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \caption{\containXWithLink($(Z, \delta^-, \delta^+), v$)}
+    \label{alg:contain_X}
+    \begin{algorithmic}[1]
+        \Require{A pseudo-configuration $(Z, \delta^-, \delta^+)$ with a distinguished vertex $c$.}
+        \Ensure{\True\ if $(Z, \delta^-, \delta^+)$ contains $X$ such that $v$ corresponds to the central vertex of degree $8$ in $X$ (See Figure \ref{fig:exception-zero-concentrate}).}
+        \State $(X, \delta_X) \gets$ the configuration $X$
+        \State $e_Z \gets$ any dart whose head is $v$ in $Z$.
+        \State $e_X \gets$ any dart whose head is the central vertex of degree $8$ in $X$.
+        \ForAll{$i \in \{0, \ldots, 7\}$}
+            \If {\Call{homomorphism}{$(X, \delta_X, \delta_X), e_X, (Z, \delta^-, \delta^+), e_Z, \gInclude$} $\neq$ \texttt{null}}
+                \State \Return \True
+            \EndIf
+            \State $e_X \gets \successor(e_X)$
+        \EndFor
+        \State \Return \False
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{lem}
+\label{lem:comp-check-deg8}
+    The assertions in Algorithm \ref{alg:for-lem:zero-deg7,8(i)}, \ref{alg:for-lem:zero-deg7,8(ii)}, and \ref{alg:for-lem:zero-deg7,8(iii)} always hold.
+\end{lem}
+
+\subsubsection{Maximal degree 7}
+The main routine to check Lemma \ref{lem:777} is \checkStriangle in Algorithm \ref{alg:for-lem:777}.  As explained in Section \ref{subsect:combine-cartwheel}, we have a lemma below. 
+
+\begin{algorithm}[H]
+    \caption{\checkStriangleWithLink($\mathcal{C}_{\textsf{all}}, \bar{\mathcal{D}}$) - Lemma \ref{lem:777}}
+    \label{alg:for-lem:777}
+    \begin{algorithmic}[1]
+        \Require{The set of free cartwheels $\mathcal{C}_{\textsf{all}}$, the set of configurations $\bar{\mathcal{D}}$.}
+        \State $\mathcal{C} \gets$ \Call{deleteDegreeFromKto9}{$\mathcal{C}_{\textsf{all}}, 9$}
+        \State $\mathcal{C} \gets$ \Call{deleteDegreeFromKto9}{$\mathcal{C}, 8$}
+        \ForAll{$(Z_C, \delta_C^-, \delta_C^+) \in \mathcal{C}$ \textbf{in parallel}}
+            \State $v \gets$ the center of $Z_C$
+            \ForAll{$e \gets$ each dart whose head is $v$ in $Z_C$ in the cycic order}
+                \State $f \gets \successor(e)$
+                \State $v_e \gets \head(\reverse(e))$
+                \State $v_f \gets \head(\reverse(f))$
+                \If {$\delta_C^-(v_e)=7$ and $\delta_C^-(v_f)=7$}
+                    \State \textbf{assert} \Call{combineEachCartWheelTwice}{$(Z_C, \delta_C^-, \delta_C^+), \reverse(e), \reverse(f), \mathcal{C}, \bar{\mathcal{D}}$} $= \emptyset$
+                \EndIf
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{lem}
+\label{lem:comp-check-7triangle}
+    The assertions in Algorithm \ref{alg:for-lem:777} always hold.
+\end{lem}
+
+The main routine to check Lemma \ref{lem:zero-deg7,7} is \checkDegS in Algorithm \ref{alg:for-lem:zero-deg7,7}.
+
+\begin{algorithm}[H]
+    \caption{\checkDegSWithLink($\mathcal{C}_{\textsf{all}}, \bar{\mathcal{D}}$) - Lemma \ref{lem:zero-deg7,7}}
+    \label{alg:for-lem:zero-deg7,7}
+    \begin{algorithmic}[1]
+        \Require{The set of free cartwheels $\mathcal{C}_{\textsf{all}}$, the set of configurations $\bar{\mathcal{D}}$.}
+        \State $\mathcal{C} \gets$ \Call{deleteDegreeFromKto9}{$\mathcal{C}_{\textsf{all}}, 9$}
+        \State $\mathcal{C} \gets$ \Call{deleteDegreeFromKto9}{$\mathcal{C}, 8$}
+        \State $\mathcal{C} \gets$ all the free cartwheels in $\mathcal{C}$ that are not blocked by $T_{7^3}$
+        \ForAll{$(Z_C, \delta_C^-, \delta_C^+) \in \mathcal{C}$ \textbf{in parallel}}
+            \State $v \gets$ the center of $Z_C$ \Comment{$\delta_C^-(v)=\delta_C^+(v)=7$ holds.}
+            \State \texttt{center\_darts} $\gets$ \Call{centerDartsByDegree}{$(Z_C, \delta_C^-, \delta_C^+)$}
+            \If {$|\texttt{center\_darts}[7]| = 1$}
+                \State \Call{check77}{$(Z_C, \delta_C^-, \delta_C^+), \texttt{center\_darts}[7], \mathcal{C}, \bar{\mathcal{D}} \cup \{T_{7^3}\}$} \Comment{Lemma \ref{lem:zero-deg7,7} (i)}
+            \ElsIf {$|\texttt{center\_darts}[7]| > 1$}
+                \State \Call{check777}{$(Z_C, \delta_C^-, \delta_C^+), \texttt{center\_darts}[7], \mathcal{C}, \bar{\mathcal{D}} \cup \{T_{7^3}\}$} \Comment{Lemma \ref{lem:zero-deg7,7} (ii)}
+            \EndIf
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{\checkSSWithLink($(Z_C, \delta_C^-, \delta_C^+), \texttt{darts7}, \mathcal{C}, \bar{\mathcal{D}} \cup \{T_{7^3}\}$) - Lemma \ref{lem:zero-deg7,7}(i)}
+    \label{alg:for-lem:zero-deg7,7(i)}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel $(Z_C, \delta_C^-, \delta_C^+)$, \texttt{darts7} is the set of center darts in $Z_C$ where the tail has degree $7$, a set of free cartwheels $\mathcal{C}$, the set of configurations $\bar{\mathcal{D}} \cup \{T_{7^3}\}$.}
+        \State $e \gets$ the single element of \texttt{darts7}.
+        \State \textbf{assert} \Call{combineEachCartwheel}{$(Z_C, \delta_C^-, \delta_C^+), \reverse(e), \mathcal{C}, \bar{\mathcal{D}} \cup \{T_{7^3}\}$} $=\emptyset$
+    \end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+    \caption{\checkSSSWithLink($(Z_C, \delta_C^-, \delta_C^+), \texttt{darts7}, \mathcal{C}, \bar{\mathcal{D}} \cup \{T_{7^3}\}$) - Lemma \ref{lem:zero-deg7,7}(ii)}
+    \label{alg:for-lem:zero-deg7,7(ii)}
+    \begin{algorithmic}[1]
+        \Require{A free cartwheel $(Z_C, \delta_C^-, \delta_C^+)$, \texttt{darts7} is the set of center darts in $Z_C$ where the tail has degree $7$, a set of free cartwheels $\mathcal{C}$, the set of configurations $\bar{\mathcal{D}} \cup \{T_{7^3}\}$.}
+        \ForAll{$i \in \{0, \ldots, |\texttt{darts7}|-1\}$}
+            \State $e_1 \gets \texttt{darts7}[i]$
+            \ForAll{$j \in \{0, \ldots, i - 1\}$}
+                \State $e_2 \gets \texttt{darts7}[j]$
+                \State \textbf{assert} \Call{combineEachCartwheelTwice}{$(Z_C, \delta_C^-, \delta_C^+), \reverse(e_1), \reverse(e_2), \mathcal{C}, \bar{\mathcal{D}} \cup \{T_{7^3}\}$} $= \emptyset$
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{lem}
+\label{lem:comp-check-deg7}
+    The assertions in Algorithm \ref{alg:for-lem:zero-deg7,7(i)} and \ref{alg:for-lem:zero-deg7,7(ii)} always hold.
+\end{lem}
+
+\end{document}

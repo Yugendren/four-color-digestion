@@ -1,0 +1,27 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\tikzset{deg5/.style={thick, circle, draw, fill=black, inner sep=1.5pt,}}
+\tikzset{deg6/.style={thick, circle, draw, fill=black, inner sep=0pt,}}
+\tikzset{deg7/.style={thick, circle, draw, fill=white, inner sep=2pt,}}
+\tikzset{deg8/.style={thick, rectangle, draw, fill=white, inner sep=2pt,}}
+\tikzset{deg9/.style={thick, regular polygon, regular polygon sides=3, rotate=180, draw, fill=white, inner sep=1pt,}}
+\tikzset{deg10/.style={thick, regular polygon, draw, fill=white, inner sep=2pt,}}
+\tikzset{->-/.style={decoration={
+    markings,
+    mark=at position .6 with {\arrow{>}}}, postaction={decorate}}}
+\tikzset{->>-/.style={decoration={
+    markings, 
+    mark=at position .5 with {\arrow{>}};, 
+    mark=at position .6 with {\arrow{>}};}, postaction={decorate}}}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=2.4cm]{img/send8.drawio.pdf}
+%    \includegraphics[width=2.7cm]{img/send8withreducible.drawio.pdf}
+%\bojan{Remove the right-hand side and add labels u,v on the vertices}
+\caption{A vertex $u$ sends charge eight to $v$ using the first four rules, each with two orientations except the first one which by itself sends charge 2. The Birkhoff diamond configuration is easily spotted in this case.}
+\label{fig:any_send8}
+\end{figure}
+
+\end{document}

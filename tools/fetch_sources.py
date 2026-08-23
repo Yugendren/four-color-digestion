@@ -5,6 +5,7 @@ Downloads the e-print tarballs for:
   1401.6481  RSST "Reducibility in the Four-Color Theorem"  (reduce.c, unavoidable.conf)
   1401.6485  RSST "Discharging cartwheels"                  (discharge.c, rules, present7-11)
   0905.0043  Steinberger D-only proof                       (U_2822.conf, modified programs)
+  2603.24880 Inoue et al. near-linear 4CT (the 2026 paper)  (main__1___1_.tex, tikz/rule.tex)
 
 Each tarball is stored under third_party/<id>/archive.tar.gz, extracted into
 third_party/<id>/src/, and its sha256 recorded in third_party/CHECKSUMS.sha256.
@@ -26,6 +27,7 @@ SOURCES = {
     "arxiv-1401.6481": "https://arxiv.org/e-print/1401.6481",
     "arxiv-1401.6485": "https://arxiv.org/e-print/1401.6485",
     "arxiv-0905.0043": "https://arxiv.org/e-print/0905.0043",
+    "arxiv-2603.24880": "https://arxiv.org/e-print/2603.24880",
 }
 
 UA = {"User-Agent": "Mericanii-fourcolor-digestion/0.1 (research; contact via repo)"}
