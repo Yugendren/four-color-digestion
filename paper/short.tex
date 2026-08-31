@@ -34,47 +34,33 @@
 \maketitle
 
 \begin{abstract}
-A discharging argument is parameterised by the amounts of charge its rules move.
-Fix the rule shapes and the pool of reducible configurations; then the set of
-amount vectors under which the argument closes is a \emph{polyhedron}, because
-each local structure that the pool fails to block contributes one linear
-inequality in the amounts. Failure of the argument is thus infeasibility of a
-linear program, and infeasibility carries a Farkas certificate: a short
-nonnegative combination of the inequalities that sums to a contradiction,
-independent of any solver and checkable in exact rational arithmetic.
-
-We give the certificate format, a solver-free exact-rational checker, and the
-first instance. Fix the $84$ discharging rule shapes of the $2026$
-near-linear-time proof of the Four Colour Theorem \cite{nl4ct2026} and restrict
-its published $8{,}200$-configuration D-reducible pool to the $5{,}895$ members
-of ring size at most $14$. A $12$-row irreducible certificate then shows that no
-nonnegative amount vector $x\in\mathbb{R}^{84}_{\ge0}$ satisfies the local charge
-conditions that schema imposes over that pool: the argument cannot be made to
-close there by re-tuning its amounts. We say ``certify'' rather than ``prove''
-in a sense made precise in \S\ref{sec:notclaim} --- the certificate is exact and
-every row is re-derived from its source by the checker, but the row set is
-necessary only under hypotheses that we state inside the theorem. The
-contradiction is legible: it lives entirely at the degree-$5$/degree-$7$
-interface, and $65$ of the $84$ rule shapes carry a zero coefficient in every row
-of it. A positive control --- the same construction over the full pool --- is
-feasible, with the published amounts satisfying every generated row.
-
-The result bears on a question Steinberger \cite{steinberger2010} posed in $2009$
-and explicitly declined to answer, whether an unavoidable set of D-reducible
-configurations of ring size at most $14$ exists; we settle it for this pool and
-these rule shapes, and no further. Automated-discharging frameworks
-\cite{stolee2014,bousquet2024square,lavalicov2022} solve the same kind of linear
-program inside a loop and treat infeasibility as a signal to enlarge the
-configuration set; the certificate their loops discard is exactly the object we
-report.
-
-Two secondary results are included. We determine $f(r)$, the minimum number of
-interior vertices of a D-reducible configuration of ring size $r$, for
-$r=8,\dots,13$: $f = 5,5,6,7,7,8$, exhaustively over $13.2$ million generated
-near-triangulations and tight at every ring. And we report an independent
-re-verification of the published 4CT configuration corpus, which located $430$
-configurations of the $2026$ pool that no stage of its pipeline uses and a
-counting defect in the $1995$ \texttt{reduce.c} reference oracle.
+Fix the $84$ discharging rule shapes of the $2026$ near-linear-time proof of the
+Four Colour Theorem \cite{nl4ct2026} and restrict its published
+$8{,}200$-configuration D-reducible pool to the $5{,}895$ members of ring size at
+most $14$; then no nonnegative amount vector $x\in\mathbb{R}^{84}_{\ge0}$
+satisfies the local charge conditions that schema imposes over that pool, and a
+$12$-row irreducible Farkas certificate says why. The underlying observation is
+that once the rule shapes and the pool are fixed, the amounts a discharging
+argument moves are just numbers and each local structure the pool fails to block
+is one linear inequality in them, so the set of amounts under which the argument
+closes is a \emph{polyhedron}; its emptiness therefore carries a Farkas
+certificate --- a short nonnegative combination of the inequalities that sums to
+a contradiction, independent of any solver and checkable in exact rational
+arithmetic. We give the certificate format, a solver-free exact-rational checker
+that re-derives every row from its source, and this first instance. We say
+``certify'' rather than ``prove'' in a sense made precise in
+\S\ref{sec:notclaim}: the row set is necessary only under hypotheses stated
+inside the theorem. The contradiction is legible --- it lives entirely at the
+degree-$5$/degree-$7$ interface, and $65$ of the $84$ rule shapes carry a zero
+coefficient in every row --- and a positive control, the same construction over
+the full pool, is feasible with the published amounts satisfying every generated
+row. The result bears on a question Steinberger \cite{steinberger2010} posed in
+$2009$ and explicitly declined to answer, whether an unavoidable set of
+D-reducible configurations of ring size at most $14$ exists; we settle it for
+this pool and these rule shapes, and no further. Automated-discharging
+frameworks \cite{stolee2014,bousquet2024square,lavalicov2022} solve the same
+linear program inside a loop and treat infeasibility as a signal to enlarge the
+configuration set; the certificate their loops discard is the object we report.
 \end{abstract}
 %======================================================================
 \section{Introduction}
@@ -91,8 +77,8 @@ charge'' is, at each local structure the pool fails to block, a single linear
 inequality in those numbers. The set of amount vectors that make the argument
 close is therefore a polyhedron.
 
-This observation is not new; it is the engine of the automated-discharging
-frameworks of Stolee \cite{stolee2014}, Bousquet, Deschamps, de Meyer and Pierron
+This observation is the engine of the automated-discharging frameworks of Stolee
+\cite{stolee2014}, Bousquet, Deschamps, de Meyer and Pierron
 \cite{bousquet2024square} and La and Valicov \cite{lavalicov2022}. What is new is
 what we do with it when the polyhedron is \emph{empty}. Farkas' lemma
 \cite{farkas1902} says that an infeasible linear system admits a certificate: a
@@ -110,7 +96,7 @@ The Four Colour Theorem has been proved four times by machine
 in a proof assistant \cite{gonthier2008}. In every case the proof pairs an
 unavoidable set of reducible configurations with a discharging argument
 certifying unavoidability, and in every case that argument arrives with its
-amounts already chosen and no account of why those amounts and not others.
+amounts already chosen and no account of why those and not others.
 
 We give the certificate format, an exact-rational checker for it, and the first
 instance. The instance concerns the $2026$ near-linear-time proof of the Four
@@ -120,27 +106,14 @@ Restrict that pool to its $5{,}895$ members of ring size at most $14$ and call t
 result $P_{14}$. Theorem~\ref{thm:lp} then says: \emph{no} nonnegative amount
 vector $x\in\mathbb{R}^{84}_{\ge0}$ satisfies the local charge conditions the
 schema imposes over $P_{14}$. The argument cannot be rescued there by re-tuning
-its amounts, and the reason is twelve rows long.
+its amounts, and the reason is twelve rows long: nine cartwheels with a
+degree-$7$ hub, each having a degree-$5$ spoke, and three degree-$5$ wheels,
+with the contradiction reading as arithmetic (\S\ref{sec:cert}).
 
-The certificate is legible in a way that an LP verdict is not. Its twelve rows
-are nine cartwheels with a degree-$7$ hub and three degree-$5$ wheels; no
-degree-$8$, $9$ or $10$ structure appears at all, even though the empirical
-failure at the published amounts is spread across hub degrees $7$ to $10$. Every
-one of the nine degree-$7$ hubs has a degree-$5$ spoke. Only $19$ of the $84$
-rule shapes carry a nonzero coefficient anywhere in it, so $65$ of the shapes are
-irrelevant to the obstruction. And the contradiction reads as arithmetic: the
-degree-$5$ rows force certain amounts up, the degree-$7$ rows force the same
-amounts down, and once $P_{14}$ stops blocking four particular cartwheels the two
-demands are incompatible, by exactly $10\cdot460 - 10\cdot462 = -20$.
-
-This bears on a question posed in $2009$. Steinberger \cite{steinberger2010} gave
-the first unavoidable set of D-reducible configurations, at the cost of ring size
-up to $16$, and wrote that he ``was not able to find an unavoidable set using
-only configurations of ring-size $14$ or less, but [had] no opinion as to whether
-such a set exists or not''. We settle a sharply scoped version: for the $2026$
-rule shapes and the $2026$ pool, ring $\le 14$ is impossible, and the twelve rows
-say why. We do not settle Steinberger's question, and \S\ref{sec:scope} states
-exactly how far short we fall.
+This bears on a question Steinberger \cite{steinberger2010} posed in $2009$ and
+declined to answer (\S\ref{sec:thm}). We settle a sharply scoped version: for the
+$2026$ rule shapes and the $2026$ pool, ring $\le 14$ is impossible. We do not
+settle his question, and \S\ref{sec:scope} states exactly how far short we fall.
 
 \subsection{Why the result type is new}
 \label{sec:novelty}
@@ -148,51 +121,35 @@ exactly how far short we fall.
 Discharging has been automated in essentially this way three times. Stolee's
 \textsc{adage} \cite{stolee2014} builds a linear program whose variables are
 discharging amounts and whose constraints are configurations, and reports the
-optimum as a density bound. Bousquet et al.\ \cite{bousquet2024square} build the
-same kind of program for square colouring of planar graphs and wrap it in a loop:
-solve, and if the optimum is insufficient, enlarge the configuration set and
-solve again. La and Valicov \cite{lavalicov2022} automate the verification side
-of the same procedure. Cranston and West's survey \cite{cranston2017discharging}
-gives the hand version of the method these frameworks mechanise.
+optimum as a density bound; Bousquet et al.\ \cite{bousquet2024square} build the
+same program for square colouring of planar graphs and wrap it in a loop,
+enlarging the configuration set whenever the optimum is insufficient; La and
+Valicov \cite{lavalicov2022} automate the verification side.
 
-In all three frameworks, an insufficient LP is a signal to change the input.
-Bousquet et al.\ enlarge $\mathcal{C}$; Stolee tries a different named rule set.
-The dual object that says \emph{why} the present input cannot succeed is
-computed by every simplex solve --- it is the Farkas ray the solver returns
-alongside its infeasibility verdict --- and it is reported by none of them.
-That object is a theorem, not a diagnostic. It is finite, it is small, it names
-its own hypotheses, and it can be checked independently of the search that found
-it. Reporting it converts a failed search into a statement about the schema.
-
-\paragraph{The analogy with unsatisfiability proofs.} The practice we are
-advocating is standard one field over. A SAT solver reporting \textsc{unsat} is
-now expected to emit a machine-checkable proof, and large computer-assisted
-results are accepted on the strength of those proofs rather than of the solver:
-the determination of the packing chromatic number of the infinite square grid
-\cite{subercaseaux2023packing} rests on a $34$-terabyte compressed DRAT proof,
-and the empty hexagon number \cite{heule2024hexagon} on a reduction verified in
-Lean. A Farkas certificate is the linear-programming analogue of an
-unsatisfiability proof, and in this setting it is very much smaller --- twelve
-rows, checkable by hand in principle. The discharging literature has not adopted
-the practice.
-
-The difference in setting matters too: those frameworks run their loops on
-schemas being designed, where enlarging the configuration set is the natural
-move on failure, whereas we run ours on a \emph{published, complete} schema whose
-configuration set is the object under study and cannot be enlarged without
-changing the claim.
+In all three, an insufficient LP is a signal to change the input. The dual object
+that says \emph{why} the present input cannot succeed is computed by every
+simplex solve --- it is the Farkas ray the solver returns alongside its
+infeasibility verdict --- and is reported by none of them. That object is a
+theorem, not a diagnostic: finite, small, naming its own hypotheses, checkable
+independently of the search that found it. The practice is standard one field
+over, where a SAT solver reporting \textsc{unsat} is expected to emit a
+machine-checkable proof and large results are accepted on the strength of those
+proofs rather than of the solver \cite{subercaseaux2023packing}; a Farkas
+certificate is the linear-programming analogue, and here it is twelve rows. The
+setting differs in
+one way that matters: those loops run on schemas being designed, where enlarging
+the configuration set is the natural move on failure, whereas we run ours on a
+\emph{published, complete} schema whose configuration set is the object under
+study and cannot be enlarged without changing the claim.
 
 \subsection{What ``certified'' means here, and what we do not claim}
 \label{sec:notclaim}
 
-We use two grades and label results with them. \textbf{Proven} means a
-mathematical argument, in some cases with a finite exhaustive case analysis whose
-completeness argument is given; Theorem~\ref{thm:fr} is of this kind.
-\textbf{Certified} means a finite computation whose output is an independently
-checkable certificate --- here, a Farkas certificate verified in exact rationals
-by a program that re-derives every row from its source rather than trusting the
-certificate's own numbers. Theorem~\ref{thm:lp} is certified, not proven, and we
-say ``certify'' rather than ``prove'' throughout for it.
+We say Theorem~\ref{thm:lp} is \emph{certified} rather than \emph{proven}, and
+mean by it: a finite computation whose output is an independently checkable
+certificate --- here, a Farkas certificate verified in exact rationals by a
+program that re-derives every row from its source rather than trusting the
+certificate's own numbers.
 
 The distinction is not decorative, because three hypotheses are load-bearing and
 are stated inside the theorem or in \S\ref{sec:scope}. (i) The amounts are
@@ -212,98 +169,64 @@ the whole system is feasible.
 Finally, the result is scoped to \emph{these} $84$ rule shapes and \emph{this}
 pool. Other D-reducible configurations of ring $\le14$ exist outside the
 published pool, and adding or replacing rule shapes is not covered.
-
-\subsection{Secondary results, and what is reported elsewhere}
-
-Two further results are included because they are short and because the second
-is what licenses the first. \S\ref{sec:fr} determines $f(r)$, the minimum number
-of interior vertices of a D-reducible configuration of ring size $r$, for
-$r=8,\dots,13$; this is a clean exhaustive theorem, and the first quantitative
-refinement we know of to Birkhoff's $1913$ ring-size bound \cite{birkhoff1913}.
-\S\ref{sec:verify} reports an independent re-verification of the published 4CT
-corpus by a reducibility checker written from the RSST mathematics rather than
-ported from its code, including a $5{,}692{,}937$-wheel differential against the
-released C++, $430$ configurations of the $2026$ pool that no stage of its
-pipeline uses, and a counting defect in the $1995$ \texttt{reduce.c} reference
-oracle. The broader motivation is the one Tao \cite{tao2025machine} articulates
-for machine-assisted proof: a machine proof becomes mathematics when it yields
-transferable structure. A machine-learning line ran alongside this work and is
-reported separately.
 %======================================================================
 \section{Preliminaries}
 \label{sec:prelim}
 %======================================================================
 
-We keep this section to what the certificate needs and refer to
-\cite{rsst1997,rsst-reduce} for everything standard.
+We fix only the notation used later, and refer to \cite{rsst1997,rsst-reduce}
+for reducibility and to Cranston and West \cite{cranston2017discharging} for
+discharging.
 
-\paragraph{Configurations and reducibility.} A \emph{configuration} $K$ of ring
-size $r$ with $k$ interior vertices is given by its \emph{free completion}
-$S(K)$: a simple plane near-triangulation of the closed disk on $n = r+k$
-vertices whose outer face is bounded by an induced cycle $R$ of length $r$ (the
-\emph{ring}) with every ring vertex of degree $\ge3$, whose interior is nonempty
-and connected with every interior vertex of degree $\ge5$, and all of whose
-bounded faces are triangles. RSST's reference parser \texttt{ReadConf} in
-\texttt{reduce.c} records three further conditions on any file it accepts, one of
-them redundant; the substantive one is that each interior vertex meets the ring
-in at most two separate contiguous arcs. Let $\Phi(K)$ be the set of
-$3$-colourings of $E(R)$, up to the $S_3$ action on colours, that extend to a
-tri-colouring of $S(K)$, and write $a(K) = |\Phi(K)|$. Then $K$ is
-\emph{D-reducible} if iterating the Kempe-closure operator from $\Phi(K)$ reaches
-$\emptyset$, and \emph{C-reducible} if the same holds after contracting a
-\emph{contract} $X$ of edges. The published catalogs record a nonempty $X$
-exactly for those configurations that are not already D-reducible; reducibility
-in the C-or-D sense is therefore strictly weaker than D-reducibility. The $2026$
-pool \cite{nl4ct2026} and Steinberger's set \cite{steinberger2010} are D-only;
-the RSST $633$ are not.
+\paragraph{Configurations.} A \emph{configuration} $K$ of ring size $r$ with $k$
+interior vertices is given by its \emph{free completion} $S(K)$: a simple plane
+near-triangulation of the closed disk on $n = r+k$ vertices whose outer face is
+bounded by an induced cycle $R$ of length $r$ (the \emph{ring}), whose interior
+is nonempty and connected with every interior vertex of degree $\ge5$, and all of
+whose bounded faces are triangles. Let $\Phi(K)$ be the set of $3$-colourings of
+$E(R)$, up to the $S_3$ action on colours, that extend to a tri-colouring of
+$S(K)$, and write $a(K) = |\Phi(K)|$. Then $K$ is \emph{D-reducible} if iterating the
+Kempe-closure operator from $\Phi(K)$ reaches $\emptyset$, and \emph{C-reducible}
+if the same holds after contracting a \emph{contract} of edges, so C-or-D
+reducibility is strictly weaker. The $2026$ pool \cite{nl4ct2026} and
+Steinberger's set \cite{steinberger2010} are D-only; the RSST $633$ are not.
 
-\paragraph{Discharging schemas.} A discharging argument assigns an
-\emph{initial charge} $T_0(v)$ to each vertex of a hypothetical minimum
-counterexample, moves charge along edges by a finite set of local \emph{rules},
-and derives a contradiction from the fact that total charge is positive while
-every vertex ends non-positive. RSST \cite{rsst-discharge} organise the local analysis around
-\emph{axles}; Steinberger \cite{steinberger2010} and \cite{nl4ct2026} use
-\emph{cartwheels} --- a hub together with its first and second neighbourhoods,
-with degrees carried as intervals rather than exact values, refined by branching
-until each is determined. A configuration in the pool \emph{blocks} a cartwheel
-if it appears inside it; blocked cartwheels are discarded, since a minimum
-counterexample contains no reducible configuration.
-
-The $2026$ schema, which is the one we analyse, sets
-$T_0(v) := 10\,(6-d(v))$, so that $\sum_v T_0(v) = 120$ by Euler's formula
-(\cite{nl4ct2026}, source line $602$ and Lemma \texttt{lem:120}). Each rule $R$
-is a planar degree-interval pattern with a distinguished dart; it sends an
-\emph{amount} $r(R)$ of charge from a source vertex $s(R)$ to a target vertex
-$t(R)$ whenever the pattern matches. The final charge is
+\paragraph{The $2026$ schema.} It assigns initial charge $T_0(v) := 10\,(6-d(v))$,
+so that $\sum_v T_0(v) = 120$ by Euler's formula (\cite{nl4ct2026}, source line
+$602$ and Lemma \texttt{lem:120}). Each rule $R$ is a planar degree-interval
+pattern with a distinguished dart; it sends an \emph{amount} $r(R)$ of charge
+from a source vertex to a target vertex whenever the pattern matches, so the
+final charge is
 \begin{equation}
 \label{eq:finalcharge}
   T(u) \;=\; T_0(u) \;+\; \sum_{v \sim u}\bigl(\phi(v,u) - \phi(u,v)\bigr),
 \end{equation}
-where $\phi(v,u)$ is the total amount sent from $v$ to $u$. The published schema
-fixes $r(R) \in \{1,2\}$ for all $84$ rules.
+with $\phi(v,u)$ the total amount sent from $v$ to $u$. The published schema fixes
+$r(R) \in \{1,2\}$ for all $84$ rules. Where RSST \cite{rsst-discharge} organise
+the local analysis around \emph{axles}, \cite{steinberger2010,nl4ct2026} use
+\emph{cartwheels} --- a hub with its first and second neighbourhoods, degrees
+carried as intervals and refined by branching until each is determined. A pool
+configuration \emph{blocks} a cartwheel if it appears inside it; blocked
+cartwheels are discarded, since a minimum counterexample contains no reducible
+configuration.
 
-\begin{remark}[$43$ figures, $84$ rules]
-\label{rem:84}
-\cite{nl4ct2026} draws $43$ rules; each is counted twice, once per reflection,
-except two that are reflection-symmetric, giving $43\cdot 2 - 2 = 84$ (source
-line $635$: ``Figure \texttt{fig:rules} shows 84 rules since precisely two, the
-first and fourth last, are symmetric under the reflection''). This matches the
-$84$ files in \art{third\_party/discharging-rules/R} one for one. The paper also
-notes that its $12$th and $13$th rules are a single rule in Steinberger's set of
-$42$. Our amount vector ranges over all $84$ coordinates independently, which is
-\emph{weaker} than requiring reflection pairs to share an amount --- the safe
-direction for an infeasibility verdict.
-\end{remark}
+\paragraph{$43$ figures, $84$ rules.} \cite{nl4ct2026} draws $43$ rules, each
+counted twice per reflection except two that are reflection-symmetric, giving
+$43\cdot 2 - 2 = 84$ (source line $635$) and matching the $84$ files in
+\art{third\_party/discharging-rules/R} one for one. Our amount vector ranges over
+all $84$ coordinates independently, \emph{weaker} than requiring reflection pairs
+to share an amount --- the safe direction for an infeasibility verdict.
 
 \paragraph{Survivors are permitted.} This is the point on which a naive encoding
-of ``the discharging argument closes'' goes wrong, so we state it early. The
-charge argument need not kill every unblocked local structure: the $2026$ proof
-leaves $5{,}439 + 6{,}790 + 3{,}285 + 626 + 8 = 16{,}148$ stage-one wheels alive
-on purpose, and three gluing lemmas dispose of the survivors. The correct local
-condition is $T \le 0$, not $T < 0$. \S\ref{sec:controls} reports the negative
-control that makes the difference concrete: the encoding demanding strict
-negativity is infeasible even over the \emph{complete} $8{,}200$-configuration
-pool, i.e.\ it would ``disprove'' the published theorem.
+of ``the discharging argument closes'' goes wrong. The charge argument need not
+kill every unblocked local structure: the $2026$ proof leaves
+$5{,}439 + 6{,}790 + 3{,}285 + 626 + 8 = 16{,}148$ stage-one wheels alive on
+purpose, and three gluing lemmas dispose of the survivors. The correct local
+condition is $T \le 0$, not $T < 0$. The negative control of
+\S\ref{sec:controls} makes the difference concrete: the encoding demanding
+strict negativity is infeasible even over the \emph{complete}
+$8{,}200$-configuration pool, i.e.\ it would ``disprove'' the published
+theorem.
 %======================================================================
 \section{The amount polyhedron and its failure certificate}
 \label{sec:lp}
@@ -318,22 +241,19 @@ $x \in \mathbb{R}^N_{\ge0}$. Everything else --- which patterns exist, which
 cartwheels the pool blocks, how the refinement branches --- is fixed. The
 question this paper asks is what the argument can do as $x$ varies.
 
-The basic observation is that the final charge is affine in $x$. Let $L$ be a
-local structure in which every degree is determined, so that for each rule shape
-$R_k$ it is decided which darts at the hub $R_k$ fires along. Writing
-$\mathrm{IN}_k(L)$ for the number of darts along which $R_k$ sends charge
-\emph{into} the hub and $\mathrm{OUT}_k(L)$ for the number along which it sends
-charge out, \eqref{eq:finalcharge} becomes
+The final charge is affine in $x$. Let $L$ be a local structure in which every
+degree is determined, so that for each rule shape $R_k$ it is decided which darts
+at the hub $R_k$ fires along. Writing $\mathrm{IN}_k(L)$ for the number of darts
+along which $R_k$ sends charge \emph{into} the hub and $\mathrm{OUT}_k(L)$ for
+the number along which it sends charge out, \eqref{eq:finalcharge} becomes
 \begin{equation}
 \label{eq:leafrow}
   C(L,x) \;=\; T_0(d) \;+\; \sum_{k=1}^{N}\bigl(\mathrm{IN}_k(L) - \mathrm{OUT}_k(L)\bigr)\,x_k ,
 \end{equation}
 an affine function with integer coefficients: no epigraph variables, no binaries,
 no case split. The requirement that the hub of $L$ ends non-positive is one
-linear inequality in $x$.
-
-Consequently the set of amount vectors under which the argument closes over $U$
-is an intersection of half-spaces with the nonnegative orthant:
+linear inequality in $x$, so the set of amount vectors under which the argument
+closes over $U$ is an intersection of half-spaces with the nonnegative orthant,
 \[
   X(U) \;=\; \bigl\{\, x \in \mathbb{R}^N_{\ge0} \;:\; A x \le b \,\bigr\},
 \]
@@ -347,12 +267,10 @@ vector $y \ge 0$ with
 \end{equation}
 whence for any candidate $x \ge 0$ the chain
 $0 \le (y^\top\! A)\,x = y^\top(Ax) \le y^\top b < 0$ is a contradiction. The
-certificate is a list of (row, multiplier) pairs. It is finite, it is checkable
-by hand arithmetic in principle and by an exact-rational program in practice, and
---- this is the point of the format --- it names the small set of local
-structures actually responsible. Nothing about it depends on the solver that
-found it, or on floating-point arithmetic, or on trusting the enumeration that
-produced the other rows.
+certificate is a list of (row, multiplier) pairs: finite, checkable by hand
+arithmetic in principle and by an exact-rational program in practice, and --- this
+is the point of the format --- naming the small set of local structures actually
+responsible.
 
 \subsection{Where the rows come from}
 \label{sec:rows}
@@ -376,13 +294,12 @@ necessary condition
 the strict cases being those in which the leaf must be pruned before an assertion
 is reached rather than surviving to the gluing lemmas. Note that $C = 0$ is
 \emph{not} imposed: a leaf with $C<0$ is pruned earlier, so $C \le 0$ is exactly
-the necessary-and-sufficient charge condition, weaker than what the code is
-observed to satisfy at the published amounts. As a differential check on
-\eqref{eq:leafrow}, all $10{,}094$ published full-pool bad cartwheels evaluate to
-exactly $0$ under our independent implementation of the row semantics, and all
-$10{,}094$ satisfy $d \in \{7,8\}$ with a spoke of degree $\ge 7$: the row
-semantics reproduce all three C++ assertions on the published output with $0$
-discrepancies.
+the necessary charge condition, weaker than what the code is observed to satisfy
+at the published amounts. As a differential check on \eqref{eq:leafrow}, all
+$10{,}094$ published full-pool bad cartwheels evaluate to exactly $0$ under our
+independent implementation of the row semantics and all satisfy $d \in \{7,8\}$
+with a spoke of degree $\ge 7$: the row semantics reproduce all three C++
+assertions on the published output with $0$ discrepancies.
 
 \paragraph{Low-degree hubs.} Taken alone, the leaf rows are satisfied by
 $x = 0$: send nothing, and every hub of degree $\ge 7$ keeps its negative initial
@@ -421,9 +338,9 @@ we got this side wrong in the loose direction, $x_0$ would have violated it.
 \paragraph{The coarse-refinement gap.} The low-degree rows are built on the
 coarse wheel (hub plus spoke-degree necklace, second neighbourhood left open),
 and blocking is tested there. ``Refining only strengthens the bound'' does not
-cover the danger, because refining can also \emph{delete} the row: if a coarse
-wheel is unblocked but every refinement of it is blocked, no vertex of a minimum
-counterexample carries that necklace and the row is spurious --- which is
+cover the danger, because refining can also \emph{delete} the row: if every
+refinement of an unblocked coarse wheel is blocked, no vertex of a minimum
+counterexample carries that necklace and the row is spurious ---
 anti-conservative for an infeasibility verdict. So it was checked twice. Exact
 model counting over the full refinement space of the certificate's degree-$5$
 necklaces leaves between $35.0\%$ and $61.2\%$ of all refinements unblocked in
@@ -490,34 +407,32 @@ the certificate, and not the LP verdict, is the reportable object.
 \label{sec:necessity}
 
 One objection nearly killed the result and is generic to this method. The
-released code counts only \texttt{always\_apply} rules outward, and stops
-refining once no rule is \texttt{dominantly\_apply}-but-not-\texttt{always\_apply};
-since \texttt{dominantly\_apply} is strictly stronger than
-\texttt{has\_intersection}, a leaf can retain rules that are neither
-\texttt{always\_apply} nor \texttt{never\_apply} on an outgoing dart --- rules
-that might fire in some realization but are not counted in the out-charge.
-Measured on the certificate's own leaves, $11$ of $5{,}292$ (rule, out-dart)
-pairs are undetermined in this sense, and for those leaves $C$ strictly
-\emph{over}-estimates the hub's true final charge, so $C(L,x)\le0$ would be a
-condition of the released \emph{verification procedure} rather than of the
-mathematics. Two blunt repairs --- dropping such rows, or weakening them ---
-both restore feasibility (Table~\ref{tab:variants}), so the distinction is not
-hypothetical.
+released code counts only \texttt{always\_apply} rules outward and stops refining
+once no rule is \texttt{dominantly\_apply}-but-not-\texttt{always\_apply}; since
+\texttt{dominantly\_apply} is strictly stronger than \texttt{has\_intersection},
+a leaf can retain rules that are neither \texttt{always\_apply} nor
+\texttt{never\_apply} on an outgoing dart --- rules that might fire in some
+realization but are not counted in the out-charge. Measured on the certificate's
+own leaves, $11$ of $5{,}292$ (rule, out-dart) pairs are undetermined in this
+sense, and for those leaves $C$ strictly \emph{over}-estimates the hub's true
+final charge, so $C(L,x)\le0$ would be a condition of the released
+\emph{verification procedure} rather than of the mathematics. Two blunt repairs
+--- dropping such rows, or weakening them --- both restore feasibility
+(Table~\ref{tab:variants}), so the distinction is not hypothetical.
 
 The repair we use instead is to pass to the \emph{tail-maximised} leaf, narrowing
 every open tail $[a,9]$ with $a<9$ to $[9,9]$; since $9$ abbreviates ``$9$ or
-more'', this restricts attention to the sub-family of realizations in which every
-unpinned second neighbour has large degree. If the tail-maximised leaf (i) has a
-fully determined outgoing side, (ii) yields the identical row --- same
-coefficients, same constant, same strictness --- and (iii) is still unblocked by
-the pool, then in those realizations the out-charge is exact while the in-charge
-can only exceed the branch's flag sum, so the true final charge is at least
-$C(L,x)$ and $T\le0$ forces $C(L,x)\le0$. Undetermined incoming rules are
-harmless precisely because they push the true charge up. All twelve rows of the
-certificate below pass this audit: the nine degree-$7$ rows satisfy (i)--(iii)
-individually, including the five whose original leaves had undetermined outgoing
-pairs, and the three degree-$5$ rows are mathematically necessary by
-construction, being already in lower-bound form
+more'', this restricts attention to the realizations in which every unpinned
+second neighbour has large degree. If the tail-maximised leaf (i) has a fully
+determined outgoing side, (ii) yields the identical row --- same coefficients,
+constant and strictness --- and (iii) is still unblocked by the pool, then in
+those realizations the out-charge is exact while the in-charge can only exceed
+the branch's flag sum, so the true final charge is at least $C(L,x)$ and
+$T\le0$ forces $C(L,x)\le0$; undetermined incoming rules are harmless precisely
+because they push the true charge up. All twelve rows pass this audit: the nine
+degree-$7$ rows satisfy (i)--(iii) individually, including the five whose
+original leaves had undetermined outgoing pairs, and the three degree-$5$ rows
+are mathematically necessary by construction, being already in lower-bound form
 (\art{results/steinberger/iis\_math\_necessity.json}).
 %======================================================================
 \section{The instance: the ring-$\le14$ sub-pool of the $2026$ schema}
@@ -529,34 +444,25 @@ construction, being already in lower-bound form
 Steinberger's unavoidable set \cite{steinberger2010} is D-only but reaches ring
 size $16$; RSST's $633$ stay at ring $\le14$ but use contracts. Steinberger
 raises the obvious question and declines to take a position
-(\art{third\_party/arxiv-0905.0043/src/4c.tex}, line $137$):
-\begin{quote}\small
-``Appel and Haken used only configurations of ring-size at most $14$\dots\ The
-unavoidable set of Robertson et al.\ also has only configurations of ring-size
-$14$ or less. Our unavoidable set uses configurations of ring-size up to
-$16$\dots\ \textbf{We were not able to find an unavoidable set using only
-configurations of ring-size $14$ or less, but we have no opinion as to whether
-such a set exists or not.}''
-\end{quote}
-The $2026$ pool \cite{nl4ct2026} is D-only, has $8{,}200$ configurations of ring
-size up to $18$, and contains $5{,}895$ of ring size $\le 14$; call that sub-pool
-$P_{14}$.
+(\art{third\_party/arxiv-0905.0043/src/4c.tex}, line $137$): ``We were not able to
+find an unavoidable set using only configurations of ring-size $14$ or less, but
+we have no opinion as to whether such a set exists or not.'' The $2026$ pool
+\cite{nl4ct2026} is D-only, has $8{,}200$ configurations of ring size up to $18$,
+and contains $5{,}895$ of ring size $\le 14$; call that sub-pool $P_{14}$.
 
 Before any linear programming we ran the released pipeline with the pool replaced
 by $P_{14}$, the $84$ rule shapes and the published amounts $x_0$ left untouched.
 It fails, and in a structured way: $681$ non-blocked combined rules rather than
 the baseline $671$ (ten revived, all ten predicted in advance by a gap analysis
-with $0$ unexpected re-blockings), a per-wheel job count of $16{,}157$ rather
-than $16{,}148$, and then $833$ of those jobs aborting --- $780$ on
+with $0$ unexpected re-blockings), $16{,}157$ per-wheel jobs rather than
+$16{,}148$, and then $833$ of those jobs aborting --- $780$ on
 \texttt{assert(C == 0)} ($530$ at $d=7$, $250$ at $d=8$) and $53$ on
 \texttt{assert(d == 7 || d == 8)} ($51$ at $d=9$, $2$ at $d=10$), the two failure
-kinds perfectly stratified by hub degree.
-
-That is a statement about $x_0$ alone, and the obvious response is to re-tune the
-amounts. The theorem below says no re-tuning can work. The $833$ aborted jobs are
-also the raw material for it: re-run against an \texttt{NDEBUG} build with the
-assertions compiled out, they yield $77{,}185$ additional fully refined leaves
-that the assert-guarded run never recorded.
+kinds perfectly stratified by hub degree. That is a statement about $x_0$ alone;
+the theorem below says no re-tuning can work. The $833$ aborted jobs are also its
+raw material: re-run against an \texttt{NDEBUG} build with the assertions
+compiled out, they yield $77{,}185$ additional fully refined leaves that the
+assert-guarded run never recorded.
 
 \subsection{The theorem}
 
@@ -580,23 +486,21 @@ the nonnegative reals, hence a fortiori over $\mathbb{Z}^{84}_{\ge0}$ and over
 the box $\{1,2\}^{84}$ that \cite{nl4ct2026} allows itself.
 
 The system behind the theorem has $48{,}509$ distinct rows: $97{,}860$ fully
-refined cartwheels yield $48{,}423$ distinct leaf rows after deduplication by
-(coefficients, constant, strictness), to which the $86$ distinct low-degree rows
-are added. The leaves are $10{,}094$ published full-pool bad cartwheels,
-$10{,}581$ from the $15{,}324$ per-wheel jobs that completed, and the $77{,}185$
-recovered from the $833$ jobs that aborted. By hub degree the rows are
-$40{,}257$ at $d=7$, $8{,}070$ at $d=8$, $93$ at $d=9$, $3$ at $d=10$, $26$ at
-$d=5$ and $60$ at $d=6$; the $93$ and $3$ are exactly the strict rows
-corresponding to the $51+2$ degree-range failures above, and the $3{,}046$
-unblocked low-degree wheels collapse to only $86$ distinct rows.
+refined cartwheels --- $10{,}094$ published full-pool bad cartwheels, $10{,}581$
+from the $15{,}324$ per-wheel jobs that completed and $77{,}185$ recovered from
+the $833$ that aborted --- yield $48{,}423$ distinct leaf rows after
+deduplication by (coefficients, constant, strictness), and the $3{,}046$
+unblocked low-degree wheels collapse to $86$ more. By hub degree: $40{,}257$ at
+$d=7$, $8{,}070$ at $d=8$, $93$ at $d=9$, $3$ at $d=10$, $26$ at $d=5$ and $60$
+at $d=6$; the $93$ and $3$ are exactly the strict rows corresponding to the
+$51+2$ degree-range failures above.
 
 \begin{table}[t]
 \centering\small
 \caption{The four headline variants and the two lossy diagnostics of
 \S\ref{sec:necessity}. ``$x_0$ viol.'' counts rows the published amounts violate.
-Rows are deduplicated by (coefficients, constant, strictness). Full table of
-eight variants, and reproduction instructions, in the artifact repository
-(see the availability statement).}
+Rows are deduplicated by (coefficients, constant, strictness). All eight variants,
+with reproduction instructions, are in the artifact repository.}
 \label{tab:variants}
 \begin{tabular}{llrrl}
 \toprule
@@ -637,8 +541,7 @@ contradiction is tight.
 multipliers $y$ and $y^\top b = -20$. ``rhs'' is the row's right-hand side and
 $C(x_0)$ the leaf charge at the published amounts, so a positive entry marks a
 row $x_0$ violates. Every row is non-strict. The full $84$-column coefficient
-vectors, the $19$-row support, and the machine-readable certificates are in the
-artifact repository (see the availability statement).}
+vectors and the $19$-row support are in the artifact repository.}
 \label{tab:cert}
 \begin{tabular}{rrlrrll}
 \toprule
@@ -660,8 +563,7 @@ $y_i$ & $d$ & spoke degrees & rhs & $C(x_0)$ & source & origin \\
 \end{tabular}
 \end{table}
 
-\paragraph{What it says.} The certificate is legible in a way LP output usually
-is not.
+\paragraph{What it says.}
 \begin{itemize}\itemsep2pt
   \item \textbf{No degree-$8$, $9$ or $10$ row appears.} The contradiction needs
         none of the $53$ degree-range failures nor any of the $250$ degree-$8$
@@ -678,9 +580,8 @@ is not.
   \item \textbf{Read as arithmetic}, the degree-$5$ rows say a degree-$5$ vertex
         must give away all $10$ units of its charge, forcing the amounts on
         \texttt{rule001}--\texttt{rule004} \emph{up}; the degree-$7$ rows cap what
-        a degree-$7$ hub with degree-$5$ neighbours may receive back, pulling the
-        same amounts \emph{down}. With $P_{14}$ no longer blocking four offending
-        degree-$7$ cartwheels, the two demands cannot both be met.
+        such a hub may receive back, pulling the same amounts \emph{down}. With
+        $P_{14}$ no longer blocking four cartwheels, both cannot be met.
 \end{itemize}
 
 \paragraph{The infeasibility is caused by the ring-$\le14$ rows.} Delete the four
@@ -696,27 +597,27 @@ agree wheel by wheel on the certificate's own support.
 
 \subsection{Checking it}
 
-\art{tools/verify\_farkas.py} is solver-free and uses exact rational arithmetic
-throughout; there is no floating point anywhere on the checking path.
-Critically, it does not trust the certificate's stored coefficients: it
-re-derives every row from its source --- cartwheel files re-parsed and re-run
-through the leaf-row constructor, low-degree tags rebuilt from the necklace and
-re-run through the lower-bound constructor --- and fails loudly on any mismatch.
-It then checks $y \ge 0$, $y \ne 0$, $(y^\top\!A)_k \ge 0$ for all $84$ columns
-and $y^\top b < 0$, prints the contradiction chain of \eqref{eq:farkas}, and
-independently confirms which rows $x_0$ violates. Deliberate corruption of a
-single coefficient is rejected with an exact claimed-versus-re-derived diff. A
-reader who accepts the row semantics of \S\ref{sec:rows} need trust nothing else
-in this paper to check Theorem~\ref{thm:lp}.
+\art{tools/verify\_farkas.py} is solver-free and exact-rational throughout; there
+is no floating point anywhere on the checking path. Critically, it does not trust
+the certificate's stored coefficients: it re-derives every row from its source
+--- cartwheel files re-parsed and re-run through the leaf-row constructor,
+low-degree tags rebuilt from the necklace and re-run through the lower-bound
+constructor --- and fails loudly on any mismatch. It then checks $y \ge 0$,
+$y \ne 0$, $(y^\top\!A)_k \ge 0$ for all $84$ columns and $y^\top b < 0$, prints
+the contradiction chain of \eqref{eq:farkas}, and confirms which rows $x_0$
+violates. Deliberate corruption of a single coefficient is rejected with an exact
+claimed-versus-re-derived diff. A reader who accepts the row semantics of
+\S\ref{sec:rows} need trust nothing else in this paper to check
+Theorem~\ref{thm:lp}.
 
 \subsection{Controls}
 \label{sec:controls}
 
 \paragraph{Positive control.} The identical construction over the full
 $8{,}200$-configuration pool is feasible, and the published amounts $x_0$ satisfy
-every one of its $3{,}511$ rows with $0$ violations
-(Table~\ref{tab:variants}). So the encoding is not vacuously infeasible: it
-distinguishes the two pools, and it accepts the published proof.
+every one of its $3{,}511$ rows with $0$ violations (Table~\ref{tab:variants}).
+The encoding is therefore not vacuously infeasible: it distinguishes the two
+pools, and it accepts the published proof.
 
 \paragraph{Negative control.} The encoding a naive reading suggests ---
 \emph{every} unblocked stage-one wheel must have strictly negative charge --- is
@@ -731,12 +632,11 @@ and never as evidence for the headline.
 \paragraph{Ablations and robustness.} The degree-$6$ rows together with all leaf
 rows are feasible; the degree-$5$ rows alone are already infeasible. Six solver
 configurations all report infeasible, and a uniform slack of $0.082$ on every
-right-hand side is the minimum needed to restore feasibility. The formulation was
-also handed to a reviewer prompted to refute it across ten named attack lines,
-which produced one real error (an over-strong pool-independence claim in
-Lemma~\ref{lem:mono}(a)), one scope correction (\S\ref{sec:necessity}), and one
-genuine gap, closed exactly (\S\ref{sec:rows}) --- none of which changed the
-certificate.
+right-hand side is the minimum needed to restore feasibility. An adversarial
+review across ten named attack lines produced one real error
+(Lemma~\ref{lem:mono}(a), an over-strong pool-independence claim), one scope
+correction (\S\ref{sec:necessity}) and one genuine gap, closed exactly
+(\S\ref{sec:rows}); none changed the certificate.
 
 \subsection{Scope}
 \label{sec:scope}
@@ -765,27 +665,26 @@ certificate.
         \mathbb{R}^{84}_{\ge0}$, so deciding infeasibility over the nonnegative
         reals is strictly stronger than the schema's own amount space requires.
 \end{enumerate}
+%======================================================================
 \section{The verification that licenses the certificate}
 \label{sec:verify}
+%======================================================================
 
-None of the linear-programming argument of the preceding sections means anything unless the
-reducibility checker feeding it, and the row semantics built on top of that checker, are correct.
-Our checker \texttt{fourcolor.reduce.check} was written directly from the mathematics of
-\cite{rsst-reduce} (the \texttt{reduce.tex} write-up, in particular its expansion of
-\cite[Theorem~(3.2)]{rsst1997}), not ported from \texttt{reduce.c}. Agreement with the released C
-programs is therefore genuine differential evidence, not a tautology: two independent readings of
-the same theorem, implemented by different people at different times in different languages, are
-being asked whether they compute the same numbers. Table~\ref{tab:verify} summarizes the five
-legs of that comparison; full logs, configuration files, and rerun scripts are in the artifact
-repository (see the availability statement).
+None of the preceding means anything unless the reducibility checker feeding the
+rows, and the row semantics built on it, are correct. Our checker
+\texttt{fourcolor.reduce.check} was written directly from the mathematics of
+\cite{rsst-reduce} (its expansion of \cite[Theorem~(3.2)]{rsst1997}), not ported
+from \texttt{reduce.c}, so agreement with the released C programs is genuine
+differential evidence rather than a tautology. Table~\ref{tab:verify} summarizes
+the five legs; logs and rerun scripts are in the artifact repository.
 
 \begin{table}[t]
 \centering
 \small
 \caption{The five verification legs. ``Outcome'' reports what was certified computationally, not
 proved mathematically. Row~3 has no published $|\Phi(K)|$ to compare against -- the released 2026
-\texttt{.conf} files carry only an ``$n\ r$'' header -- so ``confirmed'' there means only that our
-checker independently certifies each configuration D-reducible, not that it matches a prior count.}
+\texttt{.conf} files carry only an ``$n\ r$'' header -- so ``confirmed'' means our checker certifies
+each configuration D-reducible, not that it matches a prior count.}
 \label{tab:verify}
 \begin{tabular}{@{}p{0.20\textwidth}p{0.32\textwidth}p{0.42\textwidth}@{}}
 \toprule
@@ -817,175 +716,97 @@ $d{=}8$); three gluing lemmas all passed (5,365 / 1,618 / 298 cartwheels). \\
 \end{tabular}
 \end{table}
 
-\paragraph{Why the differential matters.} The 5,692,937-wheel exact match is what licenses
-treating the leaf charge as an affine function of the amount vector: it is the bridge between our
-Python row semantics and the C++ that the published proof actually runs, so the LP rows we hand
-the solver are demonstrably the rows the proof means.
+The $5{,}692{,}937$-wheel exact match is the leg that licenses treating the leaf
+charge as an affine function of the amount vector: it is the bridge between our
+Python row semantics and the C++ the published proof actually runs.
 
-\subsection{Two defects found in released code}
+The comparison also found a defect in the $1995$ reference oracle. On $70$
+sampled exhaustively-generated RSST-legal configurations run through
+\texttt{build/reduce\_rsst} there were $0$ verdict mismatches but $6$ cases on
+which the oracle recomputed a different $|\Phi(K)|$ than our checker supplied and
+aborted with \texttt{*** ERROR: DISCREPANCY IN NUMBER OF EXTENDING COLOURINGS
+***} before printing a verdict; a third, from-scratch count sharing no code path
+with our production checker agrees with it and disagrees with the oracle in all
+six, at (ring, $n$, ours~=~brute force, oracle) $= (8, 12, 72, 48)$,
+$(9, 13, 147, 94)$, $(10, 15, 367, 230)$, $(10, 15, 365, 243)$,
+$(10, 15, 408, 250)$ and $(11, 17, 995, 532)$. The evidence points to
+\texttt{reduce.c}'s \texttt{strip()} edge-numbering heuristic on a class of
+inputs its original validation never exercised; no D-reducibility verdict is in
+question, and our checker agrees with the oracle's header $a$ on all $3{,}455$
+hand-curated catalog configurations ($633 + 2{,}822$) with zero mismatches, so
+this is not a general defect
+(\art{results/theorem/fr\_table/crosscheck.json}).
 
-\paragraph{A legacy oracle that aborts.} \texttt{build/reduce\_stein}, compiled from the
-Steinberger-extended \texttt{reduce.c} (needed because the unmodified 1995 code has
-\texttt{MAXRING}~$=14$), processes 783 of Steinberger's 2,822 configurations and then aborts with
-\texttt{SIGABRT} (exit 134), truncating mid-number. The crashing input is preserved as
-\art{build/crash783.conf}: a ring-16 configuration with $n=28$ and $a=139{,}480$. Our checker
-completes it in 227.7~s, returning $a=139{,}480$, matching the published header. The binary
-corroborates the first 783 and then dies; our own checker, run against the published headers,
-carries the remaining 2,039 unaided.
-
-\paragraph{A counting defect in \texttt{reduce.c}.} On 70 sampled exhaustively-generated
-RSST-legal configurations run through \texttt{build/reduce\_rsst}, there were 0 verdict
-mismatches but 6 oracle-inconclusive cases: on those 6 the oracle recomputed a different
-$|\Phi(K)|$ than our checker supplied and aborted with \texttt{*** ERROR: DISCREPANCY IN NUMBER OF
-EXTENDING COLOURINGS ***} before printing a verdict. A third, from-scratch count of $|\Phi(K)|$,
-sharing no code path with the production checker (different edge indexing, different triangle
-enumeration, no gauge fixing, no greedy variable ordering), agrees with our checker in all 6 and
-disagrees with the oracle in all 6: (ring, $n$, ours~=~brute force, oracle) equal $(8, 12, 72,
-48)$, $(9, 13, 147, 94)$, $(10, 15, 367, 230)$, $(10, 15, 365, 243)$, $(10, 15, 408, 250)$, and
-$(11, 17, 995, 532)$. The evidence points to \texttt{reduce.c}'s \texttt{strip()} edge-numbering
-heuristic -- a hand-optimized greedy ordering routine, documented in its own comments as chosen to
-shrink the search tree -- as the outlier on a class of inputs (small, exhaustively generated,
-generic near-triangulations) that its original validation against a hand-curated catalog never
-exercised. None of the six configurations' D-reducibility verdict is in question: all are
-non-D-reducible, and the oracle never disputed the verdict, only the intermediate count. Our
-checker agrees with the oracle's header $a$ on all 3,455 hand-curated catalog configurations
-(633~+~2,822) with zero mismatches, so this is not a general defect. See
-\art{results/theorem/fr\_table/crosscheck.json}.
-
-\subsection{A pool 430 configurations larger than it needs to be}
-
-Coverage is sharply two-level. At the wheel level only 85 of the 8,200 configurations ever act as
-a blocker anywhere across $d=7,\dots,11$. At the cartwheel level 7,422 distinct configurations
-appear as blockers over 2,253,185 logged blocking events -- 90.5\% of the pool, and a lower bound,
-since the instrumentation records only the first matching configuration per event. The intuition
-that a small core carries the proof is right at the wheel stage and wrong at the cartwheel stage.
-
-A first prune tracked three blocking roles and found 673 unused; removing them made the pipeline
-fail (all three gluing checks aborted, the bad-cartwheel count collapsed from 10,094 to 0). That
-failure discovered a fourth blocking role: the gluing lemmas also consult the pool (2,199 distinct
-glue-blockers). Tracking all four roles gives 430 configurations with zero usage anywhere.
-Removing exactly those and re-running the entire pipeline gives PASS with counts identical to the
-full-pool proof in every field.
-
-\begin{proposition}[Certified]
-The 2026 proof goes through verbatim with a pool of 7,770 configurations rather than 8,200, a
-reduction of 5.2\%.
-\end{proposition}
-
-This is a floor we reached, not a claimed minimum.
-
-We are not aware of any prior independent verification of the 2026 pool's reducibility; the
-released \texttt{computer-checks} repository (\art{third\_party/GIT\_PINS.txt}, commit
-\texttt{6cb85666}) consumes the pool as an input and contains no reducibility checker of its own.
-\section{The minimum interior size of a D-reducible configuration}\label{sec:fr}
-
-Write $f(r)$ for the minimum number of interior vertices of a D-reducible configuration of ring size $r$.
-
-\begin{theorem}[Proven, exhaustive]\label{thm:fr}
-For each ring size $r \in \{8,\dots,13\}$, every D-reducible configuration of ring size $r$ has at least $f(r)$ interior vertices, where
-\[
-\bigl(f(8),f(9),f(10),f(11),f(12),f(13)\bigr) = (5,5,6,7,7,8).
-\]
-Each bound is tight: a D-reducible configuration with exactly $f(r)$ interior vertices exists in the published catalogs.
-\end{theorem}
-
-Birkhoff \cite{birkhoff1913} proved that a reducible configuration has ring size at least $6$; to our knowledge Theorem~\ref{thm:fr} is the first published lower bound on interior size as a function of ring size. Published catalogs give per-ring interior minima, but a catalog minimum is only an upper bound on $f(r)$ -- the exhaustive negative side, that nothing smaller can possibly be D-reducible, is what is new.
-
-\subsection{The enumeration}
-
-For each $r$ and each $n$ from $r+1$ to $r+f(r)-1$ we generated every near-triangulation of the disk with outer face of size $r$ on $n$ vertices using \texttt{plantri -P$r$ -c3 -a $n$} (\texttt{plantri} 5.5 \cite{brinkmann2007}, pinned with its SHA-256 digest), filtered to the RSST configuration class, and ran the D-reducibility checker on every survivor. \texttt{plantri} is a canonical-construction-path generator producing exactly one representative per isomorphism class, which is what makes ``sweep every $n$ below threshold'' an exhaustive search rather than a sample; with \texttt{-P} and no \texttt{-m}, \texttt{-c3} defaults to \texttt{-c3m3}, i.e.\ no chords and no outer-face vertex of degree $2$.
-
-\begin{table}[h]
-\centering
-\begin{tabular}{@{}lccccccc@{}}
-\toprule
-$r$ & interior range & raw & cand & excl & valid & D-red. \\
-\midrule
-8 & 1--4 & 436 & 18 & 6 & 12 & 0 \\
-9 & 1--4 & 666 & 35 & 17 & 18 & 0 \\
-10 & 1--5 & 13{,}338 & 221 & 127 & 94 & 0 \\
-11 & 1--6 & 293{,}555 & 1{,}631 & 1{,}028 & 603 & 0 \\
-12 & 1--6 & 509{,}288 & 4{,}092 & 3{,}004 & 1{,}088 & 0 \\
-13 & 1--7 & 12{,}389{,}976 & 36{,}392 & 27{,}888 & 8{,}504 & 0 \\
-\midrule
-total & & 13{,}207{,}259 & 42{,}389 & 32{,}070 & 10{,}319 & 0 \\
-\bottomrule
-\end{tabular}
-\caption{Exhaustive sweep below the interior threshold for each ring size. ``raw'' is the count of near-triangulations from \texttt{plantri}; ``cand'' passes the interior filter (nonempty connected interior of minimum degree $5$); ``excl'' additionally fails the RSST ring-contact-arc condition; ``valid'' is the true RSST configuration class. Every D-reducibility verdict is $0$. \art{results/theorem/fr\_table/manifest\_r*.json}.}
-\label{tab:frsweep}
-\end{table}
-
-RSST's reference parser \texttt{ReadConf} in \texttt{reduce.c} records three further conditions on any file it accepts -- one of them redundant -- and we enforce all three; the substantive one is that each interior vertex meets the ring in at most two separate contiguous arcs. This is genuine structure, not bookkeeping: it is not implied by the near-triangulation conditions, and its exclusion rate rises from $33\%$ at $r=8$ to $77\%$ at $r=13$. Excluded graphs were nevertheless retained with a D-reducibility verdict computed anyway, so a D-reducible-but-not-RSST-legal graph would have been surfaced loudly; none was -- every one of the $32{,}070$ exclusions is non-D-reducible too, so the filter never changed a verdict, only the population count. The $r=13$ cells at interior $6$ ($n=19$) and interior $7$ ($n=20$) were run $8$-way sharded by residue class, roughly $2{,}250$\,s and $13{,}300$\,s per shard, giving $1{,}445$ and $6{,}710$ valid configurations and $0$ D-reducible.
-
-\subsection{Verification and tightness}
-
-Up to $20$ RSST-legal below-threshold configurations per ring were serialised and run through \texttt{build/reduce\_rsst}, compiled from the pinned \texttt{reduce.c}: $70$ sampled, $0$ verdict mismatches, $6$ oracle-inconclusive. The $6$ inconclusive cases trace to a defect in the oracle's colouring count, adjudicated in our favour by a third from-scratch implementation; see \S\ref{sec:verify} for the numbers.
-
-Tightness witnesses, verified both by our checker and by the oracle, come from the published catalogs: $r=8$: \texttt{D0003.conf} ($n=13$, $a=100$); $r=9$: \texttt{D0006.conf} ($n=14$, $a=211$); $r=10$: \texttt{D0015.conf} ($n=16$, $a=536$); $r=11$: \texttt{D0024.conf} ($n=18$, $a=1{,}363$); $r=12$: \texttt{D0143.conf} ($n=19$, $a=2{,}863$) -- all five from the 2026 D pool \cite{nl4ct2026} -- and $r=13$: \texttt{126.504366} from the RSST 633 \cite{rsst-reduce} ($n=21$, $a=6{,}954$). \art{results/theorem/fr\_table/tightness\_witnesses.json}.
-
-Theorem~\ref{thm:fr} is scoped to D-reducibility. The corresponding minimum over configurations that are C-reducible via a nonempty contract but not D-reducible is strictly smaller at rings $8$ and $11$, so the D-scoping in the statement is not cosmetic.
+The same instrumentation measured how much of the pool the proof uses. Coverage
+is sharply two-level: at the wheel level only $85$ of the $8{,}200$
+configurations ever act as a blocker across $d=7,\dots,11$, while at the
+cartwheel level $7{,}422$ do, over $2{,}253{,}185$ logged blocking events.
+Tracking all four blocking roles --- the fourth, consultation by the gluing
+lemmas, discovered when a prune based on the first three broke the pipeline ---
+leaves $430$ configurations with zero usage anywhere; removing exactly those and
+re-running the entire pipeline gives PASS with counts identical to the full-pool
+proof in every field, so the $2026$ proof goes through verbatim with $7{,}770$
+configurations. That is a floor we reached, not a claimed minimum. We are not
+aware of any prior independent verification of the $2026$ pool's reducibility;
+the released \texttt{computer-checks} repository
+(\art{third\_party/GIT\_PINS.txt}, commit \texttt{6cb85666}) consumes the pool as
+an input and contains no reducibility checker of its own.
 %======================================================================
 \section{Discussion and open problems}
 \label{sec:open}
 %======================================================================
 
-\paragraph{Certificates for the automated-discharging frameworks.} The immediate
-consequence of \S\ref{sec:lp} is not about the Four Colour Theorem. Any of the
+\paragraph{Certificates for the automated-discharging frameworks.} Any of the
 frameworks of \cite{stolee2014,bousquet2024square,lavalicov2022} can emit a
-Farkas certificate at no extra cost, because their solvers already compute one
+Farkas certificate at no extra cost, since their solvers already compute one
 whenever a round of the loop fails; what is missing is the decision to record it,
 the row-provenance bookkeeping that makes it re-derivable, and an exact-rational
-checker. The value is highest exactly where those loops currently give the least
-information: when a configuration set is believed to be complete and the LP still
-fails, the certificate distinguishes ``the rule shapes are wrong'' from ``this
-particular local structure is not covered'', and it names the structure. We would
-like to see one reported for a schema someone is actively designing.
+checker. The value is highest where those loops now give least: when a
+configuration set is believed complete and the LP still fails, the certificate
+distinguishes ``the rule shapes are wrong'' from ``this local structure is not
+covered'', and names the structure.
 
 \paragraph{Removing the fixed-shapes hypothesis.} Theorem~\ref{thm:lp} fixes the
 $84$ published rule shapes; the natural strengthening --- ``no discharging schema
 of bounded rule complexity closes over the ring-$\le14$ pool'' --- requires column
-generation. Given a violated row, one must price out a new planar
-degree-interval pattern with a charge dart that would repair it, and that pricing
-subproblem is a search over planar patterns rather than a linear program. It is
-the main technical obstacle. A tractable intermediate is to enumerate all rule
-shapes below a fixed size bound and re-run the same machinery over the enlarged
-column set: infeasibility there would be a substantially stronger statement, and
-the certificate format is unchanged.
+generation, and the pricing subproblem --- given a violated row, produce a new
+planar degree-interval pattern with a charge dart that would repair it --- is a
+search over planar patterns rather than a linear program. That is the main
+technical obstacle. A tractable intermediate is to enumerate all rule shapes
+below a fixed size bound and re-run the same machinery over the enlarged column
+set: infeasibility there would be a substantially stronger statement, and the
+certificate format is unchanged.
 
 \paragraph{Steinberger's question proper.} Settling whether \emph{some} D-only
 unavoidable set of ring size $\le14$ exists needs both of the above plus a way to
-range over pools. We note only that the obstruction we found is not diffuse: it
-is a single interface, and $65$ of the $84$ shapes play no part in it. If there
-is a positive answer, the twelve rows say where new rules would have to act.
+range over pools. The obstruction we found is at least not diffuse: if there is a
+positive answer, the twelve rows say where new rules would have to act.
 
-\paragraph{$f(r)$ beyond $r=13$.} The $r=13$ interior-$7$ cell alone required
-$11{,}534{,}001$ generated graphs and roughly $30$ core-hours; $r=14$ at interior
-$8$ is about two orders of magnitude larger and is out of reach of the present
-pipeline on a workstation. The promising route is to prune the generation with a
-necessary condition on $a(K)$ rather than to run the reducibility check on every
-candidate. The corpus already gives the upper bounds $f(14)\le9$, $f(15)\le10$
-and $f(16)\le10$ from catalog witnesses.
+\paragraph{The minimum interior size of a D-reducible configuration.} A separate
+line of this project determines $f(r)$, the minimum number of interior vertices
+of a D-reducible configuration of ring size $r$, for $r = 8,\dots,13$:
+$f = 5,5,6,7,7,8$. The bounds are exhaustive --- every near-triangulation below
+the threshold was generated with \texttt{plantri} and checked, $13.2$ million
+graphs, $10{,}319$ RSST-legal configurations, $0$ D-reducible --- and tight at
+every ring, with witnesses in the published catalogs; to our knowledge this is
+the first quantitative refinement of Birkhoff's $1913$ ring-size bound
+\cite{birkhoff1913}. It is a theorem about configuration size and not about
+discharging schemas, so it is reported separately: statement, sweep table,
+manifests and the triple verification (our checker, the \texttt{reduce.c} oracle,
+and an independent from-scratch colouring count) are in
+\art{results/theorem/fr\_table/THEOREM.md}.
 
-\paragraph{A coloring-mass law, in progress.} The pruning condition just
-mentioned is the subject of a companion line of work, reported separately: an
-exact closed form $a = (2^r + 2(-1)^r)/6$ for the wheel, a proven cap
-$a \le 11\cdot2^{r+k-7}$ tight at every wheel, a proof that the growth constant
-is $3/2$ at $k=2$, and an obstruction theorem showing that no bound factoring
-through $a \le P(S,4)/24$ can reach the empirically sharp constant $4/3$. Paired
-with an empirical threshold law it would reproduce the whole $f(r)$ table
-analytically to within one interior vertex at every ring; the sharp cap is at
-present a conjecture and the threshold half is corpus-supported only. The
-current state, including the corpus and the frontier data, is in the artifact
-repository (see the availability statement).
+\paragraph{A colouring-mass law, in progress.} A companion line, reported
+separately, studies $a(K)$ directly, seeking a necessary condition that would prune
+the $f(r)$ enumeration: an exact closed form for the wheel, a conjectural cap
+$a \le 11\cdot2^{r+k-7}$ tight at every wheel, and an obstruction theorem for
+bounds factoring through $a \le P(S,4)/24$.
 
-\paragraph{Formalisation.} Both results here are within reach of a proof
-assistant given Gonthier's formalisation \cite{gonthier2008} of the reducibility
-machinery. The finite content of Theorem~\ref{thm:fr} is a replay of $10{,}319$
-configuration checks. Theorem~\ref{thm:lp} is more tractable still at the
-arithmetic level --- twelve rows over the rationals --- but the row-derivation
-step, from a cartwheel to its $84$ coefficients, carries the real formalisation
-burden, and it is the step on which the theorem's faithfulness to
-\cite{nl4ct2026} depends.
+\paragraph{Formalisation.} Theorem~\ref{thm:lp} is arithmetically trivial to
+formalise --- twelve rows over the rationals, on top of Gonthier's reducibility
+machinery \cite{gonthier2008}. The row-derivation step, from a cartwheel to its
+$84$ coefficients, carries the whole burden, and it is the step on which the
+theorem's faithfulness to \cite{nl4ct2026} depends.
 
 %======================================================================
 \section*{Data and code availability}
@@ -993,24 +814,20 @@ burden, and it is the step on which the theorem's faithfulness to
 \label{sec:availability}
 %======================================================================
 
-The certificate (both the $19$-row support and the $12$-row irreducible core, in
-machine-readable form with full $84$-column coefficient vectors), the
-solver-free exact-rational checker \art{tools/verify\_farkas.py}, the row
-generator \art{tools/lp\_discharge.py}, the enumeration manifests and
-per-configuration records behind Theorem~\ref{thm:fr}, the catalog
-re-verification reports, the pipeline reproduction logs and the pool-coverage
-measurements are all in the artifact repository at
-\url{https://github.com/<repository>/four_color_digestion}, which will be
-archived with a DOI on publication. All third-party inputs --- the four arXiv
-e-prints, the \texttt{plantri} generator, the released rule and configuration
-files and the released C++ checker --- are pinned in-repository with recorded
-SHA-256 digests (\art{third\_party/CHECKSUMS.sha256},
-\art{third\_party/GIT\_PINS.txt}). Following Steinberger's precedent for the
-$2{,}822$-configuration set, the bulk machine output --- the $48{,}509$ generated
-rows, the $97{,}860$ refined cartwheels, the $13.2$ million generated
-near-triangulations and their verdicts --- is not reproduced here in any form; it
-is in the repository, with a claim-to-artifact table naming the file behind every
-number printed above.
+Everything is in the artifact repository at
+\url{https://github.com/<repository>/four_color_digestion}, to be archived with a
+DOI on publication: the $19$-row support and the $12$-row irreducible core in
+machine-readable form with full $84$-column coefficient vectors, the checker
+\art{tools/verify\_farkas.py}, the row generator \art{tools/lp\_discharge.py},
+the $f(r)$ enumeration manifests, the catalog re-verification reports, the
+pipeline reproduction logs, the pool-coverage measurements, and the bulk machine
+output (the $48{,}509$ rows, the $97{,}860$ refined cartwheels, the $13.2$
+million near-triangulations and their verdicts), which is reproduced here in no
+form, with a claim-to-artifact table naming the file behind every number printed
+above. All third-party inputs --- the four arXiv e-prints, \texttt{plantri}, the
+released rule and configuration files and the released C++ checker --- are pinned
+in-repository with recorded SHA-256 digests
+(\art{third\_party/CHECKSUMS.sha256}, \art{third\_party/GIT\_PINS.txt}).
 
 \bibliographystyle{plain}
 \bibliography{refs}
