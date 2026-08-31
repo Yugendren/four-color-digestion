@@ -35,9 +35,7 @@
   eprint       = {1401.6481},
   archivePrefix= {arXiv},
   primaryClass = {math.CO},
-  note         = {Ancillary files contain \texttt{reduce.c} and the 633-configuration
-                  file \texttt{unavoidable.conf}; pinned locally as
-                  \texttt{third\_party/arxiv-1401.6481}}
+  note         = {Ancillary files: \texttt{reduce.c}, \texttt{unavoidable.conf}}
 }
 
 @misc{rsst-discharge,
@@ -47,9 +45,8 @@
   eprint       = {1401.6485},
   archivePrefix= {arXiv},
   primaryClass = {math.CO},
-  note         = {Ancillary files contain \texttt{discharge.c}, the rule file and the
-                  presentation files \texttt{present7}--\texttt{present11};
-                  pinned locally as \texttt{third\_party/arxiv-1401.6485}}
+  note         = {Ancillary files: \texttt{discharge.c}, the rule file and
+                  \texttt{present7}--\texttt{present11}}
 }
 
 @misc{steinberger2010,
@@ -59,21 +56,21 @@
   eprint       = {0905.0043},
   archivePrefix= {arXiv},
   primaryClass = {math.CO},
-  note         = {Published version: Trans. Amer. Math. Soc. 362 (2010), 6633--6661;
+  note         = {Published version: Trans. Amer. Math. Soc. 362 (2010), no.~12, 6633--6661;
                   pinned locally as \texttt{third\_party/arxiv-0905.0043}}
 }
 
 @misc{nl4ct2026,
-  author       = {Inoue, Yuta and others},
+  author       = {Inoue, Yuta and Kawarabayashi, Ken-ichi and Miyashita, Atsuyuki
+                  and Mohar, Bojan and Thomassen, Carsten and Thorup, Mikkel},
   title        = {The Four Color Theorem with Linearly Many Reducible Configurations
                   and Near-Linear Time Coloring},
   year         = {2026},
   eprint       = {2603.24880},
   archivePrefix= {arXiv},
   primaryClass = {math.CO},
-  note         = {Author list and metadata taken from the pinned e-print source
-                  \texttt{third\_party/arxiv-2603.24880/src/main\_\_1\_\_\_1\_.tex};
-                  sha256 \texttt{e517cf6f...92bb8b}}
+  note         = {Author list taken from the \texttt{\textbackslash author} block at line 111 of the
+                  pinned e-print source; archive sha256 \texttt{e517cf6f...92bb8b}}
 }
 
 @article{birkhoff1913,
@@ -104,8 +101,7 @@
   number  = {2},
   pages   = {323--357},
   year    = {2007},
-  note    = {The \texttt{plantri} generator; version 5.5 (17 May 2024) pinned locally as
-             \texttt{third\_party/plantri}}
+  note    = {The \texttt{plantri} generator; version 5.5 (17 May 2024) pinned}
 }
 
 @article{jacobsen2006,
@@ -160,18 +156,24 @@
   year    = {1987}
 }
 
-@misc{tao2023machine,
-  author = {Tao, Terence},
-  title  = {Machine-assisted proof},
-  year   = {2025},
-  note   = {Notices of the American Mathematical Society 72 (1), 6--13}
+@article{tao2025machine,
+  author  = {Tao, Terence},
+  title   = {Machine-assisted proof},
+  journal = {Notices of the American Mathematical Society},
+  volume  = {72},
+  number  = {1},
+  pages   = {6--13},
+  year    = {2025}
 }
 
-@misc{buzzard2024,
-  author = {Buzzard, Kevin},
-  title  = {Mathematical reasoning and the computer},
-  year   = {2024},
-  note   = {Bulletin of the American Mathematical Society 61 (2), 211--224}
+@article{buzzard2024,
+  author  = {Buzzard, Kevin},
+  title   = {Mathematical reasoning and the computer},
+  journal = {Bulletin of the American Mathematical Society},
+  volume  = {61},
+  number  = {2},
+  pages   = {211--224},
+  year    = {2024}
 }
 
 @article{davies2021,
@@ -244,4 +246,86 @@
   note         = {Author list abbreviated; see the e-print. Follow-up: arXiv:2605.30482.
                   Our reimplementation and replication live in the companion repository
                   \texttt{zeta\_map\_interp}}
+}
+
+%---------------------------------------------------------------------
+% Automated discharging
+%---------------------------------------------------------------------
+
+@article{bousquet2024square,
+  author  = {Bousquet, Nicolas and Deschamps, Quentin and de Meyer, Lucas and
+             Pierron, Th{\'e}o},
+  title   = {Square Coloring Planar Graphs with Automatic Discharging},
+  journal = {SIAM Journal on Discrete Mathematics},
+  volume  = {38},
+  number  = {1},
+  pages   = {504--528},
+  year    = {2024},
+  doi     = {10.1137/22M1492623},
+  note    = {arXiv:2204.05791}
+}
+
+@misc{stolee2014,
+  author       = {Stolee, Derrick},
+  title        = {Automated Discharging Arguments for Density Problems in Grids},
+  year         = {2014},
+  eprint       = {1409.5922},
+  archivePrefix= {arXiv},
+  primaryClass = {math.CO},
+  note         = {Preprint; no published version is recorded in DBLP}
+}
+
+@misc{lavalicov2022,
+  author       = {La, Hoang and Valicov, Petru},
+  title        = {Computer Assisted Discharging Procedure on Planar Graphs:
+                  Application to 2-Distance Coloring},
+  year         = {2022},
+  eprint       = {2202.03885},
+  archivePrefix= {arXiv},
+  primaryClass = {math.CO},
+  note         = {Preprint; no published version is recorded in DBLP}
+}
+
+@article{cranston2017discharging,
+  author  = {Cranston, Daniel W. and West, Douglas B.},
+  title   = {An Introduction to the Discharging Method via Graph Coloring},
+  journal = {Discrete Mathematics},
+  volume  = {340},
+  number  = {4},
+  pages   = {766--793},
+  year    = {2017},
+  doi     = {10.1016/j.disc.2016.11.022}
+}
+
+%---------------------------------------------------------------------
+% Machine-checkable certificates for computer-assisted proofs
+%---------------------------------------------------------------------
+
+@inproceedings{subercaseaux2023packing,
+  author    = {Subercaseaux, Bernardo and Heule, Marijn J. H.},
+  title     = {The Packing Chromatic Number of the Infinite Square Grid is 15},
+  booktitle = {Tools and Algorithms for the Construction and Analysis of Systems
+               (TACAS 2023), Part I},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {13993},
+  pages     = {389--406},
+  publisher = {Springer},
+  year      = {2023},
+  doi       = {10.1007/978-3-031-30823-9_20},
+  note      = {arXiv:2301.09757}
+}
+
+@inproceedings{heule2024hexagon,
+  author    = {Subercaseaux, Bernardo and Nawrocki, Wojciech and Gallicchio, James
+               and Codel, Cayden R. and Carneiro, Mario and Heule, Marijn J. H.},
+  title     = {Formal Verification of the Empty Hexagon Number},
+  booktitle = {15th International Conference on Interactive Theorem Proving
+               (ITP 2024)},
+  series    = {LIPIcs},
+  volume    = {309},
+  pages     = {35:1--35:19},
+  publisher = {Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  year      = {2024},
+  doi       = {10.4230/LIPIcs.ITP.2024.35},
+  note      = {arXiv:2403.17370}
 }

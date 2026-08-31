@@ -47,9 +47,11 @@ mathematics rather than by running their released code.
 schema over the ring-$\le 14$ sub-pool is a property of the \emph{rule shapes}, not
 of the published rule amounts. Fixing the $84$ discharging rule shapes of
 \texttt{arXiv:2603.24880} and restricting the published $8{,}200$-configuration
-D-reducible pool to its $5{,}895$ members of ring size $\le 14$, we prove that
+D-reducible pool to its $5{,}895$ members of ring size $\le 14$, we certify that
 \emph{no} nonnegative amount vector $x\in\mathbb{R}^{84}_{\ge 0}$ closes the
-discharging argument. The proof is a $12$-row irreducible Farkas certificate,
+discharging argument --- ``certify'' in the sense of \S\ref{sec:notclaim}: an
+exact-rational Farkas certificate over a row set that is necessary under two
+stated hypotheses, not an unconditional proof. The proof is a $12$-row irreducible Farkas certificate,
 verified over exact rationals by a solver-free checker that re-derives every row
 from its source. The same machinery over the full pool is feasible and the
 published amounts satisfy every generated row, so the encoding is not vacuous.
@@ -118,7 +120,7 @@ not.
 This paper reports on a programme of \emph{computational digestion}: re-deriving
 these proofs from their published mathematics with independent implementations, and
 then mining the resulting data for statements that a human can hold in mind. The
-framing is Tao's and Buzzard's \cite{tao2023machine,buzzard2024}: a machine proof
+framing is Tao's and Buzzard's \cite{tao2025machine,buzzard2024}: a machine proof
 becomes mathematics when it yields transferable structure, and the bottleneck is
 tooling rather than raw computation. The unit of progress we adopt is a
 \emph{verified structural fact about the proof objects} --- a theorem about the
@@ -246,7 +248,7 @@ The closest antecedent in spirit is Steinberger's own remark that he has no opin
 about the ring-$14$ question.
 
 \paragraph{On digestion.} The programme of making machine proofs comprehensible ---
-rather than merely correct --- is articulated by Tao \cite{tao2023machine} and
+rather than merely correct --- is articulated by Tao \cite{tao2025machine} and
 Buzzard \cite{buzzard2024}, and Gonthier's Coq formalisation \cite{gonthier2008}
 settles the correctness half for the 4CT specifically. Our contribution is on the
 comprehension side and is deliberately modest in ambition: verified structural facts
@@ -394,9 +396,15 @@ Fix the $84$ discharging rule shapes of \cite{nl4ct2026}
 (\art{third\_party/discharging-rules/R}). Let $P_{14}$ be the sub-pool of the
 published $8{,}200$-configuration D-reducible pool consisting of the $5{,}895$
 configurations of ring size $\le 14$. Then there is no vector of nonnegative rule
-amounts $x \in \mathbb{R}^{84}_{\ge 0}$ under which the discharging argument closes
-over $P_{14}$: i.e.\ under which every vertex of a hypothetical minimum
-counterexample ends with charge $\le 0$.
+amounts $x \in \mathbb{R}^{84}_{\ge 0}$ satisfying the local charge conditions that
+the $2026$ schema imposes over $P_{14}$: i.e.\ no $x\ge 0$ under which every
+cartwheel leaf that $P_{14}$ fails to block satisfies $C(L,x)\le 0$ (strictly
+$<0$ in the cases of \S\ref{sec:necessity}) and every unblocked degree-$5$ or
+degree-$6$ wheel satisfies $\mathrm{LB}(w,x)\le 0$. In particular the discharging
+argument of \cite{nl4ct2026} cannot be made to close over $P_{14}$ by re-tuning
+its amounts. The hypotheses under which these rows are necessary conditions ---
+including that an unblocked local structure need not be realizable --- are stated
+in \S\ref{sec:lp-scope}.
 \end{theorem}
 
 \begin{remark}[$43$ figures, $84$ rules]
@@ -1599,7 +1607,8 @@ factor of $2.4$ in $f$-slope lives in the cap, not the threshold.
 
 \begin{remark}[The structural principle]
 Under a cap $B(r,k) = C\cdot 2^r\gamma^k$, the implied $f$-slope is
-$(\log_2\beta - 1)/(1 - \log_2\gamma)$. \emph{The entire source of $f$-growth is the
+$(\log_2\beta - 1)/\log_2\gamma$ --- $0.263$ at $\gamma=2$, $0.450$ at
+$\gamma=3/2$, $0.634$ at $\gamma=4/3$. \emph{The entire source of $f$-growth is the
 excess of the threshold base $\beta$ over $2$}; a law with $\beta \le 2$ proves nothing
 about $f$. This kills the whole wheel-anchored family of threshold candidates as a
 route to $f$, since their $r$-dependence $2^r$ cancels against the cap's.
